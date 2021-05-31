@@ -13,8 +13,12 @@ let test name value =
 let lexTests = [
     "basicLex", "x"
     "firstLex", " 1200Hello    World1! 14d"
+    "underscoreLex", "x_y is _aSingle Identifier_"
 ]
 let run () =
-    lexTests 
-    |> List.map (fun (name,text) -> lex text |> test name) 
-    |> List.sum
+    let result = 
+        lexTests 
+        |> List.map (fun (name,text) -> lex text |> test name) 
+        |> List.sum
+    if result = 0 then printf "All tests passed." else printfn "%d tests failed." result
+    result
