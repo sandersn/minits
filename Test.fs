@@ -1,4 +1,4 @@
-module Lex.Test
+module Minits.Test
 open Lex
 let test name value =
     let reference = "baselines/reference/" + name + ".baseline"

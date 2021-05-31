@@ -1,4 +1,4 @@
-module Lex.Lex
+module Minits.Lex
 open System
 open Types
 let lex (s : string) = 

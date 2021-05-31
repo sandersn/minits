@@ -1,2 +1,2 @@
 [<EntryPoint>]
-let main argv = Lex.Test.run ()
+let main _ = Minits.Test.run ()
