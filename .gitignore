@@ -1,4 +1,5 @@
 bin/
 obj/
+baselines/local/
 .fake
 .ionide
