@@ -22,7 +22,8 @@ type Lexer = {
     pos: unit -> int
 }
 type Expression = 
- | Identifier of Token // MORE TO COME, OBVS
- | Var of name: Token * init: Expression
+ | Identifier of string // MORE TO COME, OBVS
+ | IntLiteral of int
+ | Var of name: string * init: Expression
 type Statement = ExpressionStatement of Expression // MORE TO COME
 type Program = list<Statement>
