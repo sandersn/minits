@@ -1,0 +1,2 @@
+[Var; Whitespace; Identifier "x"; Whitespace; Equals; Whitespace;
+ IntLiteral ("1", 1)]

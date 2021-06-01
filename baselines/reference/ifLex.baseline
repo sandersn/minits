@@ -1,0 +1,3 @@
+[If; Whitespace; LeftParen; Identifier "f"; LeftParen; Identifier "x";
+ RightParen; RightParen; Whitespace; Identifier "y"; Whitespace; Else;
+ Whitespace; LeftBrace; Whitespace; Identifier "z"; Whitespace; RightBrace]
