@@ -8,7 +8,7 @@ let parse (lexer: Lexer) =
     [parser ()]
   let parseIdentifier () =
     match lexer.scan () with
-    | Token.Identifier(text) -> Expression.Identifier text
+    | Token.Identifier(text) -> text
     | _ -> failwith "ho no"
   let parseToken token =
     match lexer.scan () with
@@ -23,6 +23,7 @@ let parse (lexer: Lexer) =
       let init = parseExpression ()
       Expression.Var (name, init)
     | Token.Identifier(text) as t -> Expression.Identifier text
+    | _ -> failwith "parseExpression: expected 'var' or an identifier."
   let parseStatement () =
     ExpressionStatement <| parseExpression ()
   let parseProgram () =

@@ -29,7 +29,7 @@ let lex (s : string) =
           Whitespace
         | c when Char.IsNumber c-> 
           scanForward Char.IsNumber
-          IntLiteral(s.[start..pos - 1], int s.[start..pos - 1]) // TODO: Catch too-large exceptions and whatnot
+          Token.IntLiteral(s.[start..pos - 1], int s.[start..pos - 1]) // TODO: Catch too-large exceptions and whatnot
         | c when Char.IsLetter c  -> scanIdentifier ()
         | '_' as c -> scanIdentifier ()
         | '{' -> pos <- pos + 1; LeftBrace
