@@ -3,7 +3,7 @@ open System
 open Types
 let keywords = [
   "function", Function
-  "var", Var
+  "var", Token.Var
   "if", If
   "else", Else
   "return", Return
@@ -21,7 +21,7 @@ let lex (s : string) =
               pos <- pos + 1
         let scanIdentifier () = 
           scanForward (fun c -> c = '_' || Char.IsLetterOrDigit c)
-          Identifier s.[start..pos - 1]
+          Token.Identifier s.[start..pos - 1]
         match s.[pos] with
         | '\n' -> pos <- pos + 1; Newline
         | c when Char.IsWhiteSpace c ->
@@ -41,17 +41,19 @@ let lex (s : string) =
         | _ -> 
           pos <- pos + 1
           Unknown
-    let scan () = 
+    { scan = fun () -> 
         if pos = s.Length then EOF else
         match scanKeyword () with
         | Some (keyword,token) -> 
           pos <- pos + keyword.Length
           token
         | None -> scanToken ()
-    // TODO: A real scanner would return `scan` and let the parser drive.
-    // It would also return an accessor for `pos` and the rest of its state.
-    let rec scanLoop acc =
-        match scan () with
-        | EOF -> List.rev acc
-        | t -> scanLoop (t :: acc)
-    scanLoop []
+      pos = fun () -> pos
+    }
+let lexAll (s: string) =
+  let lexer = lex s
+  let rec scanLoop acc =
+      match lexer.scan () with
+      | EOF -> List.rev acc
+      | t -> scanLoop (t :: acc)
+  scanLoop []

@@ -29,7 +29,7 @@ let compileTests: list<string * string> = [ ]
 let run () =
     let lexResult = 
         lexTests 
-        |> List.map (fun (name,text) -> lex text |> test name) 
+        |> List.map (fun (name,text) -> lexAll text |> test name) 
         |> List.sum
     let parseResult = 
         parseTests 

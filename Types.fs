@@ -1,7 +1,4 @@
 module Minits.Types
-type Node =
- | Statement
- | Program of list<Node>
 type Token =
  | Function
  | Var
@@ -20,3 +17,12 @@ type Token =
  | Whitespace
  | Unknown
  | EOF
+type Lexer = {
+    scan: unit -> Token
+    pos: unit -> int
+}
+type Expression = 
+ | Identifier of Token // MORE TO COME, OBVS
+ | Var of name: Token * init: Expression
+type Statement = ExpressionStatement of Expression // MORE TO COME
+type Program = list<Statement>

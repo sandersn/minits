@@ -1,3 +1,3 @@
 module Minits.Parse
 open Types
-let parse scanner = ()
+let parse (lexer: Lexer) = ()
