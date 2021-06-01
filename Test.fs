@@ -1,5 +1,7 @@
 module Minits.Test
 open Lex
+open Parse
+open Compile
 let test name value =
     let reference = "baselines/reference/" + name + ".baseline"
     let local = "baselines/local/" + name + ".baseline"
@@ -17,11 +19,27 @@ let lexTests = [
     "varLex", "var x = 1"
     "functionLex", "function f (x) { return x }"
     "ifLex", "if (f(x)) y else { z }"
+    "semicolonLex", "x; y"
+    "newlineLex", "x\n y  \n"
 ]
+let parseTests = [
+    "basicParse", "x"
+]
+let compileTests: list<string * string> = [ ]
 let run () =
-    let result = 
+    let lexResult = 
         lexTests 
         |> List.map (fun (name,text) -> lex text |> test name) 
         |> List.sum
+    let parseResult = 
+        parseTests 
+        |> List.map (fun (name,text) -> lex text |> parse |> test name) 
+        |> List.sum
+    let compileResult = 
+        // TODO: Read test from files instead
+        compileTests
+        |> List.map (fun (name, text) -> compile text |> test name)
+        |> List.sum
+    let result = lexResult + parseResult + compileResult
     if result = 0 then printf "All tests passed." else printfn "%d tests failed." result
     result

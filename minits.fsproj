@@ -9,6 +9,8 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Lex.fs" />
+    <Compile Include="Parse.fs" />
+    <Compile Include="Compile.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

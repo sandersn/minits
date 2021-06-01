@@ -23,8 +23,9 @@ let lex (s : string) =
           scanForward (fun c -> c = '_' || Char.IsLetterOrDigit c)
           Identifier s.[start..pos - 1]
         match s.[pos] with
+        | '\n' -> pos <- pos + 1; Newline
         | c when Char.IsWhiteSpace c ->
-          scanForward Char.IsWhiteSpace
+          scanForward (fun c -> c <> '\n' && Char.IsWhiteSpace c)
           Whitespace
         | c when Char.IsNumber c-> 
           scanForward Char.IsNumber
@@ -36,6 +37,7 @@ let lex (s : string) =
         | '(' -> pos <- pos + 1; LeftParen
         | ')' -> pos <- pos + 1; RightParen
         | '=' -> pos <- pos + 1; Equals
+        | ';' -> pos <- pos + 1; Semicolon
         | _ -> 
           pos <- pos + 1
           Unknown

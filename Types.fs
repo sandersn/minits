@@ -1,4 +1,7 @@
 module Minits.Types
+type Node =
+ | Statement
+ | Program of list<Node>
 type Token =
  | Function
  | Var
@@ -12,6 +15,8 @@ type Token =
  | Equals
  | IntLiteral of text: string * value: int
  | Identifier of text: string
+ | Newline
+ | Semicolon
  | Whitespace
  | Unknown
  | EOF
