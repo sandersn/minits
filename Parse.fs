@@ -11,13 +11,13 @@ let parse (lexer: Lexer) =
     match lexer.scan () with
     | Token.Identifier(text) -> text
     | _ -> 
-      errors.Add "Expected: identifier"
+      errors.Add "parseIdentifier: Expected"
       "(missing)"
   let parseToken token =
     match lexer.scan () with
     | t when t = token -> t
     | _ -> 
-      errors.Add <| sprintf "Expected: token %A" token
+      errors.Add <| sprintf "parseToken: Expected %A" token
       token
   let rec parseExpression () =
     match lexer.scan () with
@@ -28,7 +28,10 @@ let parse (lexer: Lexer) =
       let init = parseExpression ()
       Expression.Var (name, init)
     | Token.Identifier(text) as t -> Expression.Identifier text
-    | _ -> failwith "parseExpression: expected 'var' or an identifier."
+    | Token.IntLiteral(_,value) -> Expression.IntLiteral value
+    | t -> 
+      errors.Add <| sprintf "parseExpression: expected 'var' or an identifier, got %A" t
+      Expression.Identifier "(missing)"
   let parseStatement () =
     ExpressionStatement <| parseExpression ()
   let parseProgram () =

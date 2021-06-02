@@ -9,12 +9,12 @@ let keywords = [
   "return", Return
 ]
 let longestKeyword = keywords |> List.map fst |> List.map (fun s -> s.Length) |> List.max
-let lex (s : string) = 
+let lex (s : string) (includeWhitespace : bool)= 
     let mutable pos =  0
     let scanKeyword () =
       let prefix = s.Substring(pos, min longestKeyword (s.Length - pos))
       keywords |> List.tryFind (fst >> prefix.StartsWith)
-    let scanToken () =
+    let rec scanToken () =
         let start = pos
         let scanForward pred =
             while pos < s.Length && pred s.[pos] do
@@ -26,7 +26,7 @@ let lex (s : string) =
         | '\n' -> pos <- pos + 1; Newline
         | c when Char.IsWhiteSpace c ->
           scanForward (fun c -> c <> '\n' && Char.IsWhiteSpace c)
-          Whitespace
+          if includeWhitespace then Whitespace else scanToken ()
         | c when Char.IsNumber c-> 
           scanForward Char.IsNumber
           Token.IntLiteral(s.[start..pos - 1], int s.[start..pos - 1]) // TODO: Catch too-large exceptions and whatnot
@@ -51,7 +51,7 @@ let lex (s : string) =
       pos = fun () -> pos
     }
 let lexAll (s: string) =
-  let lexer = lex s
+  let lexer = lex s false
   let rec scanLoop acc =
       match lexer.scan () with
       | EOF -> List.rev acc

@@ -1,2 +1,2 @@
-[Identifier "x_y"; Whitespace; Identifier "is"; Whitespace;
- Identifier "_aSingle"; Whitespace; Identifier "Identifier_"]
+[Identifier "x_y"; Identifier "is"; Identifier "_aSingle";
+ Identifier "Identifier_"]

@@ -1,2 +1,2 @@
-[Whitespace; IntLiteral ("1200", 1200); Identifier "Hello"; Whitespace;
- Identifier "World1"; Unknown; Whitespace; IntLiteral ("14", 14); Identifier "d"]
+[IntLiteral ("1200", 1200); Identifier "Hello"; Identifier "World1"; Unknown;
+ IntLiteral ("14", 14); Identifier "d"]

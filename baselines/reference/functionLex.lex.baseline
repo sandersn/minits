@@ -1,3 +1,2 @@
-[Function; Whitespace; Identifier "f"; Whitespace; LeftParen; Identifier "x";
- RightParen; Whitespace; LeftBrace; Whitespace; Return; Whitespace;
- Identifier "x"; Whitespace; RightBrace]
+[Function; Identifier "f"; LeftParen; Identifier "x"; RightParen; LeftBrace;
+ Identifier "return"; Identifier "x"; RightBrace]
