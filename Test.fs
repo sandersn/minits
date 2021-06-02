@@ -2,9 +2,9 @@ module Minits.Test
 open Lex
 open Parse
 open Compile
-let test name value =
-    let reference = "baselines/reference/" + name + ".baseline"
-    let local = "baselines/local/" + name + ".baseline"
+let test (kind : string) (name : string) value =
+    let reference = "baselines/reference/" + name + "." + kind + ".baseline"
+    let local = "baselines/local/" + name + "." + kind + ".baseline"
     let actual = sprintf "%A" value
     let expected = if System.IO.File.Exists reference then System.IO.File.ReadAllText reference else ""
     if actual <> expected then
@@ -22,24 +22,19 @@ let lexTests = [
     "semicolonLex", "x; y"
     "newlineLex", "x\n y  \n"
 ]
-let parseTests = [
-    "basicParse", "x"
-]
 let compileTests: list<string * string> = [ ]
 let run () =
     let lexResult = 
         lexTests 
-        |> List.map (fun (name,text) -> lexAll text |> test name) 
-        |> List.sum
-    let parseResult = 
-        parseTests 
-        |> List.map (fun (name,text) -> lex text |> parse |> test name) 
+        |> List.map (fun (name,text) -> lexAll text |> test "lex" name) 
         |> List.sum
     let compileResult = 
-        // TODO: Read test from files instead
-        compileTests
-        |> List.map (fun (name, text) -> compile text |> test name)
-        |> List.sum
-    let result = lexResult + parseResult + compileResult
+        System.IO.Directory.GetFiles "tests"
+        |> Array.map (fun file -> 
+          let (tree, errors) = file |> System.IO.File.ReadAllText |> compile
+          let name = file.Substring ("tests/".Length, file.IndexOf ".ts" - "tests/".Length)
+          test "tree" name tree + test "error" name errors)
+        |> Array.sum
+    let result = lexResult + compileResult
     if result = 0 then printf "All tests passed." else printfn "%d tests failed." result
     result

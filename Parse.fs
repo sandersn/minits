@@ -2,18 +2,23 @@ module Minits.Parse
 open Types
 let parse (lexer: Lexer) = 
 // TODO: lexer needs to skip whitespace (by default)
-// TODO: All the token matches need to fail on the default case
+// TODO: Errors should have positions, maybe
+  let errors = System.Collections.Generic.List ()
   let parseSeparated parser token =
     // TODO: This is wrong
     [parser ()]
   let parseIdentifier () =
     match lexer.scan () with
     | Token.Identifier(text) -> text
-    | _ -> failwith "ho no"
+    | _ -> 
+      errors.Add "Expected: identifier"
+      "(missing)"
   let parseToken token =
     match lexer.scan () with
     | t when t = token -> t
-    | _ -> failwith "open"
+    | _ -> 
+      errors.Add <| sprintf "Expected: token %A" token
+      token
   let rec parseExpression () =
     match lexer.scan () with
     // TODO: Ints are expressions too
@@ -28,4 +33,4 @@ let parse (lexer: Lexer) =
     ExpressionStatement <| parseExpression ()
   let parseProgram () =
     parseSeparated parseStatement Newline
-  parseProgram ()
+  (parseProgram (), List.ofSeq errors)
