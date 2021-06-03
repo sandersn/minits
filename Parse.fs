@@ -42,9 +42,10 @@ let parse (lexer: Lexer) : Module * list<string> =
     | Token.Var ->
       lexer.scan ()
       let name = parseIdentifier ()
+      let typename = if parseOptional Colon then Some <| parseIdentifier () else None
       parseExpected Equals
       let init = parseExpression ()
-      Statement.Var (name, init)
+      Statement.Var (name, typename, init)
     | _ -> ExpressionStatement <| parseExpression ()
   let parseProgram () =
     let statements = parseSeparated parseStatement (fun () -> parseOptional Newline)

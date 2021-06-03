@@ -1,0 +1,2 @@
+(map [("s", Var ("s", Some "string", IntLiteral 1))],
+ [Var ("s", Some "string", IntLiteral 1)])

@@ -39,6 +39,7 @@ let lex (s : string) (includeWhitespace : bool)=
         | ')' -> pos <- pos + 1; RightParen
         | '=' -> pos <- pos + 1; Equals
         | ';' -> pos <- pos + 1; Semicolon
+        | ':' -> pos <- pos + 1; Colon
         | _ -> 
           pos <- pos + 1
           Unknown

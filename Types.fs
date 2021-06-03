@@ -14,6 +14,7 @@ type Token =
  | Identifier of text: string
  | Newline
  | Semicolon
+ | Colon
  | Whitespace
  | Unknown
  | BOF
@@ -29,7 +30,10 @@ type Expression =
  | Assignment of name: string * value: Expression
 type Statement =
  | ExpressionStatement of Expression
- | Var of name: string * init: Expression
-type Type = Type of string
+ | Var of name: string * typename: Option<string> * init: Expression
 type Table = Map<string,Statement>
 type Module = Table * list<Statement>
+type Type = Type of string
+let stringType = Type "string"
+let intType = Type "int"
+let errorType = Type "error"

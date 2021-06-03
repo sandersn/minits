@@ -1,2 +1,2 @@
-(map [("singleDeclaration", Var ("singleDeclaration", IntLiteral 1))],
- [Var ("singleDeclaration", IntLiteral 1)])
+(map [("singleDeclaration", Var ("singleDeclaration", None, IntLiteral 1))],
+ [Var ("singleDeclaration", None, IntLiteral 1)])
