@@ -1,33 +1,46 @@
 module Minits.Parse
 open Types
 let parse (lexer: Lexer) = 
-// TODO: lexer needs to skip whitespace (by default)
-// TODO: Errors should have positions, maybe
   let errors = System.Collections.Generic.List ()
-  let parseSeparated parser token =
-    // TODO: This is wrong
-    [parser ()]
+  let parseOptional token =
+    printfn "optional expected %A, found %A" token <| lexer.token ()
+    if lexer.token () = token then
+      lexer.scan ()
+      true
+    else
+      false
+  let parseToken () =
+    let t = lexer.token ()
+    printfn "%A" t
+    lexer.scan ()
+    t
+  let parseExpected token =
+    match parseToken () with
+    | t when t = token -> ()
+    | _ -> errors.Add <| sprintf "parseToken: Expected %A" token
+  let parseSeparated elt sep =
+    let rec loop acc =
+      let list = elt () :: acc
+      if sep () then loop list else List.rev list
+    loop []
   let parseIdentifier () =
-    match lexer.scan () with
+    match parseToken () with
     | Token.Identifier(text) -> text
     | _ -> 
       errors.Add "parseIdentifier: Expected"
       "(missing)"
-  let parseToken token =
-    match lexer.scan () with
-    | t when t = token -> t
-    | _ -> 
-      errors.Add <| sprintf "parseToken: Expected %A" token
-      token
   let rec parseExpression () =
-    match lexer.scan () with
-    // TODO: Ints are expressions too
+    printfn "parsing expression"
+    match parseToken () with
     | Token.Var as t ->
       let name = parseIdentifier ()
-      parseToken Equals |> ignore
+      parseExpected Equals
       let init = parseExpression ()
       Expression.Var (name, init)
-    | Token.Identifier(text) as t -> Expression.Identifier text
+    | Token.Identifier(text) as t -> 
+      if parseOptional Equals 
+      then Assignment (text, parseExpression ()) 
+      else Expression.Identifier text
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
     | t -> 
       errors.Add <| sprintf "parseExpression: expected 'var' or an identifier, got %A" t
@@ -35,5 +48,8 @@ let parse (lexer: Lexer) =
   let parseStatement () =
     ExpressionStatement <| parseExpression ()
   let parseProgram () =
-    parseSeparated parseStatement Newline
+    let statements = parseSeparated parseStatement (fun () -> parseOptional Newline)
+    parseExpected EOF
+    statements
+  lexer.scan ()
   (parseProgram (), List.ofSeq errors)

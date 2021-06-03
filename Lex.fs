@@ -10,7 +10,8 @@ let keywords = [
 ]
 let longestKeyword = keywords |> List.map fst |> List.map (fun s -> s.Length) |> List.max
 let lex (s : string) (includeWhitespace : bool)= 
-    let mutable pos =  0
+    let mutable pos = 0
+    let mutable token = BOF
     let scanKeyword () =
       let prefix = s.Substring(pos, min longestKeyword (s.Length - pos))
       keywords |> List.tryFind (fst >> prefix.StartsWith)
@@ -42,18 +43,22 @@ let lex (s : string) (includeWhitespace : bool)=
           pos <- pos + 1
           Unknown
     { scan = fun () -> 
-        if pos = s.Length then EOF else
+        if pos = s.Length then token <- EOF else
         match scanKeyword () with
-        | Some (keyword,token) -> 
+        | Some (keyword,token') -> 
           pos <- pos + keyword.Length
-          token
-        | None -> scanToken ()
+          token <- token'
+        | None -> 
+          token <- scanToken ()
+        ()
       pos = fun () -> pos
+      token = fun () -> token
     }
 let lexAll (s: string) =
   let lexer = lex s false
   let rec scanLoop acc =
-      match lexer.scan () with
+      lexer.scan ()
+      match lexer.token () with
       | EOF -> List.rev acc
       | t -> scanLoop (t :: acc)
   scanLoop []

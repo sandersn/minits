@@ -16,14 +16,17 @@ type Token =
  | Semicolon
  | Whitespace
  | Unknown
+ | BOF
  | EOF
 type Lexer = {
-    scan: unit -> Token
+    scan: unit -> unit
+    token: unit -> Token
     pos: unit -> int
 }
 type Expression = 
- | Identifier of string // MORE TO COME, OBVS
+ | Identifier of string
  | IntLiteral of int
  | Var of name: string * init: Expression
+ | Assignment of name: string * value: Expression
 type Statement = ExpressionStatement of Expression // MORE TO COME
 type Program = list<Statement>
