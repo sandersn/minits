@@ -1,6 +1,6 @@
 module Minits.Parse
 open Types
-let parse (lexer: Lexer) = 
+let parse (lexer: Lexer) : Module * list<string> = 
   let errors = System.Collections.Generic.List ()
   let parseOptional token =
     if lexer.token () = token then

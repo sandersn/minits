@@ -26,10 +26,10 @@ type Lexer = {
 type Expression = 
  | Identifier of string
  | IntLiteral of int
- | Var of name: string * init: Expression
  | Assignment of name: string * value: Expression
 type Statement =
  | ExpressionStatement of Expression
  | Var of name: string * init: Expression
+type Type = Type of string
 type Table = Map<string,Statement>
 type Module = Table * list<Statement>

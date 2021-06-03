@@ -36,5 +36,5 @@ let run () =
           test "tree" name tree + test "error" name errors)
         |> Array.sum
     let result = lexResult + compileResult
-    if result = 0 then printf "All tests passed." else printfn "%d tests failed." result
+    if result = 0 then printfn "All tests passed." else printfn "%d tests failed." result
     result
