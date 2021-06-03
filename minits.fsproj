@@ -12,6 +12,8 @@
     <Compile Include="Parse.fs" />
     <Compile Include="Bind.fs" />
     <Compile Include="Check.fs" />
+    <Compile Include="Transform.fs" />
+    <Compile Include="Emit.fs" />
     <Compile Include="Compile.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Program.fs" />

@@ -31,9 +31,9 @@ let run () =
     let compileResult = 
         System.IO.Directory.GetFiles "tests"
         |> Array.map (fun file -> 
-          let (tree, errors) = file |> System.IO.File.ReadAllText |> compile
+          let (tree, errors, emit) = file |> System.IO.File.ReadAllText |> compile
           let name = file.Substring ("tests/".Length, file.IndexOf ".ts" - "tests/".Length)
-          test "tree" name tree + test "error" name errors)
+          test "tree" name tree + test "error" name errors + test "js" name emit)
         |> Array.sum
     let result = lexResult + compileResult
     if result = 0 then printfn "All tests passed." else printfn "%d tests failed." result
