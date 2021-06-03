@@ -28,5 +28,8 @@ type Expression =
  | IntLiteral of int
  | Var of name: string * init: Expression
  | Assignment of name: string * value: Expression
-type Statement = ExpressionStatement of Expression // MORE TO COME
-type Program = list<Statement>
+type Statement =
+ | ExpressionStatement of Expression
+ | Var of name: string * init: Expression
+type Table = Map<string,Statement>
+type Module = Table * list<Statement>
