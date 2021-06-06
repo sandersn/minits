@@ -11,6 +11,7 @@ type Token =
  | RightParen
  | Equals
  | IntLiteral of text: string * value: int
+ | StringLiteral of text: string * value: string
  | Identifier of text: string
  | Newline
  | Semicolon

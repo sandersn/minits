@@ -20,6 +20,8 @@ let lexTests = [
     "functionLex", "function f (x) { return x }"
     "ifLex", "if (f(x)) y else { z }"
     "semicolonLex", "x; y"
+    "stringLex", "var s: string = \"xyz\"\n"
+    "commentLex", "x // this is a comment\nthisisnt"
     "newlineLex", "x\n y  \n"
 ]
 let compileTests: list<string * string> = [ ]

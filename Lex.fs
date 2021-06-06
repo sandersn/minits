@@ -29,6 +29,16 @@ let lex (s : string) (includeWhitespace : bool)=
           scanForward Char.IsNumber
           Token.IntLiteral(s.[start..pos - 1], int s.[start..pos - 1]) // TODO: Catch too-large exceptions and whatnot
         | c when Char.IsLetter c  -> scanIdentifier ()
+        | '"' as c ->
+          pos <- pos + 1
+          scanForward (fun c -> c <> '"')
+          pos <- pos + 1
+          Token.StringLiteral(s.[start..pos - 1], s.[start + 1..pos - 2])
+        | '/' as c ->
+          pos <- pos + 1
+          if pos < s.Length && s.[pos] = '/' 
+          then scanForward (fun c -> c <> '\n'); scanToken() 
+          else Unknown
         | '_' as c -> scanIdentifier ()
         | '{' -> pos <- pos + 1; LeftBrace
         | '}' -> pos <- pos + 1; RightBrace
