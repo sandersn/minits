@@ -1,0 +1,1 @@
+mv baselines/local/* baselines/reference/

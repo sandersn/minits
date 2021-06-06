@@ -1,20 +1,16 @@
 module Minits.Lex
 open System
 open Types
-let keywords = [
+let keywords = Map.ofList [
   "function", Function
   "var", Token.Var
   "if", If
   "else", Else
   "return", Return
 ]
-let longestKeyword = keywords |> List.map fst |> List.map (fun s -> s.Length) |> List.max
 let lex (s : string) (includeWhitespace : bool)= 
     let mutable pos = 0
     let mutable token = BOF
-    let scanKeyword () =
-      let prefix = s.Substring(pos, min longestKeyword (s.Length - pos))
-      keywords |> List.tryFind (fst >> prefix.StartsWith)
     let rec scanToken () =
         let start = pos
         let scanForward pred =
@@ -22,7 +18,8 @@ let lex (s : string) (includeWhitespace : bool)=
               pos <- pos + 1
         let scanIdentifier () = 
           scanForward (fun c -> c = '_' || Char.IsLetterOrDigit c)
-          Token.Identifier s.[start..pos - 1]
+          let id = s.[start..pos - 1]
+          defaultArg (Map.tryFind id keywords) (Token.Identifier id)
         match s.[pos] with
         | '\n' -> pos <- pos + 1; Newline
         | c when Char.IsWhiteSpace c ->
@@ -44,14 +41,7 @@ let lex (s : string) (includeWhitespace : bool)=
           pos <- pos + 1
           Unknown
     { scan = fun () -> 
-        if pos = s.Length then token <- EOF else
-        match scanKeyword () with
-        | Some (keyword,token') -> 
-          pos <- pos + keyword.Length
-          token <- token'
-        | None -> 
-          token <- scanToken ()
-        ()
+        token <- if pos = s.Length then EOF else scanToken ()
       pos = fun () -> pos
       token = fun () -> token
     }
