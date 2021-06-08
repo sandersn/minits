@@ -16,10 +16,11 @@ let parse (lexer: Lexer) : Module * list<string> =
     match parseToken () with
     | t when t = token -> ()
     | _ -> errors.Add <| sprintf "parseToken: Expected %A" token
-  let parseSeparated elt sep =
+  let parseMany elt =
     let rec loop acc =
-      let list = elt () :: acc
-      if sep () then loop list else List.rev list
+      match elt () with
+      | Some item -> loop (item :: acc)
+      | None -> List.rev acc
     loop []
   let parseIdentifier () =
     match parseToken () with
@@ -35,20 +36,26 @@ let parse (lexer: Lexer) : Module * list<string> =
       else Expression.Identifier text
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
     | t -> 
-      errors.Add <| sprintf "parseExpression: expected 'var' or an identifier, got %A" t
+      errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
       Expression.Identifier "(missing)"
+  let isStartOfExpression = function
+  | Token.Identifier _ | Token.IntLiteral _ -> true
+  | _ -> false
   let parseStatement () =
-    match lexer.token () with
-    | Token.Var ->
-      lexer.scan ()
-      let name = parseIdentifier ()
-      let typename = if parseOptional Colon then Some <| parseIdentifier () else None
-      parseExpected Equals
-      let init = parseExpression ()
-      Statement.Var (name, typename, init)
-    | _ -> ExpressionStatement <| parseExpression ()
+    let st = match lexer.token () with
+             | Token.Var ->
+               lexer.scan ()
+               let name = parseIdentifier ()
+               let typename = if parseOptional Colon then Some <| parseIdentifier () else None
+               parseExpected Equals
+               let init = parseExpression ()
+               Statement.Var (name, typename, init) |> Some
+             | t when isStartOfExpression t -> ExpressionStatement <| parseExpression () |> Some
+             | _ -> None
+    parseOptional Newline |> ignore
+    st
   let parseProgram () =
-    let statements = parseSeparated parseStatement (fun () -> parseOptional Newline)
+    let statements = parseMany parseStatement
     parseExpected EOF
     (Map.empty, statements)
   lexer.scan ()
