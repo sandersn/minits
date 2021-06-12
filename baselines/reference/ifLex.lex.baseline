@@ -1,2 +1,2 @@
-[If; LeftParen; Identifier "f"; LeftParen; Identifier "x"; RightParen;
- RightParen; Identifier "y"; Else; LeftBrace; Identifier "z"; RightBrace]
+[If; Identifier "f"; LeftParen; Identifier "x"; RightParen; Then; Identifier "y";
+ Else; LeftParen; Identifier "z"; RightParen]

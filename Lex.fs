@@ -2,13 +2,48 @@ module Minits.Lex
 open System
 open Types
 let keywords = Map.ofList [
-  "function", Function
+  "type", Token.Type
   "var", Token.Var
+  "function", Function
   "if", If
+  "then", Then
   "else", Else
-  "return", Return
+  "while", While
+  "do", Do
+  "for", For
+  "to", To
+  "in", In
+  "break", Break
+  "let", Let
+  "null", Null
 ]
-let lex (s : string) (includeWhitespace : bool)= 
+// / and /= are handled with comment handling
+let punctuation = Map.ofList [
+  '{', LeftBrace
+  '}', RightBrace
+  '(', LeftParen
+  ')', RightParen
+  '[', LeftBracket
+  ']', RightBracket
+  '<', LessThan
+  '>', GreaterThan
+  '=', Equals
+  '+', Plus
+  '-', Minus
+  '*', Asterisk
+  '&', Ampersand
+  '|', Pipe
+  ';', Semicolon
+  ':', Colon
+  ',', Comma
+  '.', Period
+]
+let digraphs = Map.ofList [
+  '<', LessThanEquals
+  '>', GreaterThanEquals
+  '=', DoubleEquals
+]
+let lex (s : string) (includeWhitespace : bool) = 
     let mutable pos = 0
     let mutable token = BOF
     let rec scanToken () =
@@ -29,6 +64,7 @@ let lex (s : string) (includeWhitespace : bool)=
           scanForward Char.IsNumber
           Token.IntLiteral(s.[start..pos - 1], int s.[start..pos - 1]) // TODO: Catch too-large exceptions and whatnot
         | c when Char.IsLetter c  -> scanIdentifier ()
+        | '_' as c -> scanIdentifier ()
         | '"' as c ->
           pos <- pos + 1
           scanForward (fun c -> c <> '"')
@@ -36,20 +72,16 @@ let lex (s : string) (includeWhitespace : bool)=
           Token.StringLiteral(s.[start..pos - 1], s.[start + 1..pos - 2])
         | '/' as c ->
           pos <- pos + 1
-          if pos < s.Length && s.[pos] = '/' 
-          then scanForward (fun c -> c <> '\n'); scanToken() 
-          else Unknown
-        | '_' as c -> scanIdentifier ()
-        | '{' -> pos <- pos + 1; LeftBrace
-        | '}' -> pos <- pos + 1; RightBrace
-        | '(' -> pos <- pos + 1; LeftParen
-        | ')' -> pos <- pos + 1; RightParen
-        | '=' -> pos <- pos + 1; Equals
-        | ';' -> pos <- pos + 1; Semicolon
-        | ':' -> pos <- pos + 1; Colon
-        | _ -> 
+          // TODO: Need to check pos < length before match and scanToken
+          match s.[pos] with
+          | '/' -> scanForward (fun c -> c <> '\n'); scanToken()
+          | '=' -> pos <- pos + 1; ForwardSlashEquals
+          | _ -> ForwardSlash
+        | c -> 
           pos <- pos + 1
-          Unknown
+          match Map.tryFind c digraphs with
+          | Some digraph when pos < s.Length && s.[pos] = '=' -> pos <- pos + 1; digraph
+          | _ -> defaultArg (Map.tryFind c punctuation) Unknown
     { scan = fun () -> 
         token <- if pos = s.Length then EOF else scanToken ()
       pos = fun () -> pos

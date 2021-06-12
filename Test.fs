@@ -1,6 +1,5 @@
 module Minits.Test
 open Lex
-open Parse
 open Compile
 let test (kind : string) (name : string) value =
     let reference = "baselines/reference/" + name + "." + kind + ".baseline"
@@ -17,12 +16,20 @@ let lexTests = [
     "firstLex", " 1200Hello    World1! 14d"
     "underscoreLex", "x_y is _aSingle Identifier_"
     "varLex", "var x = 1"
-    "functionLex", "function f (x) { return x }"
-    "ifLex", "if (f(x)) y else { z }"
+    "functionLex", "function f (x) = (x)"
+    "ifLex", "if f(x) then y else (z)"
     "semicolonLex", "x; y"
     "stringLex", "var s: string = \"xyz\"\n"
     "commentLex", "x // this is a comment\nthisisnt"
     "newlineLex", "x\n y  \n"
+    "commaLex", "x, y, z"
+    "angleBracketsLex", "A<T>"
+    "typeLex", "type x = y"
+    "dotLex", "x.y"
+    "bracketLex", "x[y]"
+    "nullLex", "evil = null"
+    "keywordLex", "type var function if then else while do for to in break let null"
+    "operatorLex", "< > <= >= = + - * / == /= & |"
 ]
 let compileTests: list<string * string> = [ ]
 let run () =

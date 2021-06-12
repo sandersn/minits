@@ -1,21 +1,46 @@
 module Minits.Types
 type Token =
- | Function
+ | Type
  | Var
+ | Function
  | If
+ | Then
  | Else
- | Return
+ | While
+ | Do
+ | For
+ | To
+ | In
+ | Break
+ | Let
+ | Null
  | LeftBrace
  | RightBrace
  | LeftParen
  | RightParen
+ | LeftBracket
+ | RightBracket
+ | LessThan
+ | LessThanEquals
+ | GreaterThan
+ | GreaterThanEquals
  | Equals
+ | DoubleEquals
+ | Plus
+ | Minus
+ | Asterisk
+ | ForwardSlash
+ | ForwardSlashEquals
+ | Ampersand
+ | Pipe
  | IntLiteral of text: string * value: int
  | StringLiteral of text: string * value: string
  | Identifier of text: string
  | Newline
  | Semicolon
  | Colon
+ | Comma
+ | Period
  | Whitespace
  | Unknown
  | BOF

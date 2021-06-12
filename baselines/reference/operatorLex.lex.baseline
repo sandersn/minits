@@ -1,0 +1,2 @@
+[LessThan; GreaterThan; LessThanEquals; GreaterThanEquals; Equals; Plus; Minus;
+ Asterisk; ForwardSlash; DoubleEquals; ForwardSlashEquals; Ampersand; Pipe]
