@@ -1,4 +1,5 @@
 module Minits.Types
+// TODO: Change token names to be less convenient to avoid clash with others
 type Token =
  | Type
  | Var
@@ -50,16 +51,21 @@ type Lexer = {
     token: unit -> Token
     pos: unit -> int
 }
+type Type =
+ | Identifier of string
+ | Literal of list<Property>
+ | Array of Type
+and Property = string * Type
 type Expression = 
  | Identifier of string
  | IntLiteral of int
  | Assignment of name: string * value: Expression
-type Statement =
+type Declaration =
  | ExpressionStatement of Expression
- | Var of name: string * typename: Option<string> * init: Expression
-type Table = Map<string,Statement>
-type Module = Table * list<Statement>
-type Type = Type of string
-let stringType = Type "string"
-let intType = Type "int"
-let errorType = Type "error"
+ | Type of name: string * t: Type
+ | Var of name: string * typename: Option<Type> * init: Expression
+type Table = Map<string,Declaration>
+type Module = Table * list<Declaration>
+let stringType = Type.Identifier "string"
+let intType = Type.Identifier "int"
+let errorType = Type.Identifier "error"

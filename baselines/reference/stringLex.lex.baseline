@@ -1,2 +1,2 @@
 [Var; Identifier "s"; Colon; Identifier "string"; Equals;
- StringLiteral (""xyz"", "xyz"); Newline]
+ StringLiteral (""xyz"", "xyz")]

@@ -28,6 +28,32 @@ let parse (lexer: Lexer) : Module * list<string> =
     | _ -> 
       errors.Add "parseIdentifier: Expected"
       "(missing)"
+  let rec parseType () =
+    match parseToken () with
+    | Token.Identifier(text) when text = "Array" -> 
+      parseExpected LessThan
+      let t = parseType ()
+      parseExpected GreaterThan
+      Array t
+    | Token.Identifier(text) -> Type.Identifier text
+    | LeftBrace -> 
+      printfn "parsed LeftBrace"
+      let literal = Literal <| parseMany parseProperty
+      parseExpected RightBrace
+      literal
+    | t ->
+      errors.Add <| sprintf "parseType: expected identifier or {, got %A" t
+      Type.Identifier "(missing)"
+  and parseProperty () =
+    printfn "expected identifier, found %A" <| lexer.token ()
+    match lexer.token () with
+    | Token.Identifier _ ->
+      let id = parseIdentifier ()
+      parseExpected Colon
+      let t = parseType ()
+      parseOptional Comma |> ignore
+      Some (id, t)
+    | _ -> None
   let rec parseExpression () =
     match parseToken () with
     | Token.Identifier(text) as t -> 
@@ -41,21 +67,27 @@ let parse (lexer: Lexer) : Module * list<string> =
   let isStartOfExpression = function
   | Token.Identifier _ | Token.IntLiteral _ -> true
   | _ -> false
-  let parseStatement () =
+  let parseDeclaration () =
     let st = match lexer.token () with
              | Token.Var ->
                lexer.scan ()
                let name = parseIdentifier ()
-               let typename = if parseOptional Colon then Some <| parseIdentifier () else None
+               let typename = if parseOptional Colon then Some <| parseType () else None
                parseExpected Equals
                let init = parseExpression ()
-               Statement.Var (name, typename, init) |> Some
+               Declaration.Var (name, typename, init) |> Some
+             | Token.Type ->
+               lexer.scan ()
+               let name = parseIdentifier ()
+               parseExpected Equals
+               let t = parseType ()
+               Declaration.Type (name, t) |> Some
              | t when isStartOfExpression t -> ExpressionStatement <| parseExpression () |> Some
              | _ -> None
-    parseOptional Newline |> ignore
+    parseOptional Semicolon |> ignore
     st
   let parseProgram () =
-    let statements = parseMany parseStatement
+    let statements = parseMany parseDeclaration
     parseExpected EOF
     (Map.empty, statements)
   lexer.scan ()

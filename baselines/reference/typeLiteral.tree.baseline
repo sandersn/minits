@@ -1,0 +1,3 @@
+(map [],
+ [Type
+    ("Position", Literal [("n", Identifier "int"); ("s", Identifier "string")])])

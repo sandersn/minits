@@ -1,1 +1,1 @@
-[Identifier "x"; Newline; Identifier "thisisnt"]
+[Identifier "x"; Identifier "thisisnt"]

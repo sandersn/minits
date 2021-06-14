@@ -43,24 +43,22 @@ let digraphs = Map.ofList [
   '>', GreaterThanEquals
   '=', DoubleEquals
 ]
-let lex (s : string) (includeWhitespace : bool) = 
+let lex (s : string) = 
     let mutable pos = 0
     let mutable token = BOF
     let rec scanToken () =
-        let start = pos
         let scanForward pred =
             while pos < s.Length && pred s.[pos] do
               pos <- pos + 1
+        scanForward Char.IsWhiteSpace
+        if pos = s.Length then EOF else
+        let start = pos
         let scanIdentifier () = 
           scanForward (fun c -> c = '_' || Char.IsLetterOrDigit c)
           let id = s.[start..pos - 1]
           defaultArg (Map.tryFind id keywords) (Token.Identifier id)
         match s.[pos] with
-        | '\n' -> pos <- pos + 1; Newline
-        | c when Char.IsWhiteSpace c ->
-          scanForward (fun c -> c <> '\n' && Char.IsWhiteSpace c)
-          if includeWhitespace then Whitespace else scanToken ()
-        | c when Char.IsNumber c-> 
+        | c when Char.IsNumber c -> 
           scanForward Char.IsNumber
           Token.IntLiteral(s.[start..pos - 1], int s.[start..pos - 1]) // TODO: Catch too-large exceptions and whatnot
         | c when Char.IsLetter c  -> scanIdentifier ()
@@ -82,13 +80,12 @@ let lex (s : string) (includeWhitespace : bool) =
           match Map.tryFind c digraphs with
           | Some digraph when pos < s.Length && s.[pos] = '=' -> pos <- pos + 1; digraph
           | _ -> defaultArg (Map.tryFind c punctuation) Unknown
-    { scan = fun () -> 
-        token <- if pos = s.Length then EOF else scanToken ()
+    { scan = fun () -> token <- scanToken ()
       pos = fun () -> pos
       token = fun () -> token
     }
 let lexAll (s: string) =
-  let lexer = lex s false
+  let lexer = lex s
   let rec scanLoop acc =
       lexer.scan ()
       match lexer.token () with

@@ -1,14 +1,16 @@
 module Minits.Emit
 open Types
+let emitType t = sprintf "%A" t
 let rec emitExpression = function
-| Identifier(name) -> name
+| Expression.Identifier(name) -> name
 | IntLiteral(value) -> string value
 | Assignment(name, value) -> sprintf "%s = %s" name (emitExpression value)
-let emitStatement = function
+let emitDeclaration = function
 | ExpressionStatement(e) -> emitExpression e
-| Var(name, typename, init) -> 
-  let typestring = match typename with
-                   | Some(name) -> ": " + name
+| Var(name, t, init) -> 
+  let typestring = match t with
+                   | Some(name) -> ": " + emitType name
                    | None -> ""
   sprintf "var %s%s = %s" name typestring (emitExpression init)
-let emit = List.map emitStatement >> String.concat "\n"
+| Type _ -> "Types do not emit yet"
+let emit = List.map emitDeclaration >> String.concat "\n"

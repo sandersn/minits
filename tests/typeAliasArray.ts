@@ -1,0 +1,1 @@
+type Ints = Array<int>
