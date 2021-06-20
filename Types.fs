@@ -62,8 +62,9 @@ type Expression =
  | Assignment of name: string * value: Expression
 type Declaration =
  | ExpressionStatement of Expression
- | Type of name: string * t: Type
- | Var of name: string * typename: Option<Type> * init: Expression
+ | Type of name: string * Type
+ | Var of name: string * t: Option<Type> * init: Expression
+ | Function of name: string * parameters: list<Property> * ret: Option<Type> * body: Expression
 type Table = Map<string,Declaration>
 type Module = Table * list<Declaration>
 let stringType = Type.Identifier "string"

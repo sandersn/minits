@@ -35,6 +35,7 @@ let check (env, statements) =
         (t, e @ e' @ error)
     | None -> (i, e)
   | Type(_, t) -> checkType t
+  | Function _ -> (errorType, ["Cannot check functions yet"])
   and checkType = function
   | Type.Identifier _ -> (stringType, []) // TODO: resolve
   | Type.Literal _ -> (intType, []) // TODO: Create from properties

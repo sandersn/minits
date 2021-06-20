@@ -80,6 +80,16 @@ let parse (lexer: Lexer) : Module * list<string> =
                parseExpected Equals
                let t = parseType ()
                Declaration.Type (name, t) |> Some
+             | Token.Function ->
+               lexer.scan ()
+               let name = parseIdentifier ()
+               parseExpected LeftParen
+               let parameters = parseMany parseProperty
+               parseExpected RightParen
+               let ret = if parseOptional Colon then Some <| parseType () else None
+               parseExpected Equals
+               let body = parseExpression ()
+               Declaration.Function (name, parameters, ret, body) |> Some
              | t when isStartOfExpression t -> ExpressionStatement <| parseExpression () |> Some
              | _ -> None
     parseOptional Semicolon |> ignore

@@ -1,0 +1,9 @@
+(map [],
+ [Function ("nullary", [], None, IntLiteral 1);
+  Function ("unary", [("n", Identifier "int")], None, Identifier "n");
+  Function
+    ("explicit", [("n", Identifier "int")], Some (Identifier "int"),
+     Identifier "n");
+  Function
+    ("binary", [("n", Identifier "int"); ("m", Identifier "int")], None,
+     Identifier "m")])

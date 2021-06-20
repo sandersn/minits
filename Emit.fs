@@ -13,4 +13,5 @@ let emitDeclaration = function
                    | None -> ""
   sprintf "var %s%s = %s" name typestring (emitExpression init)
 | Type _ -> "Types do not emit yet"
+| Function _ -> "Functions do not emit yet"
 let emit = List.map emitDeclaration >> String.concat "\n"

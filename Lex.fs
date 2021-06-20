@@ -4,7 +4,7 @@ open Types
 let keywords = Map.ofList [
   "type", Token.Type
   "var", Token.Var
-  "function", Function
+  "function", Token.Function
   "if", If
   "then", Then
   "else", Else
