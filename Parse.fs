@@ -37,7 +37,6 @@ let parse (lexer: Lexer) : Module * list<string> =
       Array t
     | Token.Identifier(text) -> Type.Identifier text
     | LeftBrace -> 
-      printfn "parsed LeftBrace"
       let literal = Literal <| parseMany parseProperty
       parseExpected RightBrace
       literal
@@ -45,7 +44,6 @@ let parse (lexer: Lexer) : Module * list<string> =
       errors.Add <| sprintf "parseType: expected identifier or {, got %A" t
       Type.Identifier "(missing)"
   and parseProperty () =
-    printfn "expected identifier, found %A" <| lexer.token ()
     match lexer.token () with
     | Token.Identifier _ ->
       let id = parseIdentifier ()

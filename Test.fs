@@ -41,7 +41,7 @@ let run () =
         System.IO.Directory.GetFiles "tests"
         |> Array.map (fun file -> 
           let (tree, errors, emit) = file |> System.IO.File.ReadAllText |> compile
-          let name = file.Substring ("tests/".Length, file.IndexOf ".ts" - "tests/".Length)
+          let name = file.Substring ("tests/".Length, file.IndexOf ".tig" - "tests/".Length)
           test "tree" name tree + test "error" name errors + test "js" name emit)
         |> Array.sum
     let result = lexResult + compileResult
