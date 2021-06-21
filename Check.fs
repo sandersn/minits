@@ -10,6 +10,7 @@ let check (env, statements) =
   let rec checkExpression = function
   | LValue(lvalue) -> checkLValue lvalue
   | IntLiteral(_) -> (intType, [])
+  | StringLiteral(_) -> (stringType, [])
   | Assignment(lvalue, value) -> 
     let (v, e) = checkExpression value
     let (n, _) = checkLValue lvalue

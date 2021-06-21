@@ -1,5 +1,5 @@
 module Minits.Types
-// TODO: Change token names to be less convenient to avoid clash with others
+// TODO: Change token nam/intes to be less convenient to avoid clash with others
 type Token =
  | Type
  | Var
@@ -63,6 +63,7 @@ type LValue =
 and Expression = 
  | LValue of LValue
  | IntLiteral of int
+ | StringLiteral of string
  | Assignment of lvalue: LValue * value: Expression
  | Sequence of list<Expression>
  | Null

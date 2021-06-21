@@ -53,7 +53,7 @@ let parse (lexer: Lexer) : Module * list<string> =
       Some (id, t)
     | _ -> None
   let isStartOfExpression = function
-  | Token.Identifier _ | Token.IntLiteral _ | Token.Null | Token.LeftParen -> true
+  | Token.Identifier _ | Token.StringLiteral _ | Token.IntLiteral _ | Token.Null | Token.LeftParen -> true
   | _ -> false
   let rec parseLValue (acc: LValue) =
     match lexer.token () with
@@ -74,6 +74,7 @@ let parse (lexer: Lexer) : Module * list<string> =
       then Assignment (lvalue, parseExpression ()) 
       else LValue lvalue
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
+    | Token.StringLiteral(_,value) -> Expression.StringLiteral value
     | LeftParen -> 
       let es = parseMany parseSemiTerminatedExpression
       parseExpected RightParen

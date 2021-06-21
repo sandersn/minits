@@ -1,0 +1,4 @@
+"var s = "hi"
+var n = 1
+s
+n"
