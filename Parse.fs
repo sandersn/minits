@@ -52,6 +52,9 @@ let parse (lexer: Lexer) : Module * list<string> =
       parseOptional Comma |> ignore
       Some (id, t)
     | _ -> None
+  let isStartOfExpression = function
+  | Token.Identifier _ | Token.IntLiteral _ | Token.Null | Token.LeftParen -> true
+  | _ -> false
   let rec parseLValue (acc: LValue) =
     match lexer.token () with
     | Period -> 
@@ -71,12 +74,19 @@ let parse (lexer: Lexer) : Module * list<string> =
       then Assignment (lvalue, parseExpression ()) 
       else LValue lvalue
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
+    | LeftParen -> 
+      let es = parseMany parseSemiTerminatedExpression
+      parseExpected RightParen
+      Sequence es
+    | Token.Null -> Expression.Null
     | t -> 
       errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
       LValue <| Identifier "(missing)"
-  let isStartOfExpression = function
-  | Token.Identifier _ | Token.IntLiteral _ -> true
-  | _ -> false
+  and parseSemiTerminatedExpression () =
+    let e = if isStartOfExpression (lexer.token()) then parseExpression () |> Some else None
+    parseOptional Semicolon |> ignore
+    e
+
   let parseDeclaration () =
     let st = match lexer.token () with
              | Token.Var ->

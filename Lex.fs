@@ -15,7 +15,7 @@ let keywords = Map.ofList [
   "in", In
   "break", Break
   "let", Let
-  "null", Null
+  "null", Token.Null
 ]
 // / and /= are handled with comment handling
 let punctuation = Map.ofList [

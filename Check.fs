@@ -18,6 +18,8 @@ let check (env, statements) =
       then []
       else [sprintf "Cannot assign value of type '%s' to variable of type '%s'" (typeToString v) (typeToString n)]
     (n, e @ error)
+  | Sequence es -> (errorType, []) // List.map checkExpression es |> List.head // TODO: Last, and concat errors
+  | Null -> (nullType, [])
   and checkLValue = function
   | Identifier(name) -> 
     match resolve name env with

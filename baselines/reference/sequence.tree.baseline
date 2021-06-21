@@ -1,0 +1,8 @@
+(map [("a", Var ("a", None, IntLiteral 1))],
+ [Var ("a", None, IntLiteral 1); ExpressionStatement (Sequence []);
+  ExpressionStatement
+    (Sequence
+       [LValue (Identifier "a"); LValue (Identifier "a");
+        LValue (Identifier "a")]);
+  ExpressionStatement
+    (Sequence [LValue (Identifier "a"); LValue (Identifier "a")])])

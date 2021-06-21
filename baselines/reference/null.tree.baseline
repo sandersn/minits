@@ -1,0 +1,3 @@
+(map [("a", Var ("a", None, Null))],
+ [Var ("a", None, Null);
+  ExpressionStatement (Sequence [IntLiteral 1; Null; Null])])

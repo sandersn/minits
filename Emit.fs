@@ -9,6 +9,8 @@ let rec emitExpression = function
 | LValue(lvalue) -> emitLValue lvalue
 | IntLiteral(value) -> string value
 | Assignment(name, value) -> sprintf "%s = %s" (emitLValue name) (emitExpression value)
+| Sequence es -> "sequences do not emit yet"
+| Null -> "null"
 let emitDeclaration = function
 | ExpressionStatement(e) -> emitExpression e
 | Var(name, t, init) -> 

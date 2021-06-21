@@ -64,6 +64,8 @@ and Expression =
  | LValue of LValue
  | IntLiteral of int
  | Assignment of lvalue: LValue * value: Expression
+ | Sequence of list<Expression>
+ | Null
 type Declaration =
  | ExpressionStatement of Expression
  | Type of name: string * Type
@@ -74,3 +76,4 @@ type Module = Table * list<Declaration>
 let stringType = Type.Identifier "string"
 let intType = Type.Identifier "int"
 let errorType = Type.Identifier "error"
+let nullType = Type.Identifier "null"
