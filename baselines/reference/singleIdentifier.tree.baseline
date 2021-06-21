@@ -1,1 +1,1 @@
-(map [], [ExpressionStatement (Identifier "x")])
+(map [], [ExpressionStatement (LValue (Identifier "x"))])

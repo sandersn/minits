@@ -1,3 +1,3 @@
 (map [("s", Var ("s", Some (Identifier "string"), IntLiteral 1))],
  [Var ("s", Some (Identifier "string"), IntLiteral 1);
-  ExpressionStatement (Assignment ("s", IntLiteral 2))])
+  ExpressionStatement (Assignment (Identifier "s", IntLiteral 2))])

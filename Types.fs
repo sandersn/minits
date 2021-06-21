@@ -56,10 +56,14 @@ type Type =
  | Literal of list<Property>
  | Array of Type
 and Property = string * Type
-type Expression = 
- | Identifier of string
+type LValue =
+| Identifier of string
+| Property of l: LValue * r: string
+| Array of l: LValue * r: Expression
+and Expression = 
+ | LValue of LValue
  | IntLiteral of int
- | Assignment of name: string * value: Expression
+ | Assignment of lvalue: LValue * value: Expression
 type Declaration =
  | ExpressionStatement of Expression
  | Type of name: string * Type

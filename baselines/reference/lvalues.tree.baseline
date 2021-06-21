@@ -1,0 +1,20 @@
+(map [],
+ [ExpressionStatement (LValue (Identifier "x"));
+  ExpressionStatement (LValue (Property (Identifier "x", "y")));
+  ExpressionStatement (LValue (Property (Property (Identifier "x", "y"), "z")));
+  ExpressionStatement (LValue (Identifier "o"));
+  ExpressionStatement (LValue (Array (Identifier "o", LValue (Identifier "x"))));
+  ExpressionStatement
+    (LValue (Array (Identifier "o", LValue (Property (Identifier "x", "y")))));
+  ExpressionStatement
+    (LValue
+       (Array
+          (Array (Identifier "o", LValue (Identifier "x")),
+           LValue (Identifier "y"))));
+  ExpressionStatement
+    (LValue
+       (Array
+          (Array (Property (Identifier "o", "x"), LValue (Identifier "y")),
+           LValue (Identifier "z"))));
+  ExpressionStatement
+    (LValue (Property (Array (Identifier "o", LValue (Identifier "x")), "y")))])

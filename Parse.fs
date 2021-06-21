@@ -22,7 +22,7 @@ let parse (lexer: Lexer) : Module * list<string> =
       | Some item -> loop (item :: acc)
       | None -> List.rev acc
     loop []
-  let parseIdentifier () =
+  let parseName () =
     match parseToken () with
     | Token.Identifier(text) -> text
     | _ -> 
@@ -34,7 +34,7 @@ let parse (lexer: Lexer) : Module * list<string> =
       parseExpected LessThan
       let t = parseType ()
       parseExpected GreaterThan
-      Array t
+      Type.Array t
     | Token.Identifier(text) -> Type.Identifier text
     | LeftBrace -> 
       let literal = Literal <| parseMany parseProperty
@@ -46,22 +46,34 @@ let parse (lexer: Lexer) : Module * list<string> =
   and parseProperty () =
     match lexer.token () with
     | Token.Identifier _ ->
-      let id = parseIdentifier ()
+      let id = parseName ()
       parseExpected Colon
       let t = parseType ()
       parseOptional Comma |> ignore
       Some (id, t)
     | _ -> None
-  let rec parseExpression () =
+  let rec parseLValue (acc: LValue) =
+    match lexer.token () with
+    | Period -> 
+      lexer.scan()
+      parseLValue <| LValue.Property(acc, parseName ())
+    | LeftBracket -> 
+      lexer.scan()
+      let acc' = LValue.Array(acc, parseExpression ())
+      parseExpected RightBracket
+      parseLValue acc' 
+    | _ -> acc
+  and parseExpression () =
     match parseToken () with
     | Token.Identifier(text) as t -> 
+      let lvalue = parseLValue (LValue.Identifier text)
       if parseOptional Equals 
-      then Assignment (text, parseExpression ()) 
-      else Expression.Identifier text
+      then Assignment (lvalue, parseExpression ()) 
+      else LValue lvalue
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
     | t -> 
       errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
-      Expression.Identifier "(missing)"
+      LValue <| Identifier "(missing)"
   let isStartOfExpression = function
   | Token.Identifier _ | Token.IntLiteral _ -> true
   | _ -> false
@@ -69,20 +81,20 @@ let parse (lexer: Lexer) : Module * list<string> =
     let st = match lexer.token () with
              | Token.Var ->
                lexer.scan ()
-               let name = parseIdentifier ()
+               let name = parseName ()
                let typename = if parseOptional Colon then Some <| parseType () else None
                parseExpected Equals
                let init = parseExpression ()
                Declaration.Var (name, typename, init) |> Some
              | Token.Type ->
                lexer.scan ()
-               let name = parseIdentifier ()
+               let name = parseName ()
                parseExpected Equals
                let t = parseType ()
                Declaration.Type (name, t) |> Some
              | Token.Function ->
                lexer.scan ()
-               let name = parseIdentifier ()
+               let name = parseName ()
                parseExpected LeftParen
                let parameters = parseMany parseProperty
                parseExpected RightParen

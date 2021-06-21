@@ -1,0 +1,3 @@
+x; x.y; x.y.z;
+o; o[x]; o[x.y]; o[x][y];
+o.x[y][z]; o[x].y
