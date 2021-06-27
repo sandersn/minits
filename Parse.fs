@@ -22,6 +22,11 @@ let parse (lexer: Lexer) : Module * list<string> =
       | Some item -> loop (item :: acc)
       | None -> List.rev acc
     loop []
+  let parseTerminated elt isStart terminal =
+    parseMany (fun () -> 
+      let d = if isStart (lexer.token ()) then elt () |> Some else None
+      parseOptional terminal |> ignore
+      d)
   let parseName () =
     match parseToken () with
     | Token.Identifier(text) -> text
@@ -55,6 +60,9 @@ let parse (lexer: Lexer) : Module * list<string> =
   let isStartOfExpression = function
   | Token.Identifier _ | Token.StringLiteral _ | Token.IntLiteral _ | Token.Null | Token.LeftParen -> true
   | _ -> false
+  let isStartOfDeclaration = function
+  | Token.Var | Token.Type | Token.Function -> true
+  | t -> isStartOfExpression t
   let rec parseLValue (acc: LValue) =
     match lexer.token () with
     | Period -> 
@@ -73,7 +81,7 @@ let parse (lexer: Lexer) : Module * list<string> =
       if parseOptional Equals then Assignment (lvalue, parseExpression ()) 
       // TODO: without a separate parseCall to do a post-parseExpression check for LParen, the callee can only be a lvalue
       elif parseOptional LeftParen then (
-        let call = Call (lvalue, parseMany parseCommaTerminatedExpression)
+        let call = Call (lvalue, parseTerminated parseExpression isStartOfExpression Comma)
         parseExpected RightParen |> ignore
         call
       )
@@ -82,53 +90,41 @@ let parse (lexer: Lexer) : Module * list<string> =
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
     | Token.StringLiteral(_,value) -> Expression.StringLiteral value
     | LeftParen -> 
-      let es = parseMany parseSemiTerminatedExpression
+      let es = parseTerminated parseExpression isStartOfExpression Semicolon
       parseExpected RightParen
       Sequence es
     | Token.Null -> Expression.Null
     | t -> 
       errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
       LValue <| Identifier "(missing)"
-  and parseSemiTerminatedExpression () =
-    let e = if isStartOfExpression (lexer.token()) then parseExpression () |> Some else None
-    parseOptional Semicolon |> ignore
-    e
-  and parseCommaTerminatedExpression () =
-    let e = if isStartOfExpression (lexer.token()) then parseExpression () |> Some else None
-    parseOptional Comma |> ignore
-    e
   let parseDeclaration () =
-  // TODO: This could be a sequence of parseOptionals except isStartOfExpression (lexer.token ())
-    let st = match lexer.token () with
-             | Token.Var ->
-               lexer.scan ()
-               let name = parseName ()
-               let typename = if parseOptional Colon then Some <| parseType () else None
-               parseExpected Equals
-               let init = parseExpression ()
-               Declaration.Var (name, typename, init) |> Some
-             | Token.Type ->
-               lexer.scan ()
-               let name = parseName ()
-               parseExpected Equals
-               let t = parseType ()
-               Declaration.Type (name, t) |> Some
-             | Token.Function ->
-               lexer.scan ()
-               let name = parseName ()
-               parseExpected LeftParen
-               let parameters = parseMany parseProperty
-               parseExpected RightParen
-               let ret = if parseOptional Colon then Some <| parseType () else None
-               parseExpected Equals
-               let body = parseExpression ()
-               Declaration.Function (name, parameters, ret, body) |> Some
-             | t when isStartOfExpression t -> ExpressionStatement <| parseExpression () |> Some
-             | _ -> None
-    parseOptional Semicolon |> ignore
-    st
+     if parseOptional Token.Var then
+       let name = parseName ()
+       let typename = if parseOptional Colon then Some <| parseType () else None
+       parseExpected Equals
+       let init = parseExpression ()
+       Declaration.Var (name, typename, init)
+     elif parseOptional Token.Type then
+       let name = parseName ()
+       parseExpected Equals
+       let t = parseType ()
+       Declaration.Type (name, t)
+     elif parseOptional Token.Function then
+       let name = parseName ()
+       parseExpected LeftParen
+       let parameters = parseMany parseProperty
+       parseExpected RightParen
+       let ret = if parseOptional Colon then Some <| parseType () else None
+       parseExpected Equals
+       let body = parseExpression ()
+       Declaration.Function (name, parameters, ret, body)
+     elif isStartOfExpression (lexer.token ()) then 
+       parseExpression () |> ExpressionStatement
+     else
+       errors.Add <| sprintf "parseDeclaration: expected 'var' or 'type' or 'function', got %A" (parseToken ())
+       Identifier "missing" |> LValue |> ExpressionStatement
   let parseProgram () =
-    let statements = parseMany parseDeclaration
+    let statements = parseTerminated parseDeclaration isStartOfDeclaration Semicolon
     parseExpected EOF
     (Map.empty, statements)
   lexer.scan ()

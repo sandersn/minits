@@ -1,0 +1,2 @@
+(map [("n", Var ("n", None, Negative (IntLiteral 1)))],
+ [Var ("n", None, Negative (IntLiteral 1))])
