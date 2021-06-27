@@ -70,8 +70,13 @@ let parse (lexer: Lexer) : Module * list<string> =
     match parseToken () with
     | Token.Identifier(text) as t -> 
       let lvalue = parseLValue (LValue.Identifier text)
-      if parseOptional Equals 
-      then Assignment (lvalue, parseExpression ()) 
+      if parseOptional Equals then Assignment (lvalue, parseExpression ()) 
+      // TODO: without a separate parseCall to do a post-parseExpression check for LParen, the callee can only be a lvalue
+      elif parseOptional LeftParen then (
+        let call = Call (lvalue, parseMany parseCommaTerminatedExpression)
+        parseExpected RightParen |> ignore
+        call
+      )
       else LValue lvalue
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
     | Token.StringLiteral(_,value) -> Expression.StringLiteral value
@@ -87,8 +92,12 @@ let parse (lexer: Lexer) : Module * list<string> =
     let e = if isStartOfExpression (lexer.token()) then parseExpression () |> Some else None
     parseOptional Semicolon |> ignore
     e
-
+  and parseCommaTerminatedExpression () =
+    let e = if isStartOfExpression (lexer.token()) then parseExpression () |> Some else None
+    parseOptional Comma |> ignore
+    e
   let parseDeclaration () =
+  // TODO: This could be a sequence of parseOptionals except isStartOfExpression (lexer.token ())
     let st = match lexer.token () with
              | Token.Var ->
                lexer.scan ()

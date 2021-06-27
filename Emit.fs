@@ -10,6 +10,7 @@ let rec emitExpression = function
 | IntLiteral(value) -> string value
 | StringLiteral(value) -> sprintf "%A" value
 | Assignment(name, value) -> sprintf "%s = %s" (emitLValue name) (emitExpression value)
+| Call(name, parameters) -> "calls do not emit yet"
 | Sequence es -> "sequences do not emit yet"
 | Null -> "null"
 let emitDeclaration = function

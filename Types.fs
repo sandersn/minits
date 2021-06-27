@@ -66,6 +66,7 @@ and Expression =
  | StringLiteral of string
  | Assignment of lvalue: LValue * value: Expression
  | Sequence of list<Expression>
+ | Call of name: LValue * parameters: list<Expression>
  | Null
 type Declaration =
  | ExpressionStatement of Expression
