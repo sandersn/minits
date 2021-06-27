@@ -9,6 +9,7 @@ let rec emitExpression = function
 | LValue(lvalue) -> emitLValue lvalue
 | IntLiteral(value) -> string value
 | StringLiteral(value) -> sprintf "%A" value
+| Negative(e) -> "-" + emitExpression e
 | Assignment(name, value) -> sprintf "%s = %s" (emitLValue name) (emitExpression value)
 | Call(name, parameters) -> "calls do not emit yet"
 | Sequence es -> "sequences do not emit yet"

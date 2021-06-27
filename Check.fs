@@ -11,6 +11,7 @@ let check (env, statements) =
   | LValue(lvalue) -> checkLValue lvalue
   | IntLiteral(_) -> (intType, [])
   | StringLiteral(_) -> (stringType, [])
+  | Negative(e) -> (errorType, ["Negatives don't check yet"])
   | Assignment(lvalue, value) -> 
     let (v, e) = checkExpression value
     let (n, _) = checkLValue lvalue

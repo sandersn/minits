@@ -78,6 +78,7 @@ let parse (lexer: Lexer) : Module * list<string> =
         call
       )
       else LValue lvalue
+    | Token.Minus -> Expression.Negative (parseExpression ())
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
     | Token.StringLiteral(_,value) -> Expression.StringLiteral value
     | LeftParen -> 

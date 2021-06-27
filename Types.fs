@@ -64,6 +64,7 @@ and Expression =
  | LValue of LValue
  | IntLiteral of int
  | StringLiteral of string
+ | Negative of Expression
  | Assignment of lvalue: LValue * value: Expression
  | Sequence of list<Expression>
  | Call of name: LValue * parameters: list<Expression>
