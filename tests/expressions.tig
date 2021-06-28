@@ -1,1 +1,10 @@
-var n = -1
+var negative = -1
+var mult = 1 * 2
+var div = 1 / 2
+var muldiv = 1 * 2 / 3
+var muldiv2 = 1 / 2 * 3
+// var add = 1 + 2
+// var sub = 1 - 2
+// var addsub = 1 + 2 - 3
+// var muladd = 1 * 2 + 3
+// var addmul = 1 + 2 * 3

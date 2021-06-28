@@ -7,7 +7,8 @@
   Function
     ("binary", [("n", Identifier "int"); ("m", Identifier "int")], None,
      LValue (Identifier "m"));
-  ExpressionStatement (Call (Identifier "nullary", []));
-  ExpressionStatement (Call (Identifier "unary", [IntLiteral 1]));
-  ExpressionStatement (Call (Identifier "explicit", [IntLiteral 2]));
-  ExpressionStatement (Call (Identifier "binary", [IntLiteral 1; IntLiteral 2]))])
+  ExpressionStatement (Call (LValue (Identifier "nullary"), []));
+  ExpressionStatement (Call (LValue (Identifier "unary"), [IntLiteral 1]));
+  ExpressionStatement (Call (LValue (Identifier "explicit"), [IntLiteral 2]));
+  ExpressionStatement
+    (Call (LValue (Identifier "binary"), [IntLiteral 1; IntLiteral 2]))])

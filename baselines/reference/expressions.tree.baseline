@@ -1,2 +1,29 @@
-(map [("n", Var ("n", None, Negative (IntLiteral 1)))],
- [Var ("n", None, Negative (IntLiteral 1))])
+(map
+   [("div", Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2)));
+    ("muldiv",
+     Var
+       ("muldiv", None,
+        Binary
+          (IntLiteral 1, Asterisk,
+           Binary (IntLiteral 2, ForwardSlash, IntLiteral 3))));
+    ("muldiv2",
+     Var
+       ("muldiv2", None,
+        Binary
+          (IntLiteral 1, ForwardSlash,
+           Binary (IntLiteral 2, Asterisk, IntLiteral 3))));
+    ("mult", Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2)));
+    ("negative", Var ("negative", None, Negative (IntLiteral 1)))],
+ [Var ("negative", None, Negative (IntLiteral 1));
+  Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2));
+  Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2));
+  Var
+    ("muldiv", None,
+     Binary
+       (IntLiteral 1, Asterisk,
+        Binary (IntLiteral 2, ForwardSlash, IntLiteral 3)));
+  Var
+    ("muldiv2", None,
+     Binary
+       (IntLiteral 1, ForwardSlash,
+        Binary (IntLiteral 2, Asterisk, IntLiteral 3)))])

@@ -16,15 +16,15 @@ let parse (lexer: Lexer) : Module * list<string> =
     match parseToken () with
     | t when t = token -> ()
     | _ -> errors.Add <| sprintf "parseToken: Expected %A" token
-  let parseMany elt =
+  let parseMany element =
     let rec loop acc =
-      match elt () with
+      match element () with
       | Some item -> loop (item :: acc)
       | None -> List.rev acc
     loop []
-  let parseTerminated elt isStart terminal =
+  let parseTerminated element isStart terminal =
     parseMany (fun () -> 
-      let d = if isStart (lexer.token ()) then elt () |> Some else None
+      let d = if isStart (lexer.token ()) then element () |> Some else None
       parseOptional terminal |> ignore
       d)
   let parseName () =
@@ -63,30 +63,34 @@ let parse (lexer: Lexer) : Module * list<string> =
   let isStartOfDeclaration = function
   | Token.Var | Token.Type | Token.Function -> true
   | t -> isStartOfExpression t
-  let rec parseLValue (acc: LValue) =
-    match lexer.token () with
-    | Period -> 
-      lexer.scan()
-      parseLValue <| LValue.Property(acc, parseName ())
-    | LeftBracket -> 
-      lexer.scan()
-      let acc' = LValue.Array(acc, parseExpression ())
-      parseExpected RightBracket
-      parseLValue acc' 
-    | _ -> acc
-  and parseExpression () =
+  // parseExpression -> parseAssignment -> parseBoolean -> parseLogicalComparison -> parsePlusMinus
+  let rec parseExpression () =
+    parseTimesDivide ()
+  and parseTimesDivide () = 
+  // TODO: Normal recursion produces a right-associative parse (right-deep);
+  // use a linear recursion like in parseLValue; parseExpression can probably reach through
+  // to parseNegative and pass the result to parseTimesDivide (eventually, the top-most associative
+  // construct)
+    let e = parseNegative ()
+    if parseOptional Token.Asterisk then Binary (e, Asterisk, parseExpression ())
+    elif parseOptional Token.ForwardSlash then Binary (e, ForwardSlash, parseExpression ())
+    else e
+  and parseNegative () =
+    if parseOptional Minus then Negative (parseCall ()) else parseCall ()
+  and parseCall () =
+    let e = parseSingleExpression ()
+    if parseOptional LeftParen then
+      let call = Call (e, parseTerminated parseExpression isStartOfExpression Comma)
+      parseExpected RightParen |> ignore
+      call
+    else e
+  and parseSingleExpression () =
     match parseToken () with
     | Token.Identifier(text) as t -> 
       let lvalue = parseLValue (LValue.Identifier text)
+      // TODO: Move assignment parsing outside
       if parseOptional Equals then Assignment (lvalue, parseExpression ()) 
-      // TODO: without a separate parseCall to do a post-parseExpression check for LParen, the callee can only be a lvalue
-      elif parseOptional LeftParen then (
-        let call = Call (lvalue, parseTerminated parseExpression isStartOfExpression Comma)
-        parseExpected RightParen |> ignore
-        call
-      )
       else LValue lvalue
-    | Token.Minus -> Expression.Negative (parseExpression ())
     | Token.IntLiteral(_,value) -> Expression.IntLiteral value
     | Token.StringLiteral(_,value) -> Expression.StringLiteral value
     | LeftParen -> 
@@ -97,6 +101,14 @@ let parse (lexer: Lexer) : Module * list<string> =
     | t -> 
       errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
       LValue <| Identifier "(missing)"
+  and parseLValue (acc: LValue) =
+    if parseOptional Period then 
+      LValue.Property(acc, parseName ()) |> parseLValue
+    elif parseOptional LeftBracket then 
+      let acc' = LValue.Array(acc, parseExpression ())
+      parseExpected RightBracket
+      parseLValue acc'
+    else acc
   let parseDeclaration () =
      if parseOptional Token.Var then
        let name = parseName ()

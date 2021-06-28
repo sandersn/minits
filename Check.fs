@@ -12,6 +12,7 @@ let check (env, statements) =
   | IntLiteral(_) -> (intType, [])
   | StringLiteral(_) -> (stringType, [])
   | Negative(e) -> (errorType, ["Negatives don't check yet"])
+  | Binary(l,op,r) -> (errorType, ["Binary expressions don't check yet"])
   | Assignment(lvalue, value) -> 
     let (v, e) = checkExpression value
     let (n, _) = checkLValue lvalue
@@ -20,7 +21,7 @@ let check (env, statements) =
       then []
       else [sprintf "Cannot assign value of type '%s' to variable of type '%s'" (typeToString v) (typeToString n)]
     (n, e @ error)
-  | Call(lvalue, parameters) -> (errorType, ["Cannot check calls yet"])
+  | Call(e, parameters) -> (errorType, ["Cannot check calls yet"])
   | Sequence es -> (errorType, []) // List.map checkExpression es |> List.head // TODO: Last, and concat errors
   | Null -> (nullType, [])
   and checkLValue = function

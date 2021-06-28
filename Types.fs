@@ -64,10 +64,11 @@ and Expression =
  | LValue of LValue
  | IntLiteral of int
  | StringLiteral of string
- | Negative of Expression
- | Assignment of lvalue: LValue * value: Expression
+ | Negative of Expression // TODO: Maybe Unary?
+ | Binary of l: Expression * op: Token * r: Expression
+ | Assignment of lvalue: LValue * value: Expression // TODO: Maybe fold into binary?
  | Sequence of list<Expression>
- | Call of name: LValue * parameters: list<Expression>
+ | Call of Expression * parameters: list<Expression>
  | Null
 type Declaration =
  | ExpressionStatement of Expression
