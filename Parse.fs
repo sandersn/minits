@@ -7,6 +7,10 @@ let parse (lexer: Lexer) : Module * list<string> =
     if t = expected then
       lexer.scan ()
     t = expected
+  let parseSome expecteds = 
+    match List.tryFind ((=) (lexer.token ())) expecteds with
+    | Some t -> lexer.scan(); Some t
+    | None -> None
   let parseToken () =
     let t = lexer.token ()
     lexer.scan ()
@@ -65,22 +69,36 @@ let parse (lexer: Lexer) : Module * list<string> =
   let isStartOfDeclaration = function
   | Token.Var | Token.Type | Token.Function -> true
   | t -> isStartOfExpression t
-  // parseExpression -> parseAssignment -> parseBoolean -> parseLogicalComparison
   let rec parseExpression () =
-    parsePlusMinus (parseTimesDivide (parseNegative ()))
+    let l = parseOr (parseAnd (parseLogicalComparison (parsePlusMinus (parseTimesDivide (parseNegative ())))))
+    if parseOptional Equals then 
+      let r = parseExpression ()
+      match l with
+      | LValue l' -> Assignment (l', r)
+      | _ -> 
+        errors.Add "Expected identifier, property access or array access on lhs of assignment"
+        Binary (l, Equals, r)
+    else l
+  and parseOr acc = 
+    if parseOptional Pipe
+    then parseOr (Binary (acc, Pipe, parseAnd (parseLogicalComparison (parsePlusMinus (parseTimesDivide (parseNegative ()))))))
+    else acc
+  and parseAnd acc =
+    if parseOptional Ampersand
+    then parseAnd (Binary (acc, Ampersand, parseLogicalComparison (parsePlusMinus (parseTimesDivide (parseNegative ())))))
+    else acc
+  and parseLogicalComparison acc = 
+    match parseSome [LessThan; GreaterThan; LessThanEquals; GreaterThanEquals; DoubleEquals; ForwardSlashEquals] with
+    | Some t -> parseLogicalComparison (Binary (acc, t, parsePlusMinus (parseTimesDivide (parseNegative ()))))
+    | None -> acc
   and parsePlusMinus acc = 
-  (*
-    Some.default (parseOne [Plus, Minus]) (fun t -> let n = parseNegative(); par...) acc
-  *)
-    if parseOptional Plus then 
-      parsePlusMinus (Binary (acc, Plus, parseTimesDivide (parseNegative ())))
-    elif parseOptional Minus then 
-      parsePlusMinus (Binary (acc, Minus, parseTimesDivide (parseNegative ())))
-    else acc
+    match parseSome [Plus; Minus] with
+    | Some t -> parsePlusMinus (Binary (acc, t, parseTimesDivide (parseNegative ())))
+    | None -> acc
   and parseTimesDivide acc = 
-    if parseOptional Asterisk then parseTimesDivide (Binary (acc, Asterisk, parseNegative ()))
-    elif parseOptional ForwardSlash then parseTimesDivide (Binary (acc, ForwardSlash, parseNegative ()))
-    else acc
+    match parseSome [Asterisk; ForwardSlash] with
+    | Some t -> parseTimesDivide (Binary (acc, t, parseNegative ()))
+    | None -> acc
   and parseNegative () =
     if parseOptional Minus then Negative (parseCall ()) else parseCall ()
   and parseCall () =
@@ -92,13 +110,9 @@ let parse (lexer: Lexer) : Module * list<string> =
     else e
   and parseSingleExpression () =
     match parseToken () with
-    | Token.Identifier(text) as t -> 
-      let lvalue = parseLValue (LValue.Identifier text)
-      // TODO: Move assignment parsing outside
-      if parseOptional Equals then Assignment (lvalue, parseExpression ()) 
-      else LValue lvalue
-    | Token.IntLiteral(_,value) -> Expression.IntLiteral value
-    | Token.StringLiteral(_,value) -> Expression.StringLiteral value
+    | Token.Identifier(text) as t -> parseLValue (Identifier text) |> LValue
+    | Token.IntLiteral(_,value) -> IntLiteral value
+    | Token.StringLiteral(_,value) -> StringLiteral value
     | LeftParen -> 
       let es = parseTerminated parseExpression isStartOfExpression Semicolon
       parseExpected RightParen
@@ -109,9 +123,9 @@ let parse (lexer: Lexer) : Module * list<string> =
       LValue <| Identifier "(missing)"
   and parseLValue (acc: LValue) =
     if parseOptional Period then 
-      LValue.Property(acc, parseName ()) |> parseLValue
+      Property(acc, parseName ()) |> parseLValue
     elif parseOptional LeftBracket then 
-      let acc' = LValue.Array(acc, parseExpression ())
+      let acc' = Array(acc, parseExpression ())
       parseExpected RightBracket
       parseLValue acc'
     else acc

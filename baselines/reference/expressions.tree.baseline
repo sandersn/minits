@@ -23,6 +23,13 @@
        ("addsub", None,
         Binary (Binary (IntLiteral 1, Plus, IntLiteral 2), Minus, IntLiteral 3)));
     ("div", Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2)));
+    ("ltaddmul",
+     Var
+       ("ltaddmul", None,
+        Binary
+          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), LessThan,
+           Binary
+             (IntLiteral 3, Plus, Binary (IntLiteral 4, Asterisk, IntLiteral 5)))));
     ("muladd",
      Var
        ("muladd", None,
@@ -40,12 +47,6 @@
        ("muldiv", None,
         Binary
           (Binary (IntLiteral 1, Asterisk, IntLiteral 2), ForwardSlash,
-           IntLiteral 3)));
-    ("muldiv2",
-     Var
-       ("muldiv2", None,
-        Binary
-          (Binary (IntLiteral 1, ForwardSlash, IntLiteral 2), Asterisk,
            IntLiteral 3))); ...],
  [Var ("negative", None, Negative (IntLiteral 1));
   Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2));
@@ -87,4 +88,26 @@
           (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3),
         Plus,
         Binary
-          (Binary (IntLiteral 4, Asterisk, IntLiteral 5), Asterisk, IntLiteral 6)))])
+          (Binary (IntLiteral 4, Asterisk, IntLiteral 5), Asterisk, IntLiteral 6)));
+  Var
+    ("ltaddmul", None,
+     Binary
+       (Binary (IntLiteral 1, Asterisk, IntLiteral 2), LessThan,
+        Binary
+          (IntLiteral 3, Plus, Binary (IntLiteral 4, Asterisk, IntLiteral 5))));
+  ExpressionStatement
+    (Assignment
+       (Identifier "ltaddmul",
+        Assignment
+          (Identifier "addmul34",
+           Binary
+             (Binary
+                (LValue (Identifier "addsub"), ForwardSlashEquals, IntLiteral 1),
+              Pipe,
+              Binary
+                (Binary
+                   (LValue (Identifier "sub"), LessThanEquals, IntLiteral 12),
+                 Ampersand,
+                 Binary
+                   (LValue (Identifier "muldiv"), DoubleEquals,
+                    LValue (Identifier "muldiv2")))))))])

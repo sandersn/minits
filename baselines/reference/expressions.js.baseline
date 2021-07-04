@@ -9,4 +9,6 @@ var addsub = binary expressions do not emit yet
 var muladd = binary expressions do not emit yet
 var muladd2 = binary expressions do not emit yet
 var addmul2 = binary expressions do not emit yet
-var addmul34 = binary expressions do not emit yet"
+var addmul34 = binary expressions do not emit yet
+var ltaddmul = binary expressions do not emit yet
+ltaddmul = addmul34 = binary expressions do not emit yet"

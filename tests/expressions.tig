@@ -10,3 +10,5 @@ var muladd = 1 * 2 + 3
 var muladd2 = 1 * 2 * 3 + 4
 var addmul2 = 1 + 2 * 3 * 4
 var addmul34 = 1 * 2 + 3 + 4 * 5 * 6
+var ltaddmul = 1 * 2 < 3 + 4 * 5
+ltaddmul = addmul34 = addsub /= 1 | sub <= 12 & muldiv == muldiv2
