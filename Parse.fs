@@ -70,7 +70,7 @@ let parse (lexer: Lexer) : Module * list<string> =
   | Token.Var | Token.Type | Token.Function -> true
   | t -> isStartOfExpression t
   let rec parseExpression () =
-    let l = parseOr (parseAnd (parseLogicalComparison (parsePlusMinus (parseTimesDivide (parseNegative ())))))
+    let l = parseOr ()
     if parseOptional Equals then 
       let r = parseExpression ()
       match l with
@@ -79,28 +79,22 @@ let parse (lexer: Lexer) : Module * list<string> =
         errors.Add "Expected identifier, property access or array access on lhs of assignment"
         Binary (l, Equals, r)
     else l
-  and parseOr acc = 
-    if parseOptional Pipe
-    then parseOr (Binary (acc, Pipe, parseAnd (parseLogicalComparison (parsePlusMinus (parseTimesDivide (parseNegative ()))))))
-    else acc
-  and parseAnd acc =
-    if parseOptional Ampersand
-    then parseAnd (Binary (acc, Ampersand, parseLogicalComparison (parsePlusMinus (parseTimesDivide (parseNegative ())))))
-    else acc
-  and parseLogicalComparison acc = 
+  and parseOr () = parseBinary [Pipe] parseAnd
+  and parseAnd () = parseBinary [Ampersand] parseLogicalComparison
+  and parseLogicalComparison () = parseLogicalComparison' (parsePlusMinus ())
+  and parseLogicalComparison' acc = 
     match parseSome [LessThan; GreaterThan; LessThanEquals; GreaterThanEquals; DoubleEquals; ForwardSlashEquals] with
-    | Some t -> Binary (acc, t, parsePlusMinus (parseTimesDivide (parseNegative ())))
+    | Some t -> Binary (acc, t, parsePlusMinus ())
     | None -> acc
-  and parsePlusMinus acc = 
-    match parseSome [Plus; Minus] with
-    | Some t -> parsePlusMinus (Binary (acc, t, parseTimesDivide (parseNegative ())))
-    | None -> acc
-  and parseTimesDivide acc = 
-    match parseSome [Asterisk; ForwardSlash] with
-    | Some t -> parseTimesDivide (Binary (acc, t, parseNegative ()))
-    | None -> acc
+  and parsePlusMinus () = parseBinary [Plus; Minus] parseTimesDivide
+  and parseTimesDivide () = parseBinary  [Asterisk; ForwardSlash] parseNegative
   and parseNegative () =
     if parseOptional Minus then Negative (parseCall ()) else parseCall ()
+  and parseBinary ops seed = parseBinary' ops seed (seed ())
+  and parseBinary' ops seed acc =
+    match parseSome ops with
+    | Some t -> parseBinary' ops seed (Binary (acc, t, seed ()))
+    | None -> acc
   and parseCall () =
     let e = parseSingleExpression ()
     if parseOptional LeftParen then
