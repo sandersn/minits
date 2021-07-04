@@ -2,20 +2,19 @@ module Minits.Parse
 open Types
 let parse (lexer: Lexer) : Module * list<string> = 
   let errors = System.Collections.Generic.List ()
-  let parseOptional token =
-    if lexer.token () = token then
+  let parseOptional expected =
+    let t = lexer.token ()
+    if t = expected then
       lexer.scan ()
-      true
-    else
-      false
+    t = expected
   let parseToken () =
     let t = lexer.token ()
     lexer.scan ()
     t
-  let parseExpected token =
-    match parseToken () with
-    | t when t = token -> ()
-    | _ -> errors.Add <| sprintf "parseToken: Expected %A" token
+  let parseExpected expected =
+    if parseOptional expected 
+    then ()
+    else errors.Add <| sprintf "parseToken: Expected %A but got %A" expected (lexer.token())
   let parseMany element =
     let rec loop acc =
       match element () with
@@ -34,6 +33,9 @@ let parse (lexer: Lexer) : Module * list<string> =
       errors.Add "parseIdentifier: Expected"
       "(missing)"
   let rec parseType () =
+    (*
+      Some.default (parseOne [Identifier, LeftBrace] (function | Identifier -> ...)) (Type.Identifier "(missing)")
+    *)
     match parseToken () with
     | Token.Identifier(text) when text = "Array" -> 
       parseExpected LessThan
@@ -63,18 +65,22 @@ let parse (lexer: Lexer) : Module * list<string> =
   let isStartOfDeclaration = function
   | Token.Var | Token.Type | Token.Function -> true
   | t -> isStartOfExpression t
-  // parseExpression -> parseAssignment -> parseBoolean -> parseLogicalComparison -> parsePlusMinus
+  // parseExpression -> parseAssignment -> parseBoolean -> parseLogicalComparison
   let rec parseExpression () =
-    parseTimesDivide ()
-  and parseTimesDivide () = 
-  // TODO: Normal recursion produces a right-associative parse (right-deep);
-  // use a linear recursion like in parseLValue; parseExpression can probably reach through
-  // to parseNegative and pass the result to parseTimesDivide (eventually, the top-most associative
-  // construct)
-    let e = parseNegative ()
-    if parseOptional Token.Asterisk then Binary (e, Asterisk, parseExpression ())
-    elif parseOptional Token.ForwardSlash then Binary (e, ForwardSlash, parseExpression ())
-    else e
+    parsePlusMinus (parseTimesDivide (parseNegative ()))
+  and parsePlusMinus acc = 
+  (*
+    Some.default (parseOne [Plus, Minus]) (fun t -> let n = parseNegative(); par...) acc
+  *)
+    if parseOptional Plus then 
+      parsePlusMinus (Binary (acc, Plus, parseTimesDivide (parseNegative ())))
+    elif parseOptional Minus then 
+      parsePlusMinus (Binary (acc, Minus, parseTimesDivide (parseNegative ())))
+    else acc
+  and parseTimesDivide acc = 
+    if parseOptional Asterisk then parseTimesDivide (Binary (acc, Asterisk, parseNegative ()))
+    elif parseOptional ForwardSlash then parseTimesDivide (Binary (acc, ForwardSlash, parseNegative ()))
+    else acc
   and parseNegative () =
     if parseOptional Minus then Negative (parseCall ()) else parseCall ()
   and parseCall () =

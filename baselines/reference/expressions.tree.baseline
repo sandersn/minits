@@ -1,29 +1,90 @@
 (map
-   [("div", Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2)));
+   [("add", Var ("add", None, Binary (IntLiteral 1, Plus, IntLiteral 2)));
+    ("addmul2",
+     Var
+       ("addmul2", None,
+        Binary
+          (IntLiteral 1, Plus,
+           Binary
+             (Binary (IntLiteral 2, Asterisk, IntLiteral 3), Asterisk,
+              IntLiteral 4))));
+    ("addmul34",
+     Var
+       ("addmul34", None,
+        Binary
+          (Binary
+             (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3),
+           Plus,
+           Binary
+             (Binary (IntLiteral 4, Asterisk, IntLiteral 5), Asterisk,
+              IntLiteral 6))));
+    ("addsub",
+     Var
+       ("addsub", None,
+        Binary (Binary (IntLiteral 1, Plus, IntLiteral 2), Minus, IntLiteral 3)));
+    ("div", Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2)));
+    ("muladd",
+     Var
+       ("muladd", None,
+        Binary
+          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3)));
+    ("muladd2",
+     Var
+       ("muladd2", None,
+        Binary
+          (Binary
+             (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Asterisk,
+              IntLiteral 3), Plus, IntLiteral 4)));
     ("muldiv",
      Var
        ("muldiv", None,
         Binary
-          (IntLiteral 1, Asterisk,
-           Binary (IntLiteral 2, ForwardSlash, IntLiteral 3))));
+          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), ForwardSlash,
+           IntLiteral 3)));
     ("muldiv2",
      Var
        ("muldiv2", None,
         Binary
-          (IntLiteral 1, ForwardSlash,
-           Binary (IntLiteral 2, Asterisk, IntLiteral 3))));
-    ("mult", Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2)));
-    ("negative", Var ("negative", None, Negative (IntLiteral 1)))],
+          (Binary (IntLiteral 1, ForwardSlash, IntLiteral 2), Asterisk,
+           IntLiteral 3))); ...],
  [Var ("negative", None, Negative (IntLiteral 1));
   Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2));
   Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2));
   Var
     ("muldiv", None,
      Binary
-       (IntLiteral 1, Asterisk,
-        Binary (IntLiteral 2, ForwardSlash, IntLiteral 3)));
+       (Binary (IntLiteral 1, Asterisk, IntLiteral 2), ForwardSlash,
+        IntLiteral 3));
   Var
     ("muldiv2", None,
      Binary
-       (IntLiteral 1, ForwardSlash,
-        Binary (IntLiteral 2, Asterisk, IntLiteral 3)))])
+       (Binary (IntLiteral 1, ForwardSlash, IntLiteral 2), Asterisk,
+        IntLiteral 3));
+  Var ("add", None, Binary (IntLiteral 1, Plus, IntLiteral 2));
+  Var ("sub", None, Binary (IntLiteral 1, Minus, IntLiteral 2));
+  Var
+    ("addsub", None,
+     Binary (Binary (IntLiteral 1, Plus, IntLiteral 2), Minus, IntLiteral 3));
+  Var
+    ("muladd", None,
+     Binary (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3));
+  Var
+    ("muladd2", None,
+     Binary
+       (Binary
+          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Asterisk, IntLiteral 3),
+        Plus, IntLiteral 4));
+  Var
+    ("addmul2", None,
+     Binary
+       (IntLiteral 1, Plus,
+        Binary
+          (Binary (IntLiteral 2, Asterisk, IntLiteral 3), Asterisk, IntLiteral 4)));
+  Var
+    ("addmul34", None,
+     Binary
+       (Binary
+          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3),
+        Plus,
+        Binary
+          (Binary (IntLiteral 4, Asterisk, IntLiteral 5), Asterisk, IntLiteral 6)))])

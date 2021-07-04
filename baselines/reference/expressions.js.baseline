@@ -2,4 +2,11 @@
 var mult = binary expressions do not emit yet
 var div = binary expressions do not emit yet
 var muldiv = binary expressions do not emit yet
-var muldiv2 = binary expressions do not emit yet"
+var muldiv2 = binary expressions do not emit yet
+var add = binary expressions do not emit yet
+var sub = binary expressions do not emit yet
+var addsub = binary expressions do not emit yet
+var muladd = binary expressions do not emit yet
+var muladd2 = binary expressions do not emit yet
+var addmul2 = binary expressions do not emit yet
+var addmul34 = binary expressions do not emit yet"

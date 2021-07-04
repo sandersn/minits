@@ -34,7 +34,7 @@ type Token =
  | ForwardSlashEquals
  | Ampersand
  | Pipe
- | IntLiteral of text: string * value: int
+ | IntLiteral of text: string * value: int // TODO: This was a bad idea
  | StringLiteral of text: string * value: string
  | Identifier of text: string
  | Newline
