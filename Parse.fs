@@ -89,7 +89,7 @@ let parse (lexer: Lexer) : Module * list<string> =
     else acc
   and parseLogicalComparison acc = 
     match parseSome [LessThan; GreaterThan; LessThanEquals; GreaterThanEquals; DoubleEquals; ForwardSlashEquals] with
-    | Some t -> parseLogicalComparison (Binary (acc, t, parsePlusMinus (parseTimesDivide (parseNegative ()))))
+    | Some t -> Binary (acc, t, parsePlusMinus (parseTimesDivide (parseNegative ())))
     | None -> acc
   and parsePlusMinus acc = 
     match parseSome [Plus; Minus] with
@@ -116,7 +116,7 @@ let parse (lexer: Lexer) : Module * list<string> =
     | LeftParen -> 
       let es = parseTerminated parseExpression isStartOfExpression Semicolon
       parseExpected RightParen
-      Sequence es
+      if List.length es = 1 then List.head es else Sequence es
     | Token.Null -> Expression.Null
     | t -> 
       errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
