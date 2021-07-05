@@ -11,4 +11,8 @@ var muladd2 = binary expressions do not emit yet
 var addmul2 = binary expressions do not emit yet
 var addmul34 = binary expressions do not emit yet
 var ltaddmul = binary expressions do not emit yet
-ltaddmul = addmul34 = binary expressions do not emit yet"
+ltaddmul = addmul34 = binary expressions do not emit yet
+Types do not emit yet
+var record = records don't emit yet
+var a = arrays don't emit yet
+var b = arrays don't emit yet"

@@ -12,3 +12,7 @@ var addmul2 = 1 + 2 * 3 * 4
 var addmul34 = 1 * 2 + 3 + 4 * 5 * 6
 var ltaddmul = 1 * 2 < 3 + 4 * 5
 ltaddmul = addmul34 = addsub /= 1 | sub <= 12 & muldiv == muldiv2
+type Foo = { foo: string, bar: int }
+var record = Foo { foo = "hi", bar = 0 }
+var a = [1,2,3]
+var b = ["hi", Foo {foo = "hi", bar = 0}]

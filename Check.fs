@@ -23,14 +23,16 @@ let check (env, statements) =
     (n, e @ error)
   | Call(e, parameters) -> (errorType, ["Cannot check calls yet"])
   | Sequence es -> (errorType, []) // List.map checkExpression es |> List.head // TODO: Last, and concat errors
+  | RecordCons _ -> (errorType, ["Records don't check yet"])
+  | ArrayCons _ -> (errorType, ["Arrays don't check yet"])
   | Null -> (nullType, [])
   and checkLValue = function
   | Identifier(name) -> 
     match resolve name env with
     | Some(statement) -> checkDeclaration statement
     | None -> (errorType, ["Could not resolve " + name])
-  | Property _ -> (stringType, []) // TODO: REcursive resolve
-  | Array _ -> (intType, []) // TODO: Recursive resolve
+  | PropertyAccess _ -> (stringType, []) // TODO: REcursive resolve
+  | LValue.ArrayAccess _ -> (intType, []) // TODO: Recursive resolve
   and checkDeclaration = function
   | ExpressionStatement(e) -> checkExpression e
   | Var(_, typename, init) ->

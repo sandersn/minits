@@ -3,8 +3,8 @@ open Types
 let emitType t = sprintf "%A" t
 let emitLValue = function
 | Identifier(name) -> name
-| Property _ -> "Properties do not emit yet"
-| Array _ -> "Arrays do not emit yet"
+| PropertyAccess _ -> "Properties do not emit yet"
+| LValue.ArrayAccess _ -> "Arrays do not emit yet"
 let rec emitExpression = function
 | LValue(lvalue) -> emitLValue lvalue
 | IntLiteral(value) -> string value
@@ -14,6 +14,8 @@ let rec emitExpression = function
 | Assignment(name, value) -> sprintf "%s = %s" (emitLValue name) (emitExpression value)
 | Call(name, parameters) -> "calls do not emit yet"
 | Sequence es -> "sequences do not emit yet"
+| RecordCons _ -> "records don't emit yet"
+| ArrayCons _ -> "arrays don't emit yet"
 | Null -> "null"
 let emitDeclaration = function
 | ExpressionStatement(e) -> emitExpression e

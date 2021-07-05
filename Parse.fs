@@ -48,7 +48,7 @@ let parse (lexer: Lexer) : Module * list<string> =
       Type.Array t
     | Token.Identifier(text) -> Type.Identifier text
     | LeftBrace -> 
-      let literal = Literal <| parseMany parseProperty
+      let literal = Literal <| parseMany parseProperty // TODO: Should be parseTerminated?
       parseExpected RightBrace
       literal
     | t ->
@@ -64,7 +64,8 @@ let parse (lexer: Lexer) : Module * list<string> =
       Some (id, t)
     | _ -> None
   let isStartOfExpression = function
-  | Token.Identifier _ | Token.StringLiteral _ | Token.IntLiteral _ | Token.Null | Token.LeftParen -> true
+  | Token.Identifier _ | Token.StringLiteral _ | Token.IntLiteral _ | Token.Null 
+  | Token.LeftParen | Token.LeftBracket -> true
   | _ -> false
   let isStartOfDeclaration = function
   | Token.Var | Token.Type | Token.Function -> true
@@ -89,12 +90,30 @@ let parse (lexer: Lexer) : Module * list<string> =
   and parsePlusMinus () = parseBinary [Plus; Minus] parseTimesDivide
   and parseTimesDivide () = parseBinary  [Asterisk; ForwardSlash] parseNegative
   and parseNegative () =
-    if parseOptional Minus then Negative (parseCall ()) else parseCall ()
+    if parseOptional Minus then Negative (parseConstructor ()) else parseConstructor ()
   and parseBinary ops seed = parseBinary' ops seed (seed ())
   and parseBinary' ops seed acc =
     match parseSome ops with
     | Some t -> parseBinary' ops seed (Binary (acc, t, seed ()))
     | None -> acc
+  and parseConstructor () = 
+    match parseCall () with
+    | LValue l ->
+      match l with
+      | Identifier name ->
+        if parseOptional LeftBrace then
+          let inits = parseRecordInitialisers ()
+          parseExpected RightBrace
+          RecordCons(name, inits)
+        else LValue (Identifier name)
+      | l -> LValue l
+    | e -> e
+  and parseRecordInitialisers () = parseTerminated parseRecordInitialiser isStartOfExpression Comma
+  and parseRecordInitialiser () =
+    let name = parseName ()
+    parseExpected Equals
+    let e = parseExpression ()
+    (name, e)
   and parseCall () =
     let e = parseSingleExpression ()
     if parseOptional LeftParen then
@@ -111,15 +130,19 @@ let parse (lexer: Lexer) : Module * list<string> =
       let es = parseTerminated parseExpression isStartOfExpression Semicolon
       parseExpected RightParen
       if List.length es = 1 then List.head es else Sequence es
+    | LeftBracket -> 
+      let inits = parseTerminated parseExpression isStartOfExpression Comma
+      parseExpected RightBracket
+      ArrayCons(inits)
     | Token.Null -> Expression.Null
     | t -> 
       errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
       LValue <| Identifier "(missing)"
   and parseLValue (acc: LValue) =
     if parseOptional Period then 
-      Property(acc, parseName ()) |> parseLValue
+      PropertyAccess(acc, parseName ()) |> parseLValue
     elif parseOptional LeftBracket then 
-      let acc' = Array(acc, parseExpression ())
+      let acc' = ArrayAccess(acc, parseExpression ())
       parseExpected RightBracket
       parseLValue acc'
     else acc
@@ -129,12 +152,12 @@ let parse (lexer: Lexer) : Module * list<string> =
        let typename = if parseOptional Colon then Some <| parseType () else None
        parseExpected Equals
        let init = parseExpression ()
-       Declaration.Var (name, typename, init)
+       Var (name, typename, init)
      elif parseOptional Token.Type then
        let name = parseName ()
        parseExpected Equals
        let t = parseType ()
-       Declaration.Type (name, t)
+       Type (name, t)
      elif parseOptional Token.Function then
        let name = parseName ()
        parseExpected LeftParen
@@ -143,7 +166,7 @@ let parse (lexer: Lexer) : Module * list<string> =
        let ret = if parseOptional Colon then Some <| parseType () else None
        parseExpected Equals
        let body = parseExpression ()
-       Declaration.Function (name, parameters, ret, body)
+       Function (name, parameters, ret, body)
      elif isStartOfExpression (lexer.token ()) then 
        parseExpression () |> ExpressionStatement
      else

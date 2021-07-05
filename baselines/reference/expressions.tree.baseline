@@ -1,5 +1,6 @@
 (map
-   [("add", Var ("add", None, Binary (IntLiteral 1, Plus, IntLiteral 2)));
+   [("a", Var ("a", None, ArrayCons [IntLiteral 1; IntLiteral 2; IntLiteral 3]));
+    ("add", Var ("add", None, Binary (IntLiteral 1, Plus, IntLiteral 2)));
     ("addmul2",
      Var
        ("addmul2", None,
@@ -22,6 +23,13 @@
      Var
        ("addsub", None,
         Binary (Binary (IntLiteral 1, Plus, IntLiteral 2), Minus, IntLiteral 3)));
+    ("b",
+     Var
+       ("b", None,
+        ArrayCons
+          [StringLiteral "hi";
+           RecordCons
+             ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)])]));
     ("div", Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2)));
     ("ltaddmul",
      Var
@@ -35,19 +43,7 @@
        ("muladd", None,
         Binary
           (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3)));
-    ("muladd2",
-     Var
-       ("muladd2", None,
-        Binary
-          (Binary
-             (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Asterisk,
-              IntLiteral 3), Plus, IntLiteral 4)));
-    ("muldiv",
-     Var
-       ("muldiv", None,
-        Binary
-          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), ForwardSlash,
-           IntLiteral 3))); ...],
+    ...],
  [Var ("negative", None, Negative (IntLiteral 1));
   Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2));
   Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2));
@@ -110,4 +106,15 @@
                  Ampersand,
                  Binary
                    (LValue (Identifier "muldiv"), DoubleEquals,
-                    LValue (Identifier "muldiv2")))))))])
+                    LValue (Identifier "muldiv2")))))));
+  Type
+    ("Foo", Literal [("foo", Identifier "string"); ("bar", Identifier "int")]);
+  Var
+    ("record", None,
+     RecordCons ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)]));
+  Var ("a", None, ArrayCons [IntLiteral 1; IntLiteral 2; IntLiteral 3]);
+  Var
+    ("b", None,
+     ArrayCons
+       [StringLiteral "hi";
+        RecordCons ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)])])])

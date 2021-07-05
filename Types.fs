@@ -58,17 +58,19 @@ type Type =
 and Property = string * Type
 type LValue =
 | Identifier of string
-| Property of l: LValue * r: string
-| Array of l: LValue * r: Expression
+| PropertyAccess of l: LValue * r: string
+| ArrayAccess of l: LValue * r: Expression
 and Expression = 
  | LValue of LValue
  | IntLiteral of int
  | StringLiteral of string
- | Negative of Expression // TODO: Maybe Unary?
+ | Negative of Expression
  | Binary of l: Expression * op: Token * r: Expression
- | Assignment of lvalue: LValue * value: Expression // TODO: Maybe fold into binary?
+ | Assignment of lvalue: LValue * value: Expression
  | Sequence of list<Expression>
  | Call of Expression * parameters: list<Expression>
+ | RecordCons of typename: string * inits: list<string * Expression>
+ | ArrayCons of inits: list<Expression>
  | Null
 type Declaration =
  | ExpressionStatement of Expression
