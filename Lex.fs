@@ -14,7 +14,7 @@ let keywords = Map.ofList [
   "to", To
   "in", In
   "break", Token.Break
-  "let", Let
+  "let", Token.Let
   "null", Token.Null
 ]
 // / and /= are handled with comment handling

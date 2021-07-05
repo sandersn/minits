@@ -74,9 +74,10 @@ and Expression =
  | If of condition: Expression * consequent: Expression * alternate: Expression
  | While of condition: Expression * action: Expression
  | For of name: string * start: Expression * stop: Expression * action: Expression
+ | Let of decls: list<Declaration> * body: Expression
  | Break
  | Null
-type Declaration =
+and Declaration =
  | ExpressionStatement of Expression
  | Type of name: string * Type
  | Var of name: string * t: Option<Type> * init: Expression

@@ -28,6 +28,7 @@ let check (env, statements) =
   | If _ -> (errorType, ["If doesn't check yet"])
   | While _ -> (nullType, ["While doesn't check yet"])
   | For _ -> (nullType, ["For doesn't check yet"])
+  | Let _ -> (errorType, ["Let doesn't check yet"])
   | Break -> (nullType, ["Break doesn't check yet"])
   | Null -> (nullType, [])
   and checkLValue = function

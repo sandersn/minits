@@ -19,6 +19,7 @@ let rec emitExpression = function
 | If _ -> "if doesn't emit yet"
 | For _ -> "for doesn't emit yet"
 | While _ -> "while doesn't emit yet"
+| Let _ -> "let doesn't emit yet"
 | Break -> "break"
 | Null -> "null"
 let emitDeclaration = function

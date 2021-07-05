@@ -65,7 +65,7 @@ let parse (lexer: Lexer) : Module * list<string> =
     | _ -> None
   let isStartOfExpression = function
   | Token.Identifier _ | Token.StringLiteral _ | Token.IntLiteral _ 
-  | Token.If | Token.For | Token.While
+  | Token.If | Token.For | Token.While | Token.Let
   | Token.Null | Token.Break
   | Token.LeftParen | Token.LeftBracket -> true
   | _ -> false
@@ -157,6 +157,11 @@ let parse (lexer: Lexer) : Module * list<string> =
       parseExpected Do
       let action = parseExpression ()
       For (id, start, stop, action)
+    | Token.Let ->
+      let decls = parseTerminated parseDeclaration isStartOfDeclaration Semicolon
+      parseExpected In
+      let body = parseExpression ()
+      Let (decls, body)
     | Token.Null -> Expression.Null
     | Token.Break -> Expression.Break
     | t -> 
@@ -170,7 +175,7 @@ let parse (lexer: Lexer) : Module * list<string> =
       parseExpected RightBracket
       parseLValue acc'
     else acc
-  let parseDeclaration () =
+  and parseDeclaration () =
      if parseOptional Token.Var then
        let name = parseName ()
        let typename = if parseOptional Colon then Some <| parseType () else None
