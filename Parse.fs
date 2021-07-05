@@ -64,7 +64,9 @@ let parse (lexer: Lexer) : Module * list<string> =
       Some (id, t)
     | _ -> None
   let isStartOfExpression = function
-  | Token.Identifier _ | Token.StringLiteral _ | Token.IntLiteral _ | Token.Null 
+  | Token.Identifier _ | Token.StringLiteral _ | Token.IntLiteral _ 
+  | Token.If | Token.For | Token.While
+  | Token.Null | Token.Break
   | Token.LeftParen | Token.LeftBracket -> true
   | _ -> false
   let isStartOfDeclaration = function
@@ -134,7 +136,29 @@ let parse (lexer: Lexer) : Module * list<string> =
       let inits = parseTerminated parseExpression isStartOfExpression Comma
       parseExpected RightBracket
       ArrayCons(inits)
+    | Token.If ->
+      let cond = parseExpression ()
+      parseExpected Then
+      let cons = parseExpression ()
+      parseExpected Else
+      let alt = parseExpression ()
+      If (cond, cons, alt)
+    | Token.While ->
+      let cond = parseExpression ()
+      parseExpected Do
+      let action = parseExpression ()
+      While (cond, action)
+    | Token.For ->
+      let id = parseName ()
+      parseExpected Equals
+      let start = parseExpression ()
+      parseExpected To
+      let stop = parseExpression ()
+      parseExpected Do
+      let action = parseExpression ()
+      For (id, start, stop, action)
     | Token.Null -> Expression.Null
+    | Token.Break -> Expression.Break
     | t -> 
       errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
       LValue <| Identifier "(missing)"

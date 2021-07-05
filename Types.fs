@@ -71,6 +71,10 @@ and Expression =
  | Call of Expression * parameters: list<Expression>
  | RecordCons of typename: string * inits: list<string * Expression>
  | ArrayCons of inits: list<Expression>
+ | If of condition: Expression * consequent: Expression * alternate: Expression
+ | While of condition: Expression * action: Expression
+ | For of name: string * start: Expression * stop: Expression * action: Expression
+ | Break
  | Null
 type Declaration =
  | ExpressionStatement of Expression

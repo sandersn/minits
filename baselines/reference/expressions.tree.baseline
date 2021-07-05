@@ -117,4 +117,23 @@
     ("b", None,
      ArrayCons
        [StringLiteral "hi";
-        RecordCons ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)])])])
+        RecordCons ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)])]);
+  Var
+    ("which", None,
+     If
+       (Binary (LValue (Identifier "add"), LessThan, LValue (Identifier "sub")),
+        Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1),
+        LValue (Identifier "addmul34")));
+  ExpressionStatement
+    (While
+       (Binary (LValue (Identifier "addmul2"), GreaterThan, IntLiteral 0),
+        Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1)));
+  ExpressionStatement
+    (For
+       ("i", IntLiteral 0, IntLiteral 12,
+        Sequence
+          [Binary
+             (LValue (Identifier "add"), Asterisk, LValue (Identifier "sub"));
+           If
+             (Binary (LValue (Identifier "i"), GreaterThan, IntLiteral 12),
+              Break, Sequence [])]))])

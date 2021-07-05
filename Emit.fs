@@ -16,6 +16,10 @@ let rec emitExpression = function
 | Sequence es -> "sequences do not emit yet"
 | RecordCons _ -> "records don't emit yet"
 | ArrayCons _ -> "arrays don't emit yet"
+| If _ -> "if doesn't emit yet"
+| For _ -> "for doesn't emit yet"
+| While _ -> "while doesn't emit yet"
+| Break -> "break"
 | Null -> "null"
 let emitDeclaration = function
 | ExpressionStatement(e) -> emitExpression e

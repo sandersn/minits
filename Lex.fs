@@ -5,15 +5,15 @@ let keywords = Map.ofList [
   "type", Token.Type
   "var", Token.Var
   "function", Token.Function
-  "if", If
+  "if", Token.If
   "then", Then
   "else", Else
-  "while", While
+  "while", Token.While
   "do", Do
-  "for", For
+  "for", Token.For
   "to", To
   "in", In
-  "break", Break
+  "break", Token.Break
   "let", Let
   "null", Token.Null
 ]

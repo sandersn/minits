@@ -15,4 +15,7 @@ ltaddmul = addmul34 = binary expressions do not emit yet
 Types do not emit yet
 var record = records don't emit yet
 var a = arrays don't emit yet
-var b = arrays don't emit yet"
+var b = arrays don't emit yet
+var which = if doesn't emit yet
+while doesn't emit yet
+for doesn't emit yet"

@@ -25,6 +25,10 @@ let check (env, statements) =
   | Sequence es -> (errorType, []) // List.map checkExpression es |> List.head // TODO: Last, and concat errors
   | RecordCons _ -> (errorType, ["Records don't check yet"])
   | ArrayCons _ -> (errorType, ["Arrays don't check yet"])
+  | If _ -> (errorType, ["If doesn't check yet"])
+  | While _ -> (nullType, ["While doesn't check yet"])
+  | For _ -> (nullType, ["For doesn't check yet"])
+  | Break -> (nullType, ["Break doesn't check yet"])
   | Null -> (nullType, [])
   and checkLValue = function
   | Identifier(name) -> 

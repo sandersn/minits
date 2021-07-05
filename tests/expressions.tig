@@ -16,3 +16,9 @@ type Foo = { foo: string, bar: int }
 var record = Foo { foo = "hi", bar = 0 }
 var a = [1,2,3]
 var b = ["hi", Foo {foo = "hi", bar = 0}]
+var which = if add < sub then muladd + 1 else addmul34
+while addmul2 > 0 do muladd + 1
+for i = 0 to 12 do (
+    add * sub
+    if i > 12 then break else ()
+)
