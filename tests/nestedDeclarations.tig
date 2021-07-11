@@ -1,0 +1,11 @@
+x // error
+var x = "hi"
+var y = 1
+function f(y: int, z: int) = (
+  x // ok
+  y // ok
+  alpha // error
+  let var x = 2; var alpha = 1 in
+  [x, y, z, alpha]
+)
+f(4, 5)

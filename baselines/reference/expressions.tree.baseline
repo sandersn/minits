@@ -1,150 +1,137 @@
-(map
-   [("a", Var ("a", None, ArrayCons [IntLiteral 1; IntLiteral 2; IntLiteral 3]));
-    ("add", Var ("add", None, Binary (IntLiteral 1, Plus, IntLiteral 2)));
-    ("addmul2",
-     Var
-       ("addmul2", None,
-        Binary
-          (IntLiteral 1, Plus,
-           Binary
-             (Binary (IntLiteral 2, Asterisk, IntLiteral 3), Asterisk,
-              IntLiteral 4))));
-    ("addmul34",
-     Var
-       ("addmul34", None,
-        Binary
-          (Binary
-             (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3),
-           Plus,
-           Binary
-             (Binary (IntLiteral 4, Asterisk, IntLiteral 5), Asterisk,
-              IntLiteral 6))));
-    ("addsub",
-     Var
-       ("addsub", None,
-        Binary (Binary (IntLiteral 1, Plus, IntLiteral 2), Minus, IntLiteral 3)));
-    ("b",
-     Var
-       ("b", None,
-        ArrayCons
-          [StringLiteral "hi";
-           RecordCons
-             ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)])]));
-    ("div", Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2)));
-    ("ltaddmul",
-     Var
-       ("ltaddmul", None,
-        Binary
-          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), LessThan,
-           Binary
-             (IntLiteral 3, Plus, Binary (IntLiteral 4, Asterisk, IntLiteral 5)))));
-    ("muladd",
-     Var
-       ("muladd", None,
-        Binary
-          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3)));
-    ...],
- [Var ("negative", None, Negative (IntLiteral 1));
-  Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2));
-  Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2));
-  Var
-    ("muldiv", None,
-     Binary
-       (Binary (IntLiteral 1, Asterisk, IntLiteral 2), ForwardSlash,
-        IntLiteral 3));
-  Var
-    ("muldiv2", None,
-     Binary
-       (Binary (IntLiteral 1, ForwardSlash, IntLiteral 2), Asterisk,
-        IntLiteral 3));
-  Var ("add", None, Binary (IntLiteral 1, Plus, IntLiteral 2));
-  Var ("sub", None, Binary (IntLiteral 1, Minus, IntLiteral 2));
-  Var
-    ("addsub", None,
-     Binary (Binary (IntLiteral 1, Plus, IntLiteral 2), Minus, IntLiteral 3));
-  Var
-    ("muladd", None,
-     Binary (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3));
-  Var
-    ("muladd2", None,
-     Binary
-       (Binary
-          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Asterisk, IntLiteral 3),
-        Plus, IntLiteral 4));
-  Var
-    ("addmul2", None,
-     Binary
-       (IntLiteral 1, Plus,
-        Binary
-          (Binary (IntLiteral 2, Asterisk, IntLiteral 3), Asterisk, IntLiteral 4)));
-  Var
-    ("addmul34", None,
-     Binary
-       (Binary
-          (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3),
-        Plus,
-        Binary
-          (Binary (IntLiteral 4, Asterisk, IntLiteral 5), Asterisk, IntLiteral 6)));
-  Var
-    ("ltaddmul", None,
-     Binary
-       (Binary (IntLiteral 1, Asterisk, IntLiteral 2), LessThan,
-        Binary
-          (IntLiteral 3, Plus, Binary (IntLiteral 4, Asterisk, IntLiteral 5))));
-  ExpressionStatement
-    (Assignment
-       (Identifier "ltaddmul",
-        Assignment
-          (Identifier "addmul34",
-           Binary
-             (Binary
-                (LValue (Identifier "addsub"), ForwardSlashEquals, IntLiteral 1),
-              Pipe,
-              Binary
-                (Binary
-                   (LValue (Identifier "sub"), LessThanEquals, IntLiteral 12),
-                 Ampersand,
+(File
+   [Var ("negative", None, Negative (IntLiteral 1));
+    Var ("mult", None, Binary (IntLiteral 1, Asterisk, IntLiteral 2));
+    Var ("div", None, Binary (IntLiteral 1, ForwardSlash, IntLiteral 2));
+    Var
+      ("muldiv", None,
+       Binary
+         (Binary (IntLiteral 1, Asterisk, IntLiteral 2), ForwardSlash,
+          IntLiteral 3));
+    Var
+      ("muldiv2", None,
+       Binary
+         (Binary (IntLiteral 1, ForwardSlash, IntLiteral 2), Asterisk,
+          IntLiteral 3));
+    Var ("add", None, Binary (IntLiteral 1, Plus, IntLiteral 2));
+    Var ("sub", None, Binary (IntLiteral 1, Minus, IntLiteral 2));
+    Var
+      ("addsub", None,
+       Binary (Binary (IntLiteral 1, Plus, IntLiteral 2), Minus, IntLiteral 3));
+    Var
+      ("muladd", None,
+       Binary
+         (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3));
+    Var
+      ("muladd2", None,
+       Binary
+         (Binary
+            (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Asterisk,
+             IntLiteral 3), Plus, IntLiteral 4));
+    Var
+      ("addmul2", None,
+       Binary
+         (IntLiteral 1, Plus,
+          Binary
+            (Binary (IntLiteral 2, Asterisk, IntLiteral 3), Asterisk,
+             IntLiteral 4)));
+    Var
+      ("addmul34", None,
+       Binary
+         (Binary
+            (Binary (IntLiteral 1, Asterisk, IntLiteral 2), Plus, IntLiteral 3),
+          Plus,
+          Binary
+            (Binary (IntLiteral 4, Asterisk, IntLiteral 5), Asterisk,
+             IntLiteral 6)));
+    Var
+      ("ltaddmul", None,
+       Binary
+         (Binary (IntLiteral 1, Asterisk, IntLiteral 2), LessThan,
+          Binary
+            (IntLiteral 3, Plus, Binary (IntLiteral 4, Asterisk, IntLiteral 5))));
+    ExpressionStatement
+      (Assignment
+         (Identifier "ltaddmul",
+          Assignment
+            (Identifier "addmul34",
+             Binary
+               (Binary
+                  (LValue (Identifier "addsub"), ForwardSlashEquals,
+                   IntLiteral 1), Pipe,
+                Binary
+                  (Binary
+                     (LValue (Identifier "sub"), LessThanEquals, IntLiteral 12),
+                   Ampersand,
+                   Binary
+                     (LValue (Identifier "muldiv"), DoubleEquals,
+                      LValue (Identifier "muldiv2")))))));
+    Type
+      ("Foo", Literal [("foo", Identifier "string"); ("bar", Identifier "int")]);
+    Var
+      ("record", None,
+       RecordCons ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)]));
+    Var ("a", None, ArrayCons [IntLiteral 1; IntLiteral 2; IntLiteral 3]);
+    Var
+      ("b", None,
+       ArrayCons
+         [StringLiteral "hi";
+          RecordCons
+            ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)])]);
+    Var
+      ("which", None,
+       If
+         (Binary
+            (LValue (Identifier "add"), LessThan, LValue (Identifier "sub")),
+          Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1),
+          LValue (Identifier "addmul34")));
+    ExpressionStatement
+      (While
+         (Binary (LValue (Identifier "addmul2"), GreaterThan, IntLiteral 0),
+          Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1)));
+    ExpressionStatement
+      (For
+         ("i", IntLiteral 0, IntLiteral 12,
+          Let
+            ([Var
+                ("total", None,
                  Binary
-                   (LValue (Identifier "muldiv"), DoubleEquals,
-                    LValue (Identifier "muldiv2")))))));
-  Type
-    ("Foo", Literal [("foo", Identifier "string"); ("bar", Identifier "int")]);
-  Var
-    ("record", None,
-     RecordCons ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)]));
-  Var ("a", None, ArrayCons [IntLiteral 1; IntLiteral 2; IntLiteral 3]);
-  Var
-    ("b", None,
-     ArrayCons
-       [StringLiteral "hi";
-        RecordCons ("Foo", [("foo", StringLiteral "hi"); ("bar", IntLiteral 0)])]);
-  Var
-    ("which", None,
-     If
-       (Binary (LValue (Identifier "add"), LessThan, LValue (Identifier "sub")),
-        Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1),
-        LValue (Identifier "addmul34")));
-  ExpressionStatement
-    (While
-       (Binary (LValue (Identifier "addmul2"), GreaterThan, IntLiteral 0),
-        Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1)));
-  ExpressionStatement
-    (For
-       ("i", IntLiteral 0, IntLiteral 12,
-        Let
-          ([Var
-              ("total", None,
-               Binary
-                 (LValue (Identifier "add"), Asterisk, LValue (Identifier "sub")));
-            Var
-              ("result", None,
-               Binary
-                 (Binary (IntLiteral 0, LessThan, LValue (Identifier "total")),
-                  Ampersand,
-                  Binary (LValue (Identifier "total"), LessThan, IntLiteral 100)))],
-           Sequence
-             [Binary
-                (LValue (Identifier "add"), Asterisk, LValue (Identifier "sub"));
-              If
-                (Binary (LValue (Identifier "i"), GreaterThan, IntLiteral 12),
-                 Break, Sequence [])])))])
+                   (LValue (Identifier "add"), Asterisk,
+                    LValue (Identifier "sub")));
+              Var
+                ("result", None,
+                 Binary
+                   (Binary (IntLiteral 0, LessThan, LValue (Identifier "total")),
+                    Ampersand,
+                    Binary
+                      (LValue (Identifier "total"), LessThan, IntLiteral 100)))],
+             Sequence
+               [Binary
+                  (LValue (Identifier "add"), Asterisk,
+                   LValue (Identifier "sub"));
+                If
+                  (Binary (LValue (Identifier "i"), GreaterThan, IntLiteral 12),
+                   Break, Sequence [])])))],
+ ["File  [Var ("negative",...:
+  [Foo, Type ("Foo", Literal [(...]
+  [a, Var ("a", None, ArrayCo...]
+  [add, Var ("add", None, Binar...]
+  [addmul2, Var  ("addmul2", None, ...]
+  [addmul34, Var  ("addmul34", None,...]
+  [addsub, Var  ("addsub", None,  ...]
+  [b, Var  ("b", None,   Arra...]
+  [div, Var ("div", None, Binar...]
+  [ltaddmul, Var  ("ltaddmul", None,...]
+  [muladd, Var  ("muladd", None,  ...]
+  [muladd2, Var  ("muladd2", None, ...]
+  [muldiv, Var  ("muldiv", None,  ...]
+  [muldiv2, Var  ("muldiv2", None, ...]
+  [mult, Var ("mult", None, Bina...]
+  [negative, Var ("negative", None, ...]
+  [record, Var  ("record", None,  ...]
+  [sub, Var ("sub", None, Binar...]
+  [which, Var  ("which", None,   ...]";
+  "ExpressionStatement  (F...:
+  [i, Var ("i", None, IntLite...]";
+  "ExpressionStatement  (L...:
+  [result, Var  ("result", None,  ...]
+  [total, Var  ("total", None,   ...]"])

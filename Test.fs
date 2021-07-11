@@ -1,4 +1,5 @@
 module Minits.Test
+open Types
 open Lex
 open Compile
 let test (kind : string) (name : string) value =
@@ -32,18 +33,26 @@ let lexTests = [
     "operatorLex", "< > <= >= = + - * / == /= & |"
 ]
 let compileTests: list<string * string> = [ ]
+let formatEnvironment (env: Environment) = 
+  let shorten a =
+    let s = sprintf "%A" a
+    if s.Length > 25 then s.Replace("\n", "").[0..22] + "..." else s
+  env 
+  |> Map.toList
+  |> List.map (fun (d,t) -> 
+     sprintf "%s:\n  %s" 
+       (shorten d) 
+       (System.String.Join("\n  ", (Map.map (fun _ d -> shorten d) t))))
 let run () =
     let lexResult = 
         lexTests 
-        |> List.map (fun (name,text) -> lexAll text |> test "lex" name) 
-        |> List.sum
+        |> List.sumBy (fun (name,text) -> lexAll text |> test "lex" name) 
     let compileResult = 
         System.IO.Directory.GetFiles "tests"
-        |> Array.map (fun file -> 
-          let (tree, errors, emit) = file |> System.IO.File.ReadAllText |> compile
+        |> Array.sumBy (fun file -> 
+          let (tree, environment, errors, emit) = file |> System.IO.File.ReadAllText |> compile
           let name = file.Substring ("tests/".Length, file.IndexOf ".tig" - "tests/".Length)
-          test "tree" name tree + test "error" name errors + test "js" name emit)
-        |> Array.sum
+          test "tree" name (tree, formatEnvironment environment) + test "error" name errors + test "js" name emit)
     let result = lexResult + compileResult
     if result = 0 then printfn "All tests passed." else printfn "%d tests failed." result
     result

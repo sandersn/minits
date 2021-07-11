@@ -1,3 +1,5 @@
-(map [],
- [Type
-    ("Position", Literal [("n", Identifier "int"); ("s", Identifier "string")])])
+(File
+   [Type
+      ("Position", Literal [("n", Identifier "int"); ("s", Identifier "string")])],
+ ["File  [Type     ("Posit...:
+  [Position, Type ("Position", Liter...]"])

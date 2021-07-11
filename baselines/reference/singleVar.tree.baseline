@@ -1,2 +1,3 @@
-(map [("singleDeclaration", Var ("singleDeclaration", None, IntLiteral 1))],
- [Var ("singleDeclaration", None, IntLiteral 1)])
+(File [Var ("singleDeclaration", None, IntLiteral 1)],
+ ["File [Var ("singleDecla...:
+  [singleDeclaration, Var ("singleDeclaration...]"])

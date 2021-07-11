@@ -22,13 +22,14 @@ let rec emitExpression = function
 | Let _ -> "let doesn't emit yet"
 | Break -> "break"
 | Null -> "null"
-let emitDeclaration = function
-| ExpressionStatement(e) -> emitExpression e
+let rec emitDeclaration = function
+| File decls -> decls |> List.map emitDeclaration |> String.concat "\n"
+| ExpressionStatement e -> emitExpression e
 | Var(name, t, init) -> 
   let typestring = match t with
                    | Some(name) -> ": " + emitType name
                    | None -> ""
   sprintf "var %s%s = %s" name typestring (emitExpression init)
-| Type _ -> "Types do not emit yet"
+| Declaration.Type _ -> "Types do not emit yet"
 | Function _ -> "Functions do not emit yet"
-let emit = List.map emitDeclaration >> String.concat "\n"
+let emit = emitDeclaration 

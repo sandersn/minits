@@ -1,1 +1,3 @@
-(map [], [Type ("Str", Identifier "string")])
+(File [Type ("Str", Identifier "string")],
+ ["File [Type ("Str", Iden...:
+  [Str, Type ("Str", Identifier...]"])

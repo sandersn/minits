@@ -1,27 +1,29 @@
-(map [],
- [ExpressionStatement (LValue (Identifier "x"));
-  ExpressionStatement (LValue (PropertyAccess (Identifier "x", "y")));
-  ExpressionStatement
-    (LValue (PropertyAccess (PropertyAccess (Identifier "x", "y"), "z")));
-  ExpressionStatement (LValue (Identifier "o"));
-  ExpressionStatement
-    (LValue (ArrayAccess (Identifier "o", LValue (Identifier "x"))));
-  ExpressionStatement
-    (LValue
-       (ArrayAccess
-          (Identifier "o", LValue (PropertyAccess (Identifier "x", "y")))));
-  ExpressionStatement
-    (LValue
-       (ArrayAccess
-          (ArrayAccess (Identifier "o", LValue (Identifier "x")),
-           LValue (Identifier "y"))));
-  ExpressionStatement
-    (LValue
-       (ArrayAccess
-          (ArrayAccess
-             (PropertyAccess (Identifier "o", "x"), LValue (Identifier "y")),
-           LValue (Identifier "z"))));
-  ExpressionStatement
-    (LValue
-       (PropertyAccess
-          (ArrayAccess (Identifier "o", LValue (Identifier "x")), "y")))])
+(File
+   [ExpressionStatement (LValue (Identifier "x"));
+    ExpressionStatement (LValue (PropertyAccess (Identifier "x", "y")));
+    ExpressionStatement
+      (LValue (PropertyAccess (PropertyAccess (Identifier "x", "y"), "z")));
+    ExpressionStatement (LValue (Identifier "o"));
+    ExpressionStatement
+      (LValue (ArrayAccess (Identifier "o", LValue (Identifier "x"))));
+    ExpressionStatement
+      (LValue
+         (ArrayAccess
+            (Identifier "o", LValue (PropertyAccess (Identifier "x", "y")))));
+    ExpressionStatement
+      (LValue
+         (ArrayAccess
+            (ArrayAccess (Identifier "o", LValue (Identifier "x")),
+             LValue (Identifier "y"))));
+    ExpressionStatement
+      (LValue
+         (ArrayAccess
+            (ArrayAccess
+               (PropertyAccess (Identifier "o", "x"), LValue (Identifier "y")),
+             LValue (Identifier "z"))));
+    ExpressionStatement
+      (LValue
+         (PropertyAccess
+            (ArrayAccess (Identifier "o", LValue (Identifier "x")), "y")))],
+ ["File  [ExpressionStatem...:
+  "])

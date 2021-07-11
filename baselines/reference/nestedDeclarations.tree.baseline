@@ -1,0 +1,25 @@
+(File
+   [ExpressionStatement (LValue (Identifier "x"));
+    Var ("x", None, StringLiteral "hi"); Var ("y", None, IntLiteral 1);
+    Function
+      ("f", [("y", Identifier "int"); ("z", Identifier "int")], None,
+       Sequence
+         [LValue (Identifier "x"); LValue (Identifier "y");
+          LValue (Identifier "alpha");
+          Let
+            ([Var ("x", None, IntLiteral 2); Var ("alpha", None, IntLiteral 1)],
+             ArrayCons
+               [LValue (Identifier "x"); LValue (Identifier "y");
+                LValue (Identifier "z"); LValue (Identifier "alpha")])]);
+    ExpressionStatement
+      (Call (LValue (Identifier "f"), [IntLiteral 4; IntLiteral 5]))],
+ ["File  [ExpressionStatem...:
+  [f, Function  ("f", [("y", ...]
+  [x, Var ("x", None, StringL...]
+  [y, Var ("y", None, IntLite...]";
+  "ExpressionStatement  (L...:
+  [alpha, Var ("alpha", None, Int...]
+  [x, Var ("x", None, IntLite...]";
+  "Function  ("f", [("y", ...:
+  [y, Var ("y", Some (Identif...]
+  [z, Var ("z", Some (Identif...]"])

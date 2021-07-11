@@ -5,8 +5,8 @@ open Bind
 open Check
 open Transform
 open Emit
+open Types
 let compile (s: string) = 
-    let (tree, parseErrors) = lex s |> parse
-    let boundTree = bind tree
-    let js = snd tree |> transform |> emit
-    (boundTree, parseErrors @ check boundTree, js)
+    let (file, parseErrors) = lex s |> parse
+    let environment = bind file
+    (file, environment, parseErrors @ check environment file, file |> transform |> emit)

@@ -68,7 +68,7 @@ and Expression =
  | Binary of l: Expression * op: Token * r: Expression
  | Assignment of lvalue: LValue * value: Expression
  | Sequence of list<Expression>
- | Call of Expression * parameters: list<Expression>
+ | Call of Expression * arguments: list<Expression>
  | RecordCons of typename: string * inits: list<string * Expression>
  | ArrayCons of inits: list<Expression>
  | If of condition: Expression * consequent: Expression * alternate: Expression
@@ -78,11 +78,14 @@ and Expression =
  | Break
  | Null
 and Declaration =
+ | File of list<Declaration>
  | ExpressionStatement of Expression
  | Type of name: string * Type
  | Var of name: string * t: Option<Type> * init: Expression
  | Function of name: string * parameters: list<Property> * ret: Option<Type> * body: Expression
-type Table = Map<string,Declaration>
+type Table = Map<string, Declaration>
+type Environment = Map<Declaration, Table>
+type Meaning = Type | Value
 type Module = Table * list<Declaration>
 let stringType = Type.Identifier "string"
 let intType = Type.Identifier "int"

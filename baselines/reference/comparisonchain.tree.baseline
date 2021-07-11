@@ -1,30 +1,18 @@
-(map
-   [("nocomparisonchain",
-     Var
-       ("nocomparisonchain", None,
-        Binary (IntLiteral 1, LessThan, LValue (Identifier "x"))));
-    ("paren2",
-     Var
-       ("paren2", None,
-        Binary
-          (IntLiteral 1, LessThan,
-           Binary (LValue (Identifier "x"), LessThan, IntLiteral 3))));
-    ("parencomparisonchain",
-     Var
-       ("parencomparisonchain", None,
-        Binary
-          (Binary (IntLiteral 1, LessThan, LValue (Identifier "x")), LessThan,
-           IntLiteral 3)))],
- [Var
-    ("parencomparisonchain", None,
-     Binary
-       (Binary (IntLiteral 1, LessThan, LValue (Identifier "x")), LessThan,
-        IntLiteral 3));
-  Var
-    ("paren2", None,
-     Binary
-       (IntLiteral 1, LessThan,
-        Binary (LValue (Identifier "x"), LessThan, IntLiteral 3)));
-  Var
-    ("nocomparisonchain", None,
-     Binary (IntLiteral 1, LessThan, LValue (Identifier "x")))])
+(File
+   [Var
+      ("parencomparisonchain", None,
+       Binary
+         (Binary (IntLiteral 1, LessThan, LValue (Identifier "x")), LessThan,
+          IntLiteral 3));
+    Var
+      ("paren2", None,
+       Binary
+         (IntLiteral 1, LessThan,
+          Binary (LValue (Identifier "x"), LessThan, IntLiteral 3)));
+    Var
+      ("nocomparisonchain", None,
+       Binary (IntLiteral 1, LessThan, LValue (Identifier "x")))],
+ ["File  [Var     ("parenc...:
+  [nocomparisonchain, Var  ("nocomparisonchai...]
+  [paren2, Var  ("paren2", None,  ...]
+  [parencomparisonchain, Var  ("parencomparisonc...]"])

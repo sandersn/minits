@@ -1,6 +1,6 @@
 module Minits.Parse
 open Types
-let parse (lexer: Lexer) : Module * list<string> = 
+let parse (lexer: Lexer) : Declaration * list<string> = 
   let errors = System.Collections.Generic.List ()
   let parseOptional expected =
     let t = lexer.token ()
@@ -186,7 +186,7 @@ let parse (lexer: Lexer) : Module * list<string> =
        let name = parseName ()
        parseExpected Equals
        let t = parseType ()
-       Type (name, t)
+       Declaration.Type (name, t)
      elif parseOptional Token.Function then
        let name = parseName ()
        parseExpected LeftParen
@@ -204,6 +204,6 @@ let parse (lexer: Lexer) : Module * list<string> =
   let parseProgram () =
     let statements = parseTerminated parseDeclaration isStartOfDeclaration Semicolon
     parseExpected EOF
-    (Map.empty, statements)
+    File statements
   lexer.scan ()
   (parseProgram (), List.ofSeq errors)

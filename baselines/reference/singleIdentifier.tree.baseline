@@ -1,1 +1,3 @@
-(map [], [ExpressionStatement (LValue (Identifier "x"))])
+(File [ExpressionStatement (LValue (Identifier "x"))],
+ ["File [ExpressionStateme...:
+  "])
