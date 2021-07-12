@@ -2,6 +2,6 @@
    [Var ("s", None, StringLiteral "hi"); Var ("n", None, IntLiteral 1);
     ExpressionStatement (LValue (Identifier "s"));
     ExpressionStatement (LValue (Identifier "n"))],
- ["File  [Var ("s", None, ...:
-  [n, Var ("n", None, IntLite...]
-  [s, Var ("s", None, StringL...]"])
+ ["File  [Var ("s", None, StringLite...:
+    [n, Var ("n", None, IntLiteral 1)]
+    [s, Var ("s", None, StringLiteral "hi")]"])

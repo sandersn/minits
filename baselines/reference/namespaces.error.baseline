@@ -1,0 +1,4 @@
+["Duplicate declaration of Nat"; "Duplicate declaration of Nat";
+ "Negatives don't check yet";
+ "Cannot assign initialiser of type 'int' to variable with declared type 'string'";
+ "Could not resolve Not"]

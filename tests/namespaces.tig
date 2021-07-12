@@ -1,0 +1,8 @@
+type Nat = int
+var Nat = "ok"
+var Nat = "not ok"
+var Nat = -1
+var Net: Nat = Nat // error, string not assignable to int
+var Nit: Net = 13 // error: value, not type
+type Not = int
+var Nut = Not // error: type, not value

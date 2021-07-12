@@ -8,16 +8,16 @@ let rec typeToString = function
 | Type.Array t -> sprintf "Array<%s>" <| typeToString t
 and propertyToString (name, t) = name + typeToString t
 let check (env : Environment) (decl: Declaration) =
-  let rec checkExpression (tables : list<Table>) expression =
+  let rec checkExpression (scope : list<Table>) expression =
     match expression with
-    | LValue(lvalue) -> checkLValue tables lvalue
+    | LValue(lvalue) -> checkLValue scope lvalue
     | IntLiteral(_) -> (intType, [])
     | StringLiteral(_) -> (stringType, [])
     | Negative(e) -> (errorType, ["Negatives don't check yet"])
     | Binary(l,op,r) -> (errorType, ["Binary expressions don't check yet"])
     | Assignment(lvalue, value) -> 
-      let (v, e) = checkExpression tables value
-      let (n, _) = checkLValue tables lvalue
+      let (v, e) = checkExpression scope value
+      let (n, _) = checkLValue scope lvalue
       let error = 
         if v = n 
         then []
@@ -33,22 +33,22 @@ let check (env : Environment) (decl: Declaration) =
     | Let _ -> (errorType, ["Let doesn't check yet"])
     | Break -> (nullType, ["Break doesn't check yet"])
     | Null -> (nullType, [])
-  and checkLValue (tables : list<Table>) lvalue =
+  and checkLValue (scope : list<Table>) (lvalue : LValue) =
     match lvalue with
     | Identifier(name) -> 
-      match resolve name tables Value with
-      | Some(statement) -> checkDeclaration tables statement
-      | None -> (errorType, ["Could not resolve " + name])
+      match resolve name scope Value with
+      | Some(statement) -> checkDeclaration scope statement
+      | _ -> (errorType, ["Could not resolve " + name])
     | PropertyAccess _ -> (stringType, []) // TODO: REcursive resolve
     | ArrayAccess _ -> (intType, []) // TODO: Recursive resolve
-  and checkDeclaration (tables : list<Table>) decl = 
+  and checkDeclaration (scope : list<Table>) (decl : Declaration) = 
     match decl with
     | File decls as f -> 
-      let x = List.map (checkDeclaration (Map.find f env :: tables)) decls
+      let x = List.map (checkDeclaration (Map.find f env :: scope)) decls
       (List.last x |> fst, List.collect snd x)
-    | ExpressionStatement(e) -> checkExpression tables e
+    | ExpressionStatement(e) -> checkExpression scope e
     | Var(_, typename, init) ->
-      let (i, e) = checkExpression tables init
+      let (i, e) = checkExpression scope init
       match typename with
       | Some(name) ->
           let (t, e') = checkType name

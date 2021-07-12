@@ -25,5 +25,5 @@
       (LValue
          (PropertyAccess
             (ArrayAccess (Identifier "o", LValue (Identifier "x")), "y")))],
- ["File  [ExpressionStatem...:
-  "])
+ ["File  [ExpressionStatement (LValu...:
+    "])

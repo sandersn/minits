@@ -1,0 +1,13 @@
+(File
+   [Type ("Nat", Identifier "int"); Var ("Nat", None, StringLiteral "ok");
+    Var ("Nat", None, StringLiteral "not ok");
+    Var ("Nat", None, Negative (IntLiteral 1));
+    Var ("Net", Some (Identifier "Nat"), LValue (Identifier "Nat"));
+    Var ("Nit", Some (Identifier "Net"), IntLiteral 13);
+    Type ("Not", Identifier "int"); Var ("Nut", None, LValue (Identifier "Not"))],
+ ["File  [Type ("Nat", Identifier "i...:
+    [Nat, { var=Var ("Nat", None, StringLiteral "...; typ=Type ("Nat", Identifier "int") }]
+    [Net, Var ("Net", Some (Identifier "Nat...]
+    [Nit, Var ("Nit", Some (Identifier "Net...]
+    [Not, Type ("Not", Identifier "int")]
+    [Nut, Var ("Nut", None, LValue (Identif...]"])

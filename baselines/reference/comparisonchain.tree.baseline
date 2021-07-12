@@ -12,7 +12,7 @@
     Var
       ("nocomparisonchain", None,
        Binary (IntLiteral 1, LessThan, LValue (Identifier "x")))],
- ["File  [Var     ("parenc...:
-  [nocomparisonchain, Var  ("nocomparisonchai...]
-  [paren2, Var  ("paren2", None,  ...]
-  [parencomparisonchain, Var  ("parencomparisonc...]"])
+ ["File  [Var     ("parencomparisonc...:
+    [nocomparisonchain, Var  ("nocomparisonchain", None, ...]
+    [paren2, Var  ("paren2", None,   Binary   ...]
+    [parencomparisonchain, Var  ("parencomparisonchain", Non...]"])

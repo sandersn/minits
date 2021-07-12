@@ -13,13 +13,13 @@
                 LValue (Identifier "z"); LValue (Identifier "alpha")])]);
     ExpressionStatement
       (Call (LValue (Identifier "f"), [IntLiteral 4; IntLiteral 5]))],
- ["File  [ExpressionStatem...:
-  [f, Function  ("f", [("y", ...]
-  [x, Var ("x", None, StringL...]
-  [y, Var ("y", None, IntLite...]";
-  "ExpressionStatement  (L...:
-  [alpha, Var ("alpha", None, Int...]
-  [x, Var ("x", None, IntLite...]";
-  "Function  ("f", [("y", ...:
-  [y, Var ("y", Some (Identif...]
-  [z, Var ("z", Some (Identif...]"])
+ ["File  [ExpressionStatement (LValu...:
+    [f, Function  ("f", [("y", Identifier...]
+    [x, Var ("x", None, StringLiteral "hi")]
+    [y, Var ("y", None, IntLiteral 1)]";
+  "ExpressionStatement  (Let     ([V...:
+    [alpha, Var ("alpha", None, IntLiteral 1)]
+    [x, Var ("x", None, IntLiteral 2)]";
+  "Function  ("f", [("y", Identifier...:
+    [y, Var ("y", Some (Identifier "int")...]
+    [z, Var ("z", Some (Identifier "int")...]"])

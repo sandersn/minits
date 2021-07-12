@@ -1,0 +1,8 @@
+"Types do not emit yet
+var Nat = "ok"
+var Nat = "not ok"
+var Nat = -1
+var Net = Nat
+var Nit = 13
+Types do not emit yet
+var Nut = Not"

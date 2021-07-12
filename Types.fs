@@ -83,7 +83,11 @@ and Declaration =
  | Type of name: string * Type
  | Var of name: string * t: Option<Type> * init: Expression
  | Function of name: string * parameters: list<Property> * ret: Option<Type> * body: Expression
-type Table = Map<string, Declaration>
+type Symbol = {
+  var: option<Declaration>
+  typ: option<Declaration>
+}
+type Table = Map<string, Symbol>
 type Environment = Map<Declaration, Table>
 type Meaning = Type | Value
 type Module = Table * list<Declaration>

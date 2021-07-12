@@ -111,27 +111,27 @@
                 If
                   (Binary (LValue (Identifier "i"), GreaterThan, IntLiteral 12),
                    Break, Sequence [])])))],
- ["File  [Var ("negative",...:
-  [Foo, Type ("Foo", Literal [(...]
-  [a, Var ("a", None, ArrayCo...]
-  [add, Var ("add", None, Binar...]
-  [addmul2, Var  ("addmul2", None, ...]
-  [addmul34, Var  ("addmul34", None,...]
-  [addsub, Var  ("addsub", None,  ...]
-  [b, Var  ("b", None,   Arra...]
-  [div, Var ("div", None, Binar...]
-  [ltaddmul, Var  ("ltaddmul", None,...]
-  [muladd, Var  ("muladd", None,  ...]
-  [muladd2, Var  ("muladd2", None, ...]
-  [muldiv, Var  ("muldiv", None,  ...]
-  [muldiv2, Var  ("muldiv2", None, ...]
-  [mult, Var ("mult", None, Bina...]
-  [negative, Var ("negative", None, ...]
-  [record, Var  ("record", None,  ...]
-  [sub, Var ("sub", None, Binar...]
-  [which, Var  ("which", None,   ...]";
-  "ExpressionStatement  (F...:
-  [i, Var ("i", None, IntLite...]";
-  "ExpressionStatement  (L...:
-  [result, Var  ("result", None,  ...]
-  [total, Var  ("total", None,   ...]"])
+ ["File  [Var ("negative", None, Neg...:
+    [Foo, Type ("Foo", Literal [("foo", Ide...]
+    [a, Var ("a", None, ArrayCons [IntLit...]
+    [add, Var ("add", None, Binary (IntLite...]
+    [addmul2, Var  ("addmul2", None,   Binary  ...]
+    [addmul34, Var  ("addmul34", None,   Binary ...]
+    [addsub, Var  ("addsub", None,   Binary (B...]
+    [b, Var  ("b", None,   ArrayCons     ...]
+    [div, Var ("div", None, Binary (IntLite...]
+    [ltaddmul, Var  ("ltaddmul", None,   Binary ...]
+    [muladd, Var  ("muladd", None,   Binary (B...]
+    [muladd2, Var  ("muladd2", None,   Binary  ...]
+    [muldiv, Var  ("muldiv", None,   Binary   ...]
+    [muldiv2, Var  ("muldiv2", None,   Binary  ...]
+    [mult, Var ("mult", None, Binary (IntLit...]
+    [negative, Var ("negative", None, Negative (...]
+    [record, Var  ("record", None,   RecordCon...]
+    [sub, Var ("sub", None, Binary (IntLite...]
+    [which, Var  ("which", None,   If     (Bi...]";
+  "ExpressionStatement  (For     ("i...:
+    [i, Var ("i", None, IntLiteral 0)]";
+  "ExpressionStatement  (Let     ([V...:
+    [result, Var  ("result", None,   Binary   ...]
+    [total, Var  ("total", None,   Binary (LV...]"])

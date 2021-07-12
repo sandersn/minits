@@ -1,5 +1,5 @@
 (File
    [Type
       ("Position", Literal [("n", Identifier "int"); ("s", Identifier "string")])],
- ["File  [Type     ("Posit...:
-  [Position, Type ("Position", Liter...]"])
+ ["File  [Type     ("Position", Lite...:
+    [Position, Type ("Position", Literal [("n", ...]"])

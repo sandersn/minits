@@ -12,17 +12,17 @@
     ExpressionStatement (Call (LValue (Identifier "explicit"), [IntLiteral 2]));
     ExpressionStatement
       (Call (LValue (Identifier "binary"), [IntLiteral 1; IntLiteral 2]))],
- ["File  [Function ("nulla...:
-  [binary, Function  ("binary", [(...]
-  [explicit, Function  ("explicit", ...]
-  [nullary, Function ("nullary", []...]
-  [unary, Function ("unary", [("n...]";
-  "Function  ("binary", [(...:
-  [m, Var ("m", Some (Identif...]
-  [n, Var ("n", Some (Identif...]";
-  "Function  ("explicit", ...:
-  [n, Var ("n", Some (Identif...]";
-  "Function ("nullary", []...:
-  ";
-  "Function ("unary", [("n...:
-  [n, Var ("n", Some (Identif...]"])
+ ["File  [Function ("nullary", [], N...:
+    [binary, Function  ("binary", [("n", Ident...]
+    [explicit, Function  ("explicit", [("n", Ide...]
+    [nullary, Function ("nullary", [], None, In...]
+    [unary, Function ("unary", [("n", Identif...]";
+  "Function  ("binary", [("n", Ident...:
+    [m, Var ("m", Some (Identifier "int")...]
+    [n, Var ("n", Some (Identifier "int")...]";
+  "Function  ("explicit", [("n", Ide...:
+    [n, Var ("n", Some (Identifier "int")...]";
+  "Function ("nullary", [], None, In...:
+    ";
+  "Function ("unary", [("n", Identif...:
+    [n, Var ("n", Some (Identifier "int")...]"])

@@ -36,13 +36,18 @@ let compileTests: list<string * string> = [ ]
 let formatEnvironment (env: Environment) = 
   let shorten a =
     let s = sprintf "%A" a
-    if s.Length > 25 then s.Replace("\n", "").[0..22] + "..." else s
+    if s.Length > 35 then s.Replace("\n", "").[0..32] + "..." else s
+  let formatSymbol = function
+  | { var = Some(var); typ = None } -> shorten var
+  | { var = None; typ = Some(typ) } -> shorten typ
+  | { var=Some(var); typ=Some(typ) } -> sprintf "{ var=%s; typ=%s }" (shorten var) (shorten typ)
+  | s -> failwith <| sprintf "Should not have an empty symbol like %A" s
   env 
   |> Map.toList
   |> List.map (fun (d,t) -> 
-     sprintf "%s:\n  %s" 
+     sprintf "%s:\n    %s" 
        (shorten d) 
-       (System.String.Join("\n  ", (Map.map (fun _ d -> shorten d) t))))
+       (System.String.Join("\n    ", (Map.map (fun _ s -> formatSymbol s) t))))
 let run () =
     let lexResult = 
         lexTests 

@@ -1,5 +1,5 @@
 (File
    [Var ("a", None, Null);
     ExpressionStatement (Sequence [IntLiteral 1; Null; Null])],
- ["File  [Var ("a", None, ...:
-  [a, Var ("a", None, Null)]"])
+ ["File  [Var ("a", None, Null);   E...:
+    [a, Var ("a", None, Null)]"])
