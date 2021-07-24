@@ -25,7 +25,9 @@ let bind (decl : Declaration) =
       Map.empty
   let rec bindDeclaration declaration = 
     match declaration with
-    | Var(name,_,_) -> Some name
+    | Var(name,_,init) -> 
+      bindExpression init
+      Some name
     | Declaration.Type(name,_) -> Some name
     | Function (name,parameters,_,body) as f ->
       let params' : Table = 
@@ -39,12 +41,11 @@ let bind (decl : Declaration) =
       bindExpression e
       None
     | File _ -> None
-  // TODO: Error on conflicts + add two namespaces
   and bindDeclarations declarations = 
     declarations
     |> List.choose (fun d -> Option.map (fun name -> (name, d)) (bindDeclaration d))
     |> createTable
-  and bindExpression expression =
+  and walkExpression (f : Expression -> list<Expression> -> 'a) (expression : Expression) =
     let kids = 
       match expression with
       | Negative e -> [e]
@@ -56,15 +57,21 @@ let bind (decl : Declaration) =
       | ArrayCons inits -> inits
       | If (cond,cons,alt) -> [cond; cons; alt]
       | While (cond, action) -> [cond; action]
-      | For (name, start, stop, action) as f ->
-        env.Add(ExpressionStatement f, createTable [name, (Var (name,None,start))])
-        [start; stop; action]
-      | Let (decls, e) as l -> 
-        env.Add(ExpressionStatement l, bindDeclarations decls)
-        [e]
+      | For (name, start, stop, action) as f -> [start; stop; action]
+      | Let (decls, e) as l -> [e]
       | LValue lvalue -> walkLValue lvalue
       | IntLiteral _ | StringLiteral _ | Break | Null -> []
-    List.iter bindExpression kids
+    f expression kids
+  and bindExpression expression  =
+    walkExpression (fun e kids ->
+      match e with
+      | For (name, start, stop, action) as f ->
+        env.Add(ExpressionStatement f, createTable [name, (Var (name,None,start))])
+      | Let (decls, e) as l -> 
+        env.Add(ExpressionStatement l, bindDeclarations decls)
+      | _ -> ()
+      List.iter bindExpression kids
+    ) expression
   and walkLValue lvalue =
     match lvalue with
     | PropertyAccess (l, _) -> walkLValue l
