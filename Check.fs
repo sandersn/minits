@@ -1,7 +1,7 @@
 module Minits.Check
 open Types
 open Bind
-let globals = Map.empty
+let globals : Table = Map.empty
 let rec typeToString = function
 | Type.Identifier name -> name
 | Literal ps  -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
@@ -11,7 +11,8 @@ and propertyToString (name, t) = name + typeToString t
 // 2. add a cache for expression checking, keyed by node (it has to be a record of maps because of different types). 
 //    return it
 // 3. expose a function that takes a node and cache and returns the type
-// 4. walk the tree in tests and call this function to create type baselines
+// 4. walk the tree in tests and call this function to create type baselines (also someday call the emitter to convert ASTs to strings)
+// 5. also, call resolve on types too
 let check (env : Environment) (decl: Declaration) =
   let errors = System.Collections.Generic.List()
   let rec checkExpression (scope : list<Table>) expression =
@@ -53,16 +54,23 @@ let check (env : Environment) (decl: Declaration) =
       let i = checkExpression scope init
       match typename with
       | Some(name) ->
-          let t = checkType name
+          let t = checkType scope name
           if t <> i then errors.Add <| sprintf "Cannot assign initialiser of type '%s' to variable with declared type '%s'" (typeToString i) (typeToString t)
           t
       | None -> i
-    | Declaration.Type(_, t) -> checkType t
+    | Declaration.Type(_, t) -> checkType scope t
     | Function _ -> errors.Add"Cannot check functions yet"; errorType
-  and checkType = function
-  | Type.Identifier _ -> errorType // TODO: resolve
-  | Type.Literal _ -> errorType // TODO: Create from properties
-  | Type.Array _ -> errorType // TODO: Recur
+  and checkType scope typ = 
+    match typ with
+    | Type.Identifier name -> resolveType scope name
+    | Type.Literal _ -> errorType // TODO: Create from properties
+    | Type.Array _ -> errorType // TODO: Recur
+  and resolveType scope name =
+    match name with
+    | "string" -> stringType
+    | "int" -> intType
+    | "null" -> nullType
+    | name -> defaultArg (resolve name scope Type |> Option.map (checkDeclaration scope)) errorType
   decl |> checkDeclaration [globals] |> ignore
   (errors :> seq<_> |> List.ofSeq)
   

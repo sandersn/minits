@@ -1,1 +1,1 @@
-["Cannot assign initialiser of type 'int' to variable with declared type 'error'"]
+["Cannot assign initialiser of type 'int' to variable with declared type 'string'"]
