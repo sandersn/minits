@@ -1,3 +1,2 @@
 ["Cannot assign initialiser of type 'int' to variable with declared type 'string'";
- "Cannot assign initialiser of type 'int' to variable with declared type 'string'";
  "Cannot assign value of type 'int' to variable of type 'string'"]

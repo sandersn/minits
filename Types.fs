@@ -1,4 +1,5 @@
 module Minits.Types
+open System.Collections.Generic
 // TODO: Change token nam/intes to be less convenient to avoid clash with others
 type Token =
  | Type
@@ -91,6 +92,12 @@ type Table = Map<string, Symbol>
 type Environment = Map<Declaration, Table>
 type Meaning = Type | Value
 type Module = Table * list<Declaration>
+type ResolvedTypes = {
+  declarations: Dictionary<Declaration, Type>
+  expressions: Dictionary<Expression, Type>
+  types: Dictionary<Type, Type>
+  lvalues: Dictionary<LValue, Type>
+}
 let stringType = Type.Identifier "string"
 let intType = Type.Identifier "int"
 let errorType = Type.Identifier "error"
