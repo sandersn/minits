@@ -53,37 +53,37 @@ type Lexer = {
     pos: unit -> int
 }
 type Type =
- | Identifier of string
- | Literal of list<Property>
- | Array of Type
+| Identifier of string
+| Literal of list<Property>
+| Array of Type
 and Property = string * Type
 type LValue =
 | Identifier of string
 | PropertyAccess of l: LValue * r: string
 | ArrayAccess of l: LValue * r: Expression
 and Expression = 
- | LValue of LValue
- | IntLiteral of int
- | StringLiteral of string
- | Negative of Expression
- | Binary of l: Expression * op: Token * r: Expression
- | Assignment of lvalue: LValue * value: Expression
- | Sequence of list<Expression>
- | Call of Expression * arguments: list<Expression>
- | RecordCons of typename: string * inits: list<string * Expression>
- | ArrayCons of inits: list<Expression>
- | If of condition: Expression * consequent: Expression * alternate: Expression
- | While of condition: Expression * action: Expression
- | For of name: string * start: Expression * stop: Expression * action: Expression
- | Let of decls: list<Declaration> * body: Expression
- | Break
- | Null
+| LValue of LValue
+| IntLiteral of int
+| StringLiteral of string
+| Negative of Expression
+| Binary of l: Expression * op: Token * r: Expression
+| Assignment of lvalue: LValue * value: Expression
+| Sequence of list<Expression>
+| Call of Expression * arguments: list<Expression>
+| RecordCons of typename: string * inits: list<string * Expression>
+| ArrayCons of inits: list<Expression>
+| If of condition: Expression * consequent: Expression * alternate: Expression
+| While of condition: Expression * action: Expression
+| For of name: string * start: Expression * stop: Expression * action: Expression
+| Let of decls: list<Declaration> * body: Expression
+| Break
+| Null
 and Declaration =
- | File of list<Declaration>
- | ExpressionStatement of Expression
- | Type of name: string * Type
- | Var of name: string * t: Option<Type> * init: Expression
- | Function of name: string * parameters: list<Property> * ret: Option<Type> * body: Expression
+| File of list<Declaration>
+| ExpressionStatement of Expression
+| Type of name: string * Type
+| Var of name: string * t: Option<Type> * init: Expression
+| Function of name: string * parameters: list<Property> * ret: Option<Type> * body: Expression
 type Symbol = {
   var: option<Declaration>
   typ: option<Declaration>
@@ -98,7 +98,3 @@ type ResolvedTypes = {
   types: Dictionary<Type, Type>
   lvalues: Dictionary<LValue, Type>
 }
-let stringType = Type.Identifier "string"
-let intType = Type.Identifier "int"
-let errorType = Type.Identifier "error"
-let nullType = Type.Identifier "null"

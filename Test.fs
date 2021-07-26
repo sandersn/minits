@@ -2,6 +2,7 @@ module Minits.Test
 open Types
 open Lex
 open Compile
+open Check
 let test (kind : string) (name : string) value =
     let reference = "baselines/reference/" + name + "." + kind + ".baseline"
     let local = "baselines/local/" + name + "." + kind + ".baseline"
@@ -32,11 +33,10 @@ let lexTests = [
     "keywordLex", "type var function if then else while do for to in break let null"
     "operatorLex", "< > <= >= = + - * / == /= & |"
 ]
-let compileTests: list<string * string> = [ ]
+let shorten a =
+  let s = sprintf "%A" a
+  if s.Length > 35 then s.Replace("\n", "").[0..32] + "..." else s
 let formatEnvironment (env: Environment) = 
-  let shorten a =
-    let s = sprintf "%A" a
-    if s.Length > 35 then s.Replace("\n", "").[0..32] + "..." else s
   let formatSymbol = function
   | { var = Some(var); typ = None } -> shorten var
   | { var = None; typ = Some(typ) } -> shorten typ
@@ -48,6 +48,12 @@ let formatEnvironment (env: Environment) =
      sprintf "%s:\n    %s" 
        (shorten d) 
        (System.String.Join("\n    ", (Map.map (fun _ s -> formatSymbol s) t))))
+let getTypesOfNodes (decl: Declaration) (types: ResolvedTypes): list<string> =
+  let getTypesOfDeclaration decl = sprintf "%s :: %A" (shorten decl) (getTypeOfDeclaration types decl)
+  let getTypesOfExpression e = sprintf "%s :: %A" (shorten e) (getTypeOfExpression types e)
+  let getTypesOfLValue l = sprintf "%s :: %A" (shorten l) (getTypeOfLValue types l)
+  let getTypesOfType t = sprintf "%s :: %A" (shorten t) (getTypeOfType types t)
+  Traverse.toList decl getTypesOfDeclaration getTypesOfExpression getTypesOfLValue getTypesOfType
 let run () =
     let lexResult = 
         lexTests 
@@ -55,9 +61,12 @@ let run () =
     let compileResult = 
         System.IO.Directory.GetFiles "tests"
         |> Array.sumBy (fun file -> 
-          let (tree, environment, errors, emit) = file |> System.IO.File.ReadAllText |> compile
+          let (tree, environment, types, errors, emit) = file |> System.IO.File.ReadAllText |> compile
           let name = file.Substring ("tests/".Length, file.IndexOf ".tig" - "tests/".Length)
-          test "tree" name (tree, formatEnvironment environment) + test "error" name errors + test "js" name emit)
+          test "tree" name (tree, formatEnvironment environment) 
+          + test "types" name (getTypesOfNodes tree types)
+          + test "error" name errors 
+          + test "js" name emit)
     let result = lexResult + compileResult
     if result = 0 then printfn "All tests passed." else printfn "%d tests failed." result
     result

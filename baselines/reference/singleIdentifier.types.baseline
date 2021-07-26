@@ -1,0 +1,4 @@
+["File [ExpressionStatement (LValue... :: Some (Identifier "error")";
+ "ExpressionStatement (LValue (Iden... :: Some (Identifier "error")";
+ "LValue (Identifier "x") :: Some (Identifier "error")";
+ "Identifier "x" :: Some (Identifier "error")"]

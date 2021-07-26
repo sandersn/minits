@@ -1,6 +1,10 @@
 module Minits.Check
 open Types
 open Bind
+let stringType = Type.Identifier "string"
+let intType = Type.Identifier "int"
+let errorType = Type.Identifier "error"
+let nullType = Type.Identifier "null"
 let globals : Table = Map.empty
 let first f (a,b) = (f a, b)
 let second f (a,b) = (a, f b)
@@ -97,5 +101,13 @@ let check (env : Environment) (decl: Declaration) =
     | Type.Array elt -> Type.Array (resolveType scope elt)
     | Type.Literal properties -> Type.Literal (List.map (second (resolveType scope)) properties)
   decl |> checkDeclaration [globals] |> ignore
-  (errors :> seq<_> |> List.ofSeq)
+  (cache, errors :> seq<_> |> List.ofSeq)
+let getTypeOfDeclaration (cache: ResolvedTypes) (node: Declaration) =
+  if cache.declarations.ContainsKey node then Some cache.declarations.[node] else None
+let getTypeOfExpression (cache: ResolvedTypes) (node: Expression) =
+  if cache.expressions.ContainsKey node then Some cache.expressions.[node] else None
+let getTypeOfLValue (cache: ResolvedTypes) (node: LValue) =
+  if cache.lvalues.ContainsKey node then Some cache.lvalues.[node] else None
+let getTypeOfType (cache: ResolvedTypes) (node: Type) =
+  if cache.types.ContainsKey node then Some cache.types.[node] else None
   

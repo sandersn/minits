@@ -23,24 +23,23 @@ let bind (decl : Declaration) =
     List.fold 
       (fun locals (name,d) -> Map.add name (createSymbol d (Map.tryFind name locals)) locals)
       Map.empty
-  let rec bindDeclaration declaration = 
-    match declaration with
-    | Var(name,_,init) -> 
-      bindExpression init
-      Some name
-    | Declaration.Type(name,_) -> Some name
-    | Function (name,parameters,_,body) as f ->
-      let params' : Table = 
-        parameters 
-        |> List.map (fun (name, t) -> (name, Var (name, Some t, Sequence []))) 
-        |> createTable
-      bindExpression body
-      env.Add(f, params')
-      Some name
-    | ExpressionStatement e -> 
-      bindExpression e
-      None
-    | File _ -> None
+  let rec bindDeclaration = function
+  | Var(name,_,init) -> 
+    bindExpression init
+    Some name
+  | Declaration.Type(name,_) -> Some name
+  | Function (name,parameters,_,body) as f ->
+    let params' : Table = 
+      parameters 
+      |> List.map (fun (name, t) -> (name, Var (name, Some t, Sequence []))) 
+      |> createTable
+    bindExpression body
+    env.Add(f, params')
+    Some name
+  | ExpressionStatement e -> 
+    bindExpression e
+    None
+  | File _ -> None
   and bindDeclarations declarations = 
     declarations
     |> List.choose (fun d -> Option.map (fun name -> (name, d)) (bindDeclaration d))
@@ -57,26 +56,25 @@ let bind (decl : Declaration) =
       | ArrayCons inits -> inits
       | If (cond,cons,alt) -> [cond; cons; alt]
       | While (cond, action) -> [cond; action]
-      | For (name, start, stop, action) as f -> [start; stop; action]
-      | Let (decls, e) as l -> [e]
+      | For (_, start, stop, action) as f -> [start; stop; action]
+      | Let (_, e) as l -> [e]
       | LValue lvalue -> walkLValue lvalue
       | IntLiteral _ | StringLiteral _ | Break | Null -> []
     f expression kids
   and bindExpression expression  =
     walkExpression (fun e kids ->
       match e with
-      | For (name, start, stop, action) as f ->
+      | For (name, start, _, _) as f ->
         env.Add(ExpressionStatement f, createTable [name, (Var (name,None,start))])
       | Let (decls, e) as l -> 
         env.Add(ExpressionStatement l, bindDeclarations decls)
       | _ -> ()
       List.iter bindExpression kids
     ) expression
-  and walkLValue lvalue =
-    match lvalue with
-    | PropertyAccess (l, _) -> walkLValue l
-    | ArrayAccess (l, r) -> r :: walkLValue l
-    | Identifier _ -> []
+  and walkLValue = function
+  | PropertyAccess (l, _) -> walkLValue l
+  | ArrayAccess (l, r) -> r :: walkLValue l
+  | Identifier _ -> []
   match decl with
   | File decls as f -> 
     env.Add(f, bindDeclarations decls)
