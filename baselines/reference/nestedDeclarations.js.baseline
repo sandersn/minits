@@ -1,5 +1,9 @@
 "x
 var x = "hi"
 var y = 1
-function f(y: int, z: int) = sequences do not emit yet
-calls do not emit yet"
+function f(y: int, z: int) =
+(x; y; alpha; let
+var x = 2
+var alpha = 1 in
+[x, y, z, alpha])
+f(4, 5)"

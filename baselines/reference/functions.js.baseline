@@ -1,8 +1,12 @@
-"function nullary() = 1
-function unary(n: int) = n
-function explicit(n: int): int = n
-function binary(n: int, m: int) = m
-calls do not emit yet
-calls do not emit yet
-calls do not emit yet
-calls do not emit yet"
+"function nullary() =
+1
+function unary(n: int) =
+n
+function explicit(n: int): int =
+n
+function binary(n: int, m: int) =
+m
+nullary()
+unary(1)
+explicit(2)
+binary(1, 2)"

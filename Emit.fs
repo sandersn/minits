@@ -28,16 +28,17 @@ and emitExpression = function
 | IntLiteral(value) -> string value
 | StringLiteral(value) -> sprintf "%A" value
 | Negative(e) -> "-" + emitExpression e
-| Binary (l,op,r) -> String.concat " " [emitExpression l; emitToken op; emitExpression r]
+| Binary (l,op,r) -> sprintf "(%s %s %s)" (emitExpression l) (emitToken op) (emitExpression r)
 | Assignment(name, value) -> $"{emitLValue name} = {emitExpression value}"
-| Call(name, parameters) -> "calls do not emit yet"
-| Sequence es -> "sequences do not emit yet"
-| RecordCons _ -> "records don't emit yet"
-| ArrayCons _ -> "arrays don't emit yet"
-| If _ -> "if doesn't emit yet"
-| For _ -> "for doesn't emit yet"
-| While _ -> "while doesn't emit yet"
-| Let _ -> "let doesn't emit yet"
+| Call(name, parameters) -> 
+  sprintf "%s(%s)" (emitExpression name) (parameters |> List.map emitExpression |> String.concat ", ")
+| Sequence es -> sprintf "(%s)" (es |> List.map emitExpression |> String.concat "; ")
+| RecordCons (name,inits) -> sprintf "%s {%s}" name (inits |> List.map (fun (n,e) -> $"{n} = {emitExpression e}") |> String.concat ", ")
+| ArrayCons es -> sprintf "[%s]" (es |> List.map emitExpression |> String.concat ", ")
+| If (cond,cons,alt) -> $"if {emitExpression cond} then {emitExpression cons} else {emitExpression alt}"
+| For (name,start,stop,action) -> $"for {name} = {emitExpression start} to {emitExpression stop} do\n{emitExpression action}"
+| While (cond,action) -> $"while {emitExpression cond} do\n{emitExpression action}"
+| Let (decls,e) -> sprintf "let\n%s in\n%s" (decls |> List.map emitDeclaration |> String.concat "\n") (emitExpression e)
 | Break -> "break"
 | Null -> "null"
 and emitDeclaration = function
@@ -49,5 +50,5 @@ and emitDeclaration = function
 | Function (name, parameters, ret, body) ->
   let sparams = parameters |> List.map emitProperty |> String.concat ", "
   let sbody = emitExpression body
-  sprintf "function %s(%s)%s = %s" name sparams (emitTypeAnnotation ret) sbody
+  sprintf "function %s(%s)%s =\n%s" name sparams (emitTypeAnnotation ret) sbody
 let emit = emitDeclaration 
