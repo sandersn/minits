@@ -18,7 +18,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
   let parseExpected expected =
     if parseOptional expected 
     then ()
-    else errors.Add <| sprintf "parseToken: Expected %A but got %A" expected (lexer.token())
+    else errors.Add $"parseToken: Expected {expected} but got {lexer.token()}"
   let parseMany element =
     let rec loop acc =
       match element () with
@@ -52,7 +52,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
       parseExpected RightBrace
       literal
     | t ->
-      errors.Add <| sprintf "parseType: expected identifier or {, got %A" t
+      errors.Add (sprintf "parseType: expected identifier or {, got %A" t)
       Type.Identifier "(missing)"
   and parseProperty () =
     match lexer.token () with
@@ -165,7 +165,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
     | Token.Null -> Expression.Null
     | Token.Break -> Expression.Break
     | t -> 
-      errors.Add <| sprintf "parseExpression: expected literal or an identifier, got %A" t
+      errors.Add $"parseExpression: expected literal or an identifier, got {t}"
       LValue <| Identifier "(missing)"
   and parseLValue (acc: LValue) =
     if parseOptional Period then 
@@ -199,7 +199,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
      elif isStartOfExpression (lexer.token ()) then 
        parseExpression () |> ExpressionStatement
      else
-       errors.Add <| sprintf "parseDeclaration: expected 'var' or 'type' or 'function', got %A" (parseToken ())
+       errors.Add $"parseDeclaration: expected 'var' or 'type' or 'function', got {parseToken ()}"
        Identifier "missing" |> LValue |> ExpressionStatement
   let parseProgram () =
     let statements = parseTerminated parseDeclaration isStartOfDeclaration Semicolon

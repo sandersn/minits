@@ -41,7 +41,7 @@ let formatEnvironment (env: Environment) =
   | { var = Some(var); typ = None } -> shorten var
   | { var = None; typ = Some(typ) } -> shorten typ
   | { var=Some(var); typ=Some(typ) } -> sprintf "{ var=%s; typ=%s }" (shorten var) (shorten typ)
-  | s -> failwith <| sprintf "Should not have an empty symbol like %A" s
+  | s -> failwith <| $"Should not have an empty symbol like {s}"
   env 
   |> Map.toList
   |> List.map (fun (d,t) -> 
@@ -49,10 +49,10 @@ let formatEnvironment (env: Environment) =
        (shorten d) 
        (System.String.Join("\n    ", (Map.map (fun _ s -> formatSymbol s) t))))
 let getTypesOfNodes (decl: Declaration) (types: ResolvedTypes): list<string> =
-  let getTypesOfDeclaration decl = sprintf "%s :: %A" (shorten decl) (getTypeOfDeclaration types decl)
-  let getTypesOfExpression e = sprintf "%s :: %A" (shorten e) (getTypeOfExpression types e)
-  let getTypesOfLValue l = sprintf "%s :: %A" (shorten l) (getTypeOfLValue types l)
-  let getTypesOfType t = sprintf "%s :: %A" (shorten t) (getTypeOfType types t)
+  let getTypesOfDeclaration decl = $"{shorten decl} :: %A{getTypeOfDeclaration types decl}"
+  let getTypesOfExpression e = $"{shorten e} :: %A{getTypeOfExpression types e}"
+  let getTypesOfLValue l = $"{shorten l} :: %A{getTypeOfLValue types l}"
+  let getTypesOfType t = $"{shorten t} :: %A{getTypeOfType types t}"
   Traverse.toList decl getTypesOfDeclaration getTypesOfExpression getTypesOfLValue getTypesOfType
 let run () =
     let lexResult = 

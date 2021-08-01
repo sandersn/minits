@@ -11,8 +11,8 @@ let second f (a,b) = (a, f b)
 let rec typeToString = function
 | Type.Identifier name -> name
 | Literal ps -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
-| Type.Array t -> sprintf "Array<%s>" <| typeToString t
-and propertyToString (name, t) = sprintf "%s: %s" name  (typeToString t)
+| Type.Array t -> $"Array<{typeToString t}>"
+and propertyToString (name, t) = $"{name}: {typeToString t}"
 // TODO: also someday call the emitter to convert ASTs to strings
 let check (env : Environment) (decl: Declaration) =
   let errors = System.Collections.Generic.List()
@@ -49,13 +49,13 @@ let check (env : Environment) (decl: Declaration) =
     | StringLiteral _ -> stringType
     | Negative e -> 
       let t = checkExpression scope e
-      if t <> intType then errors.Add <| sprintf "Negative: expected int but got %s" (typeToString t)
+      if t <> intType then errors.Add $"Negative: expected int but got {typeToString t}"
       intType
     | Binary(l,op,r) -> errors.Add "Binary expressions don't check yet"; errorType
     | Assignment(lvalue, value) -> 
       let v = checkExpression scope value
       let n = checkLValue scope lvalue
-      if v <> n then errors.Add <| sprintf "Cannot assign value of type '%s' to variable of type '%s'" (typeToString v) (typeToString n)
+      if v <> n then errors.Add $"Cannot assign value of type '{typeToString v}' to variable of type '{typeToString n}'"
       n
     | Call(e, parameters) -> errors.Add "Cannot check calls yet"; errorType
     | Sequence es -> errorType // List.map checkExpression es |> List.last
@@ -85,7 +85,7 @@ let check (env : Environment) (decl: Declaration) =
       match typename with
       | Some(name) ->
           let t = resolveType scope name
-          if t <> i then errors.Add <| sprintf "Cannot assign initialiser of type '%s' to variable with declared type '%s'" (typeToString i) (typeToString t)
+          if t <> i then errors.Add $"Cannot assign initialiser of type '{typeToString i}' to variable with declared type '{typeToString t}'"
           t
       | None -> i
     | Declaration.Type(_, t) -> resolveType scope t

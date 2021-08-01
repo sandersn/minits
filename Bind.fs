@@ -8,17 +8,17 @@ let bind (decl : Declaration) =
     match d with
     | Declaration.Type (name,_) as t -> 
       match s' with
-      | { typ = Some _ } -> errors.Add (sprintf "Duplicate declaration of %s" name); s'
+      | { typ = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
       | _ -> { s' with typ = Some t }
     | Var (name,_,_) as v -> 
       match s' with
-      | { var = Some _ } -> errors.Add (sprintf "Duplicate declaration of %s" name); s'
+      | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
       | _ -> { s' with var = Some v }
     | Function (name,_,_,_) as f ->
       match s' with
-      | { var = Some _ } -> errors.Add (sprintf "Duplicate declaration of %s" name); s'
+      | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
       | _ -> { s' with var = Some f }
-    | _ -> failwith <| sprintf "Should only create symbols for Function, Var and Type, got %A" d
+    | _ -> failwith $"Should only create symbols for Function, Var and Type, got {d}"
   let createTable : list<string * Declaration> -> Table =
     List.fold 
       (fun locals (name,d) -> Map.add name (createSymbol d (Map.tryFind name locals)) locals)

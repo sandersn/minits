@@ -4,7 +4,7 @@ let emitTypeAnnotation = function
 | Some t -> ": " + Check.typeToString t
 | _ -> ""
 // TODO: This is duplicated in the checker
-let emitProperty (name, t) = sprintf "%s: %s" name (Check.typeToString t)
+let emitProperty (name, t) = $"{name}: {Check.typeToString t}"
 let emitToken = function
 | Pipe -> "|"
 | Ampersand -> "&"
@@ -22,14 +22,14 @@ let emitToken = function
 let rec emitLValue = function
 | Identifier(name) -> name
 | PropertyAccess (l,r) -> $"{emitLValue l}.{r}"
-| ArrayAccess (l,r) -> sprintf "%s[%s]" (emitLValue l) (emitExpression r)
+| ArrayAccess (l,r) -> $"{emitLValue l}[{emitExpression r}]"
 and emitExpression = function
 | LValue(lvalue) -> emitLValue lvalue
 | IntLiteral(value) -> string value
 | StringLiteral(value) -> sprintf "%A" value
 | Negative(e) -> "-" + emitExpression e
-| Binary (l,op,r) -> sprintf "%s %s %s" (emitExpression l) (emitToken op) (emitExpression r)
-| Assignment(name, value) -> sprintf "%s = %s" (emitLValue name) (emitExpression value)
+| Binary (l,op,r) -> String.concat " " [emitExpression l; emitToken op; emitExpression r]
+| Assignment(name, value) -> $"{emitLValue name} = {emitExpression value}"
 | Call(name, parameters) -> "calls do not emit yet"
 | Sequence es -> "sequences do not emit yet"
 | RecordCons _ -> "records don't emit yet"
@@ -44,8 +44,8 @@ and emitDeclaration = function
 | File decls -> decls |> List.map emitDeclaration |> String.concat "\n"
 | ExpressionStatement e -> emitExpression e
 | Var(name, t, init) -> 
-  sprintf "var %s%s = %s" name (emitTypeAnnotation t) (emitExpression init)
-| Declaration.Type (name,t) -> sprintf "type %s = %s" name (Check.typeToString t)
+  $"var {name}{emitTypeAnnotation t} = {emitExpression init}"
+| Declaration.Type (name,t) -> $"type {name} = {Check.typeToString t}"
 | Function (name, parameters, ret, body) ->
   let sparams = parameters |> List.map emitProperty |> String.concat ", "
   let sbody = emitExpression body
