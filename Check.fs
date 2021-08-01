@@ -30,12 +30,27 @@ let check (env : Environment) (decl: Declaration) =
     let e = checkExpression' scope expression
     cache.expressions.Add (expression,e)
     e
+  and checkLValue scope lvalue =
+    if cache.lvalues.ContainsKey lvalue then cache.lvalues.[lvalue] else
+    let l = checkLValue' scope lvalue
+    cache.lvalues.Add (lvalue,l)
+    l
+  and checkDeclaration (scope : list<Table>) (decl : Declaration) = 
+    if cache.declarations.ContainsKey decl then cache.declarations.[decl] else
+    let d = checkDeclaration' scope decl
+    cache.declarations.Add (decl,d)
+    d
+  and resolveType scope typ = 
+    if cache.types.ContainsKey typ then cache.types.[typ] else
+    let t = resolveType' scope typ
+    cache.types.Add (typ,t)
+    t
   and checkExpression' (scope : list<Table>) expression =
     match expression with
-    | LValue(lvalue) -> checkLValue scope lvalue
-    | IntLiteral(_) -> intType
-    | StringLiteral(_) -> stringType
-    | Negative(e) -> errors.Add "Negatives don't check yet"; errorType
+    | LValue lvalue -> checkLValue scope lvalue
+    | IntLiteral _ -> intType
+    | StringLiteral _ -> stringType
+    | Negative e -> errors.Add "Negatives don't check yet"; errorType
     | Binary(l,op,r) -> errors.Add "Binary expressions don't check yet"; errorType
     | Assignment(lvalue, value) -> 
       let v = checkExpression scope value
@@ -52,24 +67,14 @@ let check (env : Environment) (decl: Declaration) =
     | Let _ -> errors.Add "Let doesn't check yet"; errorType
     | Break -> errors.Add "Break doesn't check yet"; nullType
     | Null -> nullType
-  and checkLValue scope lvalue =
-    if cache.lvalues.ContainsKey lvalue then cache.lvalues.[lvalue] else
-    let l = checkLValue' scope lvalue
-    cache.lvalues.Add (lvalue,l)
-    l
   and checkLValue' (scope : list<Table>) (lvalue : LValue) =
     match lvalue with
     | Identifier(name) -> 
       match resolve name scope Value with
       | Some(statement) -> checkDeclaration scope statement
       | _ -> errors.Add <| "Could not resolve " + name; errorType
-    | PropertyAccess _ -> stringType // TODO: REcursive resolve
-    | ArrayAccess _ -> intType // TODO: Recursive resolve
-  and checkDeclaration (scope : list<Table>) (decl : Declaration) = 
-    if cache.declarations.ContainsKey decl then cache.declarations.[decl] else
-    let d = checkDeclaration' scope decl
-    cache.declarations.Add (decl,d)
-    d
+    | PropertyAccess _ -> errorType // TODO: REcursive resolve
+    | ArrayAccess _ -> errorType // TODO: Recursive resolve
   and checkDeclaration' (scope : list<Table>) (decl : Declaration) = 
     match decl with
     | File decls as f -> 
@@ -85,11 +90,6 @@ let check (env : Environment) (decl: Declaration) =
       | None -> i
     | Declaration.Type(_, t) -> resolveType scope t
     | Function _ -> errors.Add "Cannot check functions yet"; errorType
-  and resolveType scope typ = 
-    if cache.types.ContainsKey typ then cache.types.[typ] else
-    let t = resolveType' scope typ
-    cache.types.Add (typ,t)
-    t
   and resolveType' scope typ = 
     match typ with
     | Type.Identifier name -> 
