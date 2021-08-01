@@ -1,0 +1,7 @@
+["File  [Var ("a", None, Null);   E... :: Some (Identifier "error")";
+ "Var ("a", None, Null) :: Some (Identifier "null")";
+ "Null :: Some (Identifier "null")";
+ "ExpressionStatement (Sequence [In... :: Some (Identifier "error")";
+ "Sequence [IntLiteral 1; Null; Null] :: Some (Identifier "error")";
+ "IntLiteral 1 :: None"; "Null :: Some (Identifier "null")";
+ "Null :: Some (Identifier "null")"]

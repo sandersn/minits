@@ -1,0 +1,11 @@
+["File  [Var ("s", None, StringLite... :: Some (Identifier "int")";
+ "Var ("s", None, StringLiteral "hi") :: Some (Identifier "string")";
+ "StringLiteral "hi" :: Some (Identifier "string")";
+ "Var ("n", None, IntLiteral 1) :: Some (Identifier "int")";
+ "IntLiteral 1 :: Some (Identifier "int")";
+ "ExpressionStatement (LValue (Iden... :: Some (Identifier "string")";
+ "LValue (Identifier "s") :: Some (Identifier "string")";
+ "Identifier "s" :: Some (Identifier "string")";
+ "ExpressionStatement (LValue (Iden... :: Some (Identifier "int")";
+ "LValue (Identifier "n") :: Some (Identifier "int")";
+ "Identifier "n" :: Some (Identifier "int")"]

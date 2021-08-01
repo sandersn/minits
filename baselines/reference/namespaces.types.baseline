@@ -1,0 +1,22 @@
+["File  [Type ("Nat", Identifier "i... :: Some (Identifier "error")";
+ "Type ("Nat", Identifier "int") :: Some (Identifier "int")";
+ "Identifier "int" :: Some (Identifier "int")";
+ "Var ("Nat", None, StringLiteral "... :: Some (Identifier "string")";
+ "StringLiteral "ok" :: Some (Identifier "string")";
+ "Var ("Nat", None, StringLiteral "... :: Some (Identifier "string")";
+ "StringLiteral "not ok" :: Some (Identifier "string")";
+ "Var ("Nat", None, Negative (IntLi... :: Some (Identifier "int")";
+ "Negative (IntLiteral 1) :: Some (Identifier "int")";
+ "IntLiteral 1 :: Some (Identifier "int")";
+ "Var ("Net", Some (Identifier "Nat... :: Some (Identifier "int")";
+ "Identifier "Nat" :: Some (Identifier "int")";
+ "LValue (Identifier "Nat") :: Some (Identifier "string")";
+ "Identifier "Nat" :: Some (Identifier "string")";
+ "Var ("Nit", Some (Identifier "Net... :: Some (Identifier "error")";
+ "Identifier "Net" :: Some (Identifier "error")";
+ "IntLiteral 13 :: Some (Identifier "int")";
+ "Type ("Not", Identifier "int") :: Some (Identifier "int")";
+ "Identifier "int" :: Some (Identifier "int")";
+ "Var ("Nut", None, LValue (Identif... :: Some (Identifier "error")";
+ "LValue (Identifier "Not") :: Some (Identifier "error")";
+ "Identifier "Not" :: Some (Identifier "error")"]

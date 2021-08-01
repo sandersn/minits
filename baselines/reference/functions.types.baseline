@@ -1,0 +1,27 @@
+["File  [Function ("nullary", [], N... :: Some (Identifier "error")";
+ "Function ("nullary", [], None, In... :: Some (Identifier "error")";
+ "IntLiteral 1 :: None";
+ "Function ("unary", [("n", Identif... :: Some (Identifier "error")";
+ "Identifier "int" :: None"; "LValue (Identifier "n") :: None";
+ "Identifier "n" :: None";
+ "Function  ("explicit", [("n", Ide... :: Some (Identifier "error")";
+ "Identifier "int" :: None"; "Identifier "int" :: None";
+ "LValue (Identifier "n") :: None"; "Identifier "n" :: None";
+ "Function  ("binary", [("n", Ident... :: Some (Identifier "error")";
+ "Identifier "int" :: None"; "Identifier "int" :: None";
+ "LValue (Identifier "m") :: None"; "Identifier "m" :: None";
+ "ExpressionStatement (Call (LValue... :: Some (Identifier "error")";
+ "Call (LValue (Identifier "nullary... :: Some (Identifier "error")";
+ "LValue (Identifier "nullary") :: None"; "Identifier "nullary" :: None";
+ "ExpressionStatement (Call (LValue... :: Some (Identifier "error")";
+ "Call (LValue (Identifier "unary")... :: Some (Identifier "error")";
+ "LValue (Identifier "unary") :: None"; "Identifier "unary" :: None";
+ "IntLiteral 1 :: None";
+ "ExpressionStatement (Call (LValue... :: Some (Identifier "error")";
+ "Call (LValue (Identifier "explici... :: Some (Identifier "error")";
+ "LValue (Identifier "explicit") :: None"; "Identifier "explicit" :: None";
+ "IntLiteral 2 :: None";
+ "ExpressionStatement  (Call (LValu... :: Some (Identifier "error")";
+ "Call (LValue (Identifier "binary"... :: Some (Identifier "error")";
+ "LValue (Identifier "binary") :: None"; "Identifier "binary" :: None";
+ "IntLiteral 1 :: None"; "IntLiteral 2 :: None"]

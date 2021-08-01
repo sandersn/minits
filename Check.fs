@@ -13,10 +13,7 @@ let rec typeToString = function
 | Literal ps  -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
 | Type.Array t -> sprintf "Array<%s>" <| typeToString t
 and propertyToString (name, t) = name + typeToString t
-// TODO:
-// 3. expose a function that takes a node and cache and returns the type
-// 4. walk the tree in tests and call this function to create type baselines (also someday call the emitter to convert ASTs to strings)
-// 5. also, call resolve on types too
+// TODO: also someday call the emitter to convert ASTs to strings
 let check (env : Environment) (decl: Declaration) =
   let errors = System.Collections.Generic.List()
   let cache: ResolvedTypes = {
@@ -50,7 +47,10 @@ let check (env : Environment) (decl: Declaration) =
     | LValue lvalue -> checkLValue scope lvalue
     | IntLiteral _ -> intType
     | StringLiteral _ -> stringType
-    | Negative e -> errors.Add "Negatives don't check yet"; errorType
+    | Negative e -> 
+      let t = checkExpression scope e
+      if t <> intType then errors.Add <| sprintf "Negative: expected int but got %s" (typeToString t)
+      intType
     | Binary(l,op,r) -> errors.Add "Binary expressions don't check yet"; errorType
     | Assignment(lvalue, value) -> 
       let v = checkExpression scope value

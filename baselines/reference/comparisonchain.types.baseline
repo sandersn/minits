@@ -1,0 +1,15 @@
+["File  [Var     ("parencomparisonc... :: Some (Identifier "error")";
+ "Var  ("parencomparisonchain", Non... :: Some (Identifier "error")";
+ "Binary  (Binary (IntLiteral 1, Le... :: Some (Identifier "error")";
+ "Binary (IntLiteral 1, LessThan, L... :: Some (Identifier "error")";
+ "IntLiteral 1 :: None"; "LValue (Identifier "x") :: None";
+ "Identifier "x" :: None"; "IntLiteral 3 :: None";
+ "Var  ("paren2", None,   Binary   ... :: Some (Identifier "error")";
+ "Binary  (IntLiteral 1, LessThan, ... :: Some (Identifier "error")";
+ "IntLiteral 1 :: None"; "Binary (LValue (Identifier "x"), ... :: None";
+ "LValue (Identifier "x") :: None"; "Identifier "x" :: None";
+ "IntLiteral 3 :: None";
+ "Var  ("nocomparisonchain", None, ... :: Some (Identifier "error")";
+ "Binary (IntLiteral 1, LessThan, L... :: Some (Identifier "error")";
+ "IntLiteral 1 :: None"; "LValue (Identifier "x") :: None";
+ "Identifier "x" :: None"]

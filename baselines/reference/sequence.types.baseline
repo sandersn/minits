@@ -1,0 +1,14 @@
+["File  [Var ("a", None, IntLiteral... :: Some (Identifier "error")";
+ "Var ("a", None, IntLiteral 1) :: Some (Identifier "int")";
+ "IntLiteral 1 :: Some (Identifier "int")";
+ "ExpressionStatement (Sequence []) :: Some (Identifier "error")";
+ "Sequence [] :: Some (Identifier "error")";
+ "ExpressionStatement  (Sequence   ... :: Some (Identifier "error")";
+ "Sequence  [LValue (Identifier "a"... :: Some (Identifier "error")";
+ "LValue (Identifier "a") :: None"; "Identifier "a" :: None";
+ "LValue (Identifier "a") :: None"; "Identifier "a" :: None";
+ "LValue (Identifier "a") :: None"; "Identifier "a" :: None";
+ "ExpressionStatement  (Sequence [L... :: Some (Identifier "error")";
+ "Sequence [LValue (Identifier "a")... :: Some (Identifier "error")";
+ "LValue (Identifier "a") :: None"; "Identifier "a" :: None";
+ "LValue (Identifier "a") :: None"; "Identifier "a" :: None"]
