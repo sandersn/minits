@@ -1,11 +1,7 @@
-["File  [Var ("s", None, StringLite... :: Some (Identifier "int")";
- "Var ("s", None, StringLiteral "hi") :: Some (Identifier "string")";
- "StringLiteral "hi" :: Some (Identifier "string")";
- "Var ("n", None, IntLiteral 1) :: Some (Identifier "int")";
- "IntLiteral 1 :: Some (Identifier "int")";
- "ExpressionStatement (LValue (Iden... :: Some (Identifier "string")";
- "LValue (Identifier "s") :: Some (Identifier "string")";
- "Identifier "s" :: Some (Identifier "string")";
- "ExpressionStatement (LValue (Iden... :: Some (Identifier "int")";
- "LValue (Identifier "n") :: Some (Identifier "int")";
- "Identifier "n" :: Some (Identifier "int")"]
+["var s = "hi" var n = 1 s n :: Some (Identifier "int")";
+ "var s = "hi" :: Some (Identifier "string")";
+ ""hi" :: Some (Identifier "string")"; "var n = 1 :: Some (Identifier "int")";
+ "1 :: Some (Identifier "int")"; "s :: Some (Identifier "string")";
+ "s :: Some (Identifier "string")"; "s :: Some (Identifier "string")";
+ "n :: Some (Identifier "int")"; "n :: Some (Identifier "int")";
+ "n :: Some (Identifier "int")"]

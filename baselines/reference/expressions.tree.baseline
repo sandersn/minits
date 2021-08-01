@@ -111,27 +111,27 @@
                 If
                   (Binary (LValue (Identifier "i"), GreaterThan, IntLiteral 12),
                    Break, Sequence [])])))],
- ["File  [Var ("negative", None, Neg...:
-    [Foo, Type ("Foo", Literal [("foo", Ide...]
-    [a, Var ("a", None, ArrayCons [IntLit...]
-    [add, Var ("add", None, Binary (IntLite...]
-    [addmul2, Var  ("addmul2", None,   Binary  ...]
-    [addmul34, Var  ("addmul34", None,   Binary ...]
-    [addsub, Var  ("addsub", None,   Binary (B...]
-    [b, Var  ("b", None,   ArrayCons     ...]
-    [div, Var ("div", None, Binary (IntLite...]
-    [ltaddmul, Var  ("ltaddmul", None,   Binary ...]
-    [muladd, Var  ("muladd", None,   Binary (B...]
-    [muladd2, Var  ("muladd2", None,   Binary  ...]
-    [muldiv, Var  ("muldiv", None,   Binary   ...]
-    [muldiv2, Var  ("muldiv2", None,   Binary  ...]
-    [mult, Var ("mult", None, Binary (IntLit...]
-    [negative, Var ("negative", None, Negative (...]
-    [record, Var  ("record", None,   RecordCon...]
-    [sub, Var ("sub", None, Binary (IntLite...]
-    [which, Var  ("which", None,   If     (Bi...]";
-  "ExpressionStatement  (For     ("i...:
-    [i, Var ("i", None, IntLiteral 0)]";
-  "ExpressionStatement  (Let     ([V...:
-    [result, Var  ("result", None,   Binary   ...]
-    [total, Var  ("total", None,   Binary (LV...]"])
+ ["var negative = -1 var mult = (1 *...:
+    [Foo, type Foo = {foo: string, bar: int}]
+    [a, var a = [1, 2, 3]]
+    [add, var add = (1 + 2)]
+    [addmul2, var addmul2 = (1 + ((2 * 3) * 4))]
+    [addmul34, var addmul34 = (((1 * 2) + 3) + (...]
+    [addsub, var addsub = ((1 + 2) - 3)]
+    [b, var b = ["hi", Foo {foo = "hi", b...]
+    [div, var div = (1 / 2)]
+    [ltaddmul, var ltaddmul = ((1 * 2) < (3 + (4...]
+    [muladd, var muladd = ((1 * 2) + 3)]
+    [muladd2, var muladd2 = (((1 * 2) * 3) + 4)]
+    [muldiv, var muldiv = ((1 * 2) / 3)]
+    [muldiv2, var muldiv2 = ((1 / 2) * 3)]
+    [mult, var mult = (1 * 2)]
+    [negative, var negative = -1]
+    [record, var record = Foo {foo = "hi", bar...]
+    [sub, var sub = (1 - 2)]
+    [which, var which = if (add < sub) then (...]";
+  "for i = 0 to 12 do let var total ...:
+    [i, var i = 0]";
+  "let var total = (add * sub) var r...:
+    [result, var result = ((0 < total) & (tota...]
+    [total, var total = (add * sub)]"])

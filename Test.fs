@@ -3,6 +3,7 @@ open Types
 open Lex
 open Compile
 open Check
+open Emit
 let test (kind : string) (name : string) value =
     let reference = "baselines/reference/" + name + "." + kind + ".baseline"
     let local = "baselines/local/" + name + "." + kind + ".baseline"
@@ -33,26 +34,26 @@ let lexTests = [
     "keywordLex", "type var function if then else while do for to in break let null"
     "operatorLex", "< > <= >= = + - * / == /= & |"
 ]
-let shorten a =
-  let s = sprintf "%A" a
-  if s.Length > 35 then s.Replace("\n", "").[0..32] + "..." else s
+let shorten (s: string) =
+  let s' = s.Replace("\n", " ")
+  if s'.Length > 35 then s'.[0..32] + "..." else s'
 let formatEnvironment (env: Environment) = 
   let formatSymbol = function
-  | { var = Some(var); typ = None } -> shorten var
-  | { var = None; typ = Some(typ) } -> shorten typ
-  | { var=Some(var); typ=Some(typ) } -> sprintf "{ var=%s; typ=%s }" (shorten var) (shorten typ)
+  | { var = Some(var); typ = None } -> shorten <| emitDeclaration var
+  | { var = None; typ = Some(typ) } -> shorten <| emitDeclaration typ
+  | { var=Some(var); typ=Some(typ) } -> sprintf "{ var=%s; typ=%s }" (shorten <| emitDeclaration var) (shorten <| emitDeclaration typ)
   | s -> failwith <| $"Should not have an empty symbol like {s}"
   env 
   |> Map.toList
   |> List.map (fun (d,t) -> 
      sprintf "%s:\n    %s" 
-       (shorten d) 
+       (shorten <| emitDeclaration d) 
        (System.String.Join("\n    ", (Map.map (fun _ s -> formatSymbol s) t))))
 let getTypesOfNodes (decl: Declaration) (types: ResolvedTypes): list<string> =
-  let getTypesOfDeclaration decl = $"{shorten decl} :: %A{getTypeOfDeclaration types decl}"
-  let getTypesOfExpression e = $"{shorten e} :: %A{getTypeOfExpression types e}"
-  let getTypesOfLValue l = $"{shorten l} :: %A{getTypeOfLValue types l}"
-  let getTypesOfType t = $"{shorten t} :: %A{getTypeOfType types t}"
+  let getTypesOfDeclaration decl = $"{shorten <| emitDeclaration decl} :: %A{getTypeOfDeclaration types decl}"
+  let getTypesOfExpression e = $"{shorten <| emitExpression e} :: %A{getTypeOfExpression types e}"
+  let getTypesOfLValue l = $"{shorten <| emitLValue l} :: %A{getTypeOfLValue types l}"
+  let getTypesOfType t = $"{shorten <| typeToString t} :: %A{getTypeOfType types t}"
   Traverse.toList decl getTypesOfDeclaration getTypesOfExpression getTypesOfLValue getTypesOfType
 let run () =
     let lexResult = 

@@ -1,5 +1,4 @@
-["File  [Type     ("Position", Lite... :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
- "Type ("Position", Literal [("n", ... :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
- "Literal [("n", Identifier "int");... :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
- "Identifier "int" :: Some (Identifier "int")";
- "Identifier "string" :: Some (Identifier "string")"]
+["type Position = {n: int, s: string} :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
+ "type Position = {n: int, s: string} :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
+ "{n: int, s: string} :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
+ "int :: Some (Identifier "int")"; "string :: Some (Identifier "string")"]

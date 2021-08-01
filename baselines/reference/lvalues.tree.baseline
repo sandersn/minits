@@ -25,5 +25,5 @@
       (LValue
          (PropertyAccess
             (ArrayAccess (Identifier "o", LValue (Identifier "x")), "y")))],
- ["File  [ExpressionStatement (LValu...:
+ ["x x.y x.y.z o o[x] o[x.y] o[x][y]...:
     "])

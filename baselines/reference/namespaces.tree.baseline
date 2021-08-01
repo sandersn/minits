@@ -5,9 +5,9 @@
     Var ("Net", Some (Identifier "Nat"), LValue (Identifier "Nat"));
     Var ("Nit", Some (Identifier "Net"), IntLiteral 13);
     Type ("Not", Identifier "int"); Var ("Nut", None, LValue (Identifier "Not"))],
- ["File  [Type ("Nat", Identifier "i...:
-    [Nat, { var=Var ("Nat", None, StringLiteral "...; typ=Type ("Nat", Identifier "int") }]
-    [Net, Var ("Net", Some (Identifier "Nat...]
-    [Nit, Var ("Nit", Some (Identifier "Net...]
-    [Not, Type ("Not", Identifier "int")]
-    [Nut, Var ("Nut", None, LValue (Identif...]"])
+ ["type Nat = int var Nat = "ok" var...:
+    [Nat, { var=var Nat = "ok"; typ=type Nat = int }]
+    [Net, var Net: Nat = Nat]
+    [Nit, var Nit: Net = 13]
+    [Not, type Not = int]
+    [Nut, var Nut = Not]"])

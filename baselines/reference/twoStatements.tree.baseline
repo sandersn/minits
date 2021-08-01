@@ -2,5 +2,5 @@
    [Var ("arthurTwoShedsJackson", None, IntLiteral 1);
     ExpressionStatement
       (Assignment (Identifier "arthurTwoShedsJackson", IntLiteral 2))],
- ["File  [Var ("arthurTwoShedsJackso...:
-    [arthurTwoShedsJackson, Var ("arthurTwoShedsJackson", Non...]"])
+ ["var arthurTwoShedsJackson = 1 art...:
+    [arthurTwoShedsJackson, var arthurTwoShedsJackson = 1]"])

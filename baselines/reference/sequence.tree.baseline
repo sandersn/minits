@@ -6,5 +6,5 @@
           LValue (Identifier "a")]);
     ExpressionStatement
       (Sequence [LValue (Identifier "a"); LValue (Identifier "a")])],
- ["File  [Var ("a", None, IntLiteral...:
-    [a, Var ("a", None, IntLiteral 1)]"])
+ ["var a = 1 () (a; a; a) (a; a):
+    [a, var a = 1]"])

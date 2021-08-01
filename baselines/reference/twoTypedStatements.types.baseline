@@ -1,8 +1,5 @@
-["File  [Var ("s", Some (Identifier... :: Some (Identifier "string")";
- "Var ("s", Some (Identifier "strin... :: Some (Identifier "string")";
- "Identifier "string" :: Some (Identifier "string")";
- "IntLiteral 1 :: Some (Identifier "int")";
- "ExpressionStatement (Assignment (... :: Some (Identifier "string")";
- "Assignment (Identifier "s", IntLi... :: Some (Identifier "string")";
- "Identifier "s" :: Some (Identifier "string")";
- "IntLiteral 2 :: Some (Identifier "int")"]
+["var s: string = 1 s = 2 :: Some (Identifier "string")";
+ "var s: string = 1 :: Some (Identifier "string")";
+ "string :: Some (Identifier "string")"; "1 :: Some (Identifier "int")";
+ "s = 2 :: Some (Identifier "string")"; "s = 2 :: Some (Identifier "string")";
+ "s :: Some (Identifier "string")"; "2 :: Some (Identifier "int")"]

@@ -1,3 +1,3 @@
 (File [Var ("singleDeclaration", None, IntLiteral 1)],
- ["File [Var ("singleDeclaration", N...:
-    [singleDeclaration, Var ("singleDeclaration", None, I...]"])
+ ["var singleDeclaration = 1:
+    [singleDeclaration, var singleDeclaration = 1]"])

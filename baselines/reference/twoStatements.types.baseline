@@ -1,7 +1,7 @@
-["File  [Var ("arthurTwoShedsJackso... :: Some (Identifier "int")";
- "Var ("arthurTwoShedsJackson", Non... :: Some (Identifier "int")";
- "IntLiteral 1 :: Some (Identifier "int")";
- "ExpressionStatement  (Assignment ... :: Some (Identifier "int")";
- "Assignment (Identifier "arthurTwo... :: Some (Identifier "int")";
- "Identifier "arthurTwoShedsJackson" :: Some (Identifier "int")";
- "IntLiteral 2 :: Some (Identifier "int")"]
+["var arthurTwoShedsJackson = 1 art... :: Some (Identifier "int")";
+ "var arthurTwoShedsJackson = 1 :: Some (Identifier "int")";
+ "1 :: Some (Identifier "int")";
+ "arthurTwoShedsJackson = 2 :: Some (Identifier "int")";
+ "arthurTwoShedsJackson = 2 :: Some (Identifier "int")";
+ "arthurTwoShedsJackson :: Some (Identifier "int")";
+ "2 :: Some (Identifier "int")"]

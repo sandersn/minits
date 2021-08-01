@@ -51,4 +51,5 @@ and emitDeclaration = function
   let sparams = parameters |> List.map emitProperty |> String.concat ", "
   let sbody = emitExpression body
   sprintf "function %s(%s)%s =\n%s" name sparams (emitTypeAnnotation ret) sbody
+// TODO: This emits Tiger instead of JS. I want to change this later.
 let emit = emitDeclaration 
