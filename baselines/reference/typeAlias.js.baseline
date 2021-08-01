@@ -1,1 +1,1 @@
-"Types do not emit yet"
+"type Str = string"

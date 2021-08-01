@@ -1,3 +1,3 @@
-"var parencomparisonchain = binary expressions do not emit yet
-var paren2 = binary expressions do not emit yet
-var nocomparisonchain = binary expressions do not emit yet"
+"var parencomparisonchain = 1 < x < 3
+var paren2 = 1 < x < 3
+var nocomparisonchain = 1 < x"

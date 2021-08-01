@@ -1,1 +1,1 @@
-"Types do not emit yet"
+"type Position = {n: int, s: string}"

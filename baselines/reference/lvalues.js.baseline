@@ -1,9 +1,9 @@
 "x
-Properties do not emit yet
-Properties do not emit yet
+x.y
+x.y.z
 o
-Arrays do not emit yet
-Arrays do not emit yet
-Arrays do not emit yet
-Arrays do not emit yet
-Properties do not emit yet"
+o[x]
+o[x.y]
+o[x][y]
+o.x[y][z]
+o[x].y"

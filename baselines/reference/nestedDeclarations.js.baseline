@@ -1,5 +1,5 @@
 "x
 var x = "hi"
 var y = 1
-Functions do not emit yet
+function f(y: int, z: int) = sequences do not emit yet
 calls do not emit yet"

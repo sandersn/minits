@@ -1,18 +1,18 @@
 "var negative = -1
-var mult = binary expressions do not emit yet
-var div = binary expressions do not emit yet
-var muldiv = binary expressions do not emit yet
-var muldiv2 = binary expressions do not emit yet
-var add = binary expressions do not emit yet
-var sub = binary expressions do not emit yet
-var addsub = binary expressions do not emit yet
-var muladd = binary expressions do not emit yet
-var muladd2 = binary expressions do not emit yet
-var addmul2 = binary expressions do not emit yet
-var addmul34 = binary expressions do not emit yet
-var ltaddmul = binary expressions do not emit yet
-ltaddmul = addmul34 = binary expressions do not emit yet
-Types do not emit yet
+var mult = 1 * 2
+var div = 1 / 2
+var muldiv = 1 * 2 / 3
+var muldiv2 = 1 / 2 * 3
+var add = 1 + 2
+var sub = 1 - 2
+var addsub = 1 + 2 - 3
+var muladd = 1 * 2 + 3
+var muladd2 = 1 * 2 * 3 + 4
+var addmul2 = 1 + 2 * 3 * 4
+var addmul34 = 1 * 2 + 3 + 4 * 5 * 6
+var ltaddmul = 1 * 2 < 3 + 4 * 5
+ltaddmul = addmul34 = addsub /= 1 | sub <= 12 & muldiv == muldiv2
+type Foo = {foo: string, bar: int}
 var record = records don't emit yet
 var a = arrays don't emit yet
 var b = arrays don't emit yet

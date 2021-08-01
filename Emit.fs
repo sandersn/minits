@@ -1,16 +1,34 @@
 module Minits.Emit
 open Types
-let emitType t = sprintf "%A" t
-let emitLValue = function
+let emitTypeAnnotation = function
+| Some t -> ": " + Check.typeToString t
+| _ -> ""
+// TODO: This is duplicated in the checker
+let emitProperty (name, t) = sprintf "%s: %s" name (Check.typeToString t)
+let emitToken = function
+| Pipe -> "|"
+| Ampersand -> "&"
+| Plus -> "+"
+| Minus -> "-"
+| Asterisk -> "*"
+| ForwardSlash -> "/"
+| LessThan -> "<"
+| GreaterThan -> ">"
+| LessThanEquals -> "<="
+| GreaterThanEquals -> ">="
+| DoubleEquals -> "=="
+| ForwardSlashEquals -> "/="
+| t -> failwith $"Unexpected binary operator token {t}"
+let rec emitLValue = function
 | Identifier(name) -> name
-| PropertyAccess _ -> "Properties do not emit yet"
-| LValue.ArrayAccess _ -> "Arrays do not emit yet"
-let rec emitExpression = function
+| PropertyAccess (l,r) -> $"{emitLValue l}.{r}"
+| ArrayAccess (l,r) -> sprintf "%s[%s]" (emitLValue l) (emitExpression r)
+and emitExpression = function
 | LValue(lvalue) -> emitLValue lvalue
 | IntLiteral(value) -> string value
 | StringLiteral(value) -> sprintf "%A" value
 | Negative(e) -> "-" + emitExpression e
-| Binary (l,op,r) -> "binary expressions do not emit yet"
+| Binary (l,op,r) -> sprintf "%s %s %s" (emitExpression l) (emitToken op) (emitExpression r)
 | Assignment(name, value) -> sprintf "%s = %s" (emitLValue name) (emitExpression value)
 | Call(name, parameters) -> "calls do not emit yet"
 | Sequence es -> "sequences do not emit yet"
@@ -22,14 +40,14 @@ let rec emitExpression = function
 | Let _ -> "let doesn't emit yet"
 | Break -> "break"
 | Null -> "null"
-let rec emitDeclaration = function
+and emitDeclaration = function
 | File decls -> decls |> List.map emitDeclaration |> String.concat "\n"
 | ExpressionStatement e -> emitExpression e
 | Var(name, t, init) -> 
-  let typestring = match t with
-                   | Some(name) -> ": " + emitType name
-                   | None -> ""
-  sprintf "var %s%s = %s" name typestring (emitExpression init)
-| Declaration.Type _ -> "Types do not emit yet"
-| Function _ -> "Functions do not emit yet"
+  sprintf "var %s%s = %s" name (emitTypeAnnotation t) (emitExpression init)
+| Declaration.Type (name,t) -> sprintf "type %s = %s" name (Check.typeToString t)
+| Function (name, parameters, ret, body) ->
+  let sparams = parameters |> List.map emitProperty |> String.concat ", "
+  let sbody = emitExpression body
+  sprintf "function %s(%s)%s = %s" name sparams (emitTypeAnnotation ret) sbody
 let emit = emitDeclaration 

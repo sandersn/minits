@@ -10,9 +10,9 @@ let first f (a,b) = (f a, b)
 let second f (a,b) = (a, f b)
 let rec typeToString = function
 | Type.Identifier name -> name
-| Literal ps  -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
+| Literal ps -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
 | Type.Array t -> sprintf "Array<%s>" <| typeToString t
-and propertyToString (name, t) = name + typeToString t
+and propertyToString (name, t) = sprintf "%s: %s" name  (typeToString t)
 // TODO: also someday call the emitter to convert ASTs to strings
 let check (env : Environment) (decl: Declaration) =
   let errors = System.Collections.Generic.List()
