@@ -1,2 +1,4 @@
-["x :: Some (Identifier "error")"; "x :: Some (Identifier "error")";
- "x :: Some (Identifier "error")"; "x :: Some (Identifier "error")"]
+"x :: Some "error"
+x :: Some "error"
+x :: Some "error"
+x :: Some "error""

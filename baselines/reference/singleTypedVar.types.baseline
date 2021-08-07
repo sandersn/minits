@@ -1,3 +1,4 @@
-["var s: string = 1 :: Some (Identifier "string")";
- "var s: string = 1 :: Some (Identifier "string")";
- "string :: Some (Identifier "string")"; "1 :: Some (Identifier "int")"]
+"var s: string = 1 :: Some "string"
+var s: string = 1 :: Some "string"
+string :: Some "string"
+1 :: Some "int""

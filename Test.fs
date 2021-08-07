@@ -49,12 +49,12 @@ let formatEnvironment (env: Environment) =
      sprintf "%s:\n    %s" 
        (shorten <| emitDeclaration d) 
        (System.String.Join("\n    ", (Map.map (fun _ s -> formatSymbol s) t))))
-let getTypesOfNodes (decl: Declaration) (types: ResolvedTypes): list<string> =
-  let getTypesOfDeclaration decl = $"{shorten <| emitDeclaration decl} :: %A{getTypeOfDeclaration types decl}"
-  let getTypesOfExpression e = $"{shorten <| emitExpression e} :: %A{getTypeOfExpression types e}"
-  let getTypesOfLValue l = $"{shorten <| emitLValue l} :: %A{getTypeOfLValue types l}"
-  let getTypesOfType t = $"{shorten <| typeToString t} :: %A{getTypeOfType types t}"
-  Traverse.toList decl getTypesOfDeclaration getTypesOfExpression getTypesOfLValue getTypesOfType
+let getTypesOfNodes (decl: Declaration) (types: ResolvedTypes): string =
+  let getTypesOfDeclaration decl = $"{shorten <| emitDeclaration decl} :: %A{getTypeOfDeclaration types decl |> Option.map typeToString}"
+  let getTypesOfExpression e = $"{shorten <| emitExpression e} :: %A{getTypeOfExpression types e |> Option.map typeToString}"
+  let getTypesOfLValue l = $"{shorten <| emitLValue l} :: %A{getTypeOfLValue types l |> Option.map typeToString}"
+  let getTypesOfType t = $"{shorten <| typeToString t} :: %A{getTypeOfType types t |> Option.map typeToString}"
+  Traverse.toList decl getTypesOfDeclaration getTypesOfExpression getTypesOfLValue getTypesOfType |> String.concat "\n"
 let run () =
     let lexResult = 
         lexTests 

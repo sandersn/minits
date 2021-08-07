@@ -1,15 +1,22 @@
-["type Nat = int var Nat = "ok" var... :: Some (Identifier "error")";
- "type Nat = int :: Some (Identifier "int")"; "int :: Some (Identifier "int")";
- "var Nat = "ok" :: Some (Identifier "string")";
- ""ok" :: Some (Identifier "string")";
- "var Nat = "not ok" :: Some (Identifier "string")";
- ""not ok" :: Some (Identifier "string")";
- "var Nat = -1 :: Some (Identifier "int")"; "-1 :: Some (Identifier "int")";
- "1 :: Some (Identifier "int")"; "var Net: Nat = Nat :: Some (Identifier "int")";
- "Nat :: Some (Identifier "int")"; "Nat :: Some (Identifier "string")";
- "Nat :: Some (Identifier "string")";
- "var Nit: Net = 13 :: Some (Identifier "error")";
- "Net :: Some (Identifier "error")"; "13 :: Some (Identifier "int")";
- "type Not = int :: Some (Identifier "int")"; "int :: Some (Identifier "int")";
- "var Nut = Not :: Some (Identifier "error")";
- "Not :: Some (Identifier "error")"; "Not :: Some (Identifier "error")"]
+"type Nat = int var Nat = "ok" var... :: Some "error"
+type Nat = int :: Some "int"
+int :: Some "int"
+var Nat = "ok" :: Some "string"
+"ok" :: Some "string"
+var Nat = "not ok" :: Some "string"
+"not ok" :: Some "string"
+var Nat = -1 :: Some "int"
+-1 :: Some "int"
+1 :: Some "int"
+var Net: Nat = Nat :: Some "int"
+Nat :: Some "int"
+Nat :: Some "string"
+Nat :: Some "string"
+var Nit: Net = 13 :: Some "error"
+Net :: Some "error"
+13 :: Some "int"
+type Not = int :: Some "int"
+int :: Some "int"
+var Nut = Not :: Some "error"
+Not :: Some "error"
+Not :: Some "error""

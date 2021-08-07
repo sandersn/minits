@@ -1,9 +1,20 @@
-["var parencomparisonchain = ((1 < ... :: Some (Identifier "error")";
- "var parencomparisonchain = ((1 < ... :: Some (Identifier "error")";
- "((1 < x) < 3) :: Some (Identifier "error")";
- "(1 < x) :: Some (Identifier "error")"; "1 :: None"; "x :: None"; "x :: None";
- "3 :: None"; "var paren2 = (1 < (x < 3)) :: Some (Identifier "error")";
- "(1 < (x < 3)) :: Some (Identifier "error")"; "1 :: None"; "(x < 3) :: None";
- "x :: None"; "x :: None"; "3 :: None";
- "var nocomparisonchain = (1 < x) :: Some (Identifier "error")";
- "(1 < x) :: Some (Identifier "error")"; "1 :: None"; "x :: None"; "x :: None"]
+"var parencomparisonchain = ((1 < ... :: Some "int"
+var parencomparisonchain = ((1 < ... :: Some "int"
+((1 < x) < 3) :: Some "int"
+(1 < x) :: Some "int"
+1 :: Some "int"
+x :: Some "error"
+x :: Some "error"
+3 :: Some "int"
+var paren2 = (1 < (x < 3)) :: Some "int"
+(1 < (x < 3)) :: Some "int"
+1 :: Some "int"
+(x < 3) :: Some "int"
+x :: Some "error"
+x :: Some "error"
+3 :: Some "int"
+var nocomparisonchain = (1 < x) :: Some "int"
+(1 < x) :: Some "int"
+1 :: Some "int"
+x :: Some "error"
+x :: Some "error""

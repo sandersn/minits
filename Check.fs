@@ -51,7 +51,18 @@ let check (env : Environment) (decl: Declaration) =
       let t = checkExpression scope e
       if t <> intType then errors.Add $"Negative: expected int but got {typeToString t}"
       intType
-    | Binary(l,op,r) -> errors.Add "Binary expressions don't check yet"; errorType
+    | Binary(l,op,r) -> 
+      let lt = checkExpression scope l
+      let rt = checkExpression scope r
+      let checkBinary = function
+      | Plus | Minus | Asterisk | ForwardSlash | Pipe | Ampersand | LessThan | GreaterThan | LessThanEquals | GreaterThanEquals -> 
+        expectType intType lt rt
+        intType
+      | DoubleEquals | ForwardSlashEquals ->
+        if lt <> rt then errors.Add $"Expected both sides to have same type, but left={typeToString lt} and right={typeToString rt}" else ()
+        intType
+      | t -> failwith $"Unexpected binary operator token {t}"
+      checkBinary op
     | Assignment(lvalue, value) -> 
       let v = checkExpression scope value
       let n = checkLValue scope lvalue
@@ -67,6 +78,10 @@ let check (env : Environment) (decl: Declaration) =
     | Let _ -> errors.Add "Let doesn't check yet"; errorType
     | Break -> errors.Add "Break doesn't check yet"; nullType
     | Null -> nullType
+  and expectType expected lt rt = 
+    if lt <> expected then errors.Add $"Left side expected {typeToString expected} but got {typeToString lt}" 
+    elif rt <> expected then errors.Add $"Right side expected {typeToString expected} but got {typeToString rt}"
+    else ()
   and checkLValue' (scope : list<Table>) (lvalue : LValue) =
     match lvalue with
     | Identifier(name) -> 

@@ -1,4 +1,4 @@
-["type Ints = Array<int> :: Some (Array (Identifier "int"))";
- "type Ints = Array<int> :: Some (Array (Identifier "int"))";
- "Array<int> :: Some (Array (Identifier "int"))";
- "int :: Some (Identifier "int")"]
+"type Ints = Array<int> :: Some "Array<int>"
+type Ints = Array<int> :: Some "Array<int>"
+Array<int> :: Some "Array<int>"
+int :: Some "int""

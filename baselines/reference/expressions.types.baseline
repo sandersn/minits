@@ -1,55 +1,178 @@
-["var negative = -1 var mult = (1 *... :: Some (Identifier "null")";
- "var negative = -1 :: Some (Identifier "int")"; "-1 :: Some (Identifier "int")";
- "1 :: Some (Identifier "int")";
- "var mult = (1 * 2) :: Some (Identifier "error")";
- "(1 * 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "var div = (1 / 2) :: Some (Identifier "error")";
- "(1 / 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "var muldiv = ((1 * 2) / 3) :: Some (Identifier "error")";
- "((1 * 2) / 3) :: Some (Identifier "error")";
- "(1 * 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "3 :: None";
- "var muldiv2 = ((1 / 2) * 3) :: Some (Identifier "error")";
- "((1 / 2) * 3) :: Some (Identifier "error")";
- "(1 / 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "3 :: None"; "var add = (1 + 2) :: Some (Identifier "error")";
- "(1 + 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "var sub = (1 - 2) :: Some (Identifier "error")";
- "(1 - 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "var addsub = ((1 + 2) - 3) :: Some (Identifier "error")";
- "((1 + 2) - 3) :: Some (Identifier "error")";
- "(1 + 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "3 :: None";
- "var muladd = ((1 * 2) + 3) :: Some (Identifier "error")";
- "((1 * 2) + 3) :: Some (Identifier "error")";
- "(1 * 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "3 :: None";
- "var muladd2 = (((1 * 2) * 3) + 4) :: Some (Identifier "error")";
- "(((1 * 2) * 3) + 4) :: Some (Identifier "error")"; "((1 * 2) * 3) :: None";
- "(1 * 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "3 :: None"; "4 :: None";
- "var addmul2 = (1 + ((2 * 3) * 4)) :: Some (Identifier "error")";
- "(1 + ((2 * 3) * 4)) :: Some (Identifier "error")";
- "1 :: Some (Identifier "int")"; "((2 * 3) * 4) :: None"; "(2 * 3) :: None";
- "2 :: None"; "3 :: None"; "4 :: None";
- "var addmul34 = (((1 * 2) + 3) + (... :: Some (Identifier "error")";
- "(((1 * 2) + 3) + ((4 * 5) * 6)) :: Some (Identifier "error")";
- "((1 * 2) + 3) :: Some (Identifier "error")";
- "(1 * 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "3 :: None"; "((4 * 5) * 6) :: None"; "(4 * 5) :: None";
- "4 :: None"; "5 :: None"; "6 :: None";
- "var ltaddmul = ((1 * 2) < (3 + (4... :: Some (Identifier "error")";
- "((1 * 2) < (3 + (4 * 5))) :: Some (Identifier "error")";
- "(1 * 2) :: Some (Identifier "error")"; "1 :: Some (Identifier "int")";
- "2 :: None"; "(3 + (4 * 5)) :: None"; "3 :: None"; "(4 * 5) :: None";
- "4 :: None"; "5 :: None";
- "ltaddmul = addmul34 = ((addsub /=... :: Some (Identifier "error")";
- "ltaddmul = addmul34 = ((addsub /=... :: Some (Identifier "error")";
- "ltaddmul :: Some (Identifier "error")";
- "addmul34 = ((addsub /= 1) | ((sub... :: Some (Identifier "error")";
- "addmul34 :: Some (Identifier "error")";
- "((addsub /= 1) | ((sub <= 12) & (... :: Some (Identifier "error")";
- "(addsub /= 1) :: None"; "addsub :: None"; "addsub :: None";
- "1 :: Some (Identifier "int")"; "((sub <= 12) & (muldiv == muldiv2)) :: None";
- "(sub <= 12) :: None"; "sub :: None"; "sub :: None"; "12 :: None";
- "(muldiv == muldiv2) :: None"; "muldiv :: None"; "muldiv :: None"; ...]
+"var negative = -1 var mult = (1 *... :: Some "null"
+var negative = -1 :: Some "int"
+-1 :: Some "int"
+1 :: Some "int"
+var mult = (1 * 2) :: Some "int"
+(1 * 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+var div = (1 / 2) :: Some "int"
+(1 / 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+var muldiv = ((1 * 2) / 3) :: Some "int"
+((1 * 2) / 3) :: Some "int"
+(1 * 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+var muldiv2 = ((1 / 2) * 3) :: Some "int"
+((1 / 2) * 3) :: Some "int"
+(1 / 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+var add = (1 + 2) :: Some "int"
+(1 + 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+var sub = (1 - 2) :: Some "int"
+(1 - 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+var addsub = ((1 + 2) - 3) :: Some "int"
+((1 + 2) - 3) :: Some "int"
+(1 + 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+var muladd = ((1 * 2) + 3) :: Some "int"
+((1 * 2) + 3) :: Some "int"
+(1 * 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+var muladd2 = (((1 * 2) * 3) + 4) :: Some "int"
+(((1 * 2) * 3) + 4) :: Some "int"
+((1 * 2) * 3) :: Some "int"
+(1 * 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+4 :: Some "int"
+var addmul2 = (1 + ((2 * 3) * 4)) :: Some "int"
+(1 + ((2 * 3) * 4)) :: Some "int"
+1 :: Some "int"
+((2 * 3) * 4) :: Some "int"
+(2 * 3) :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+4 :: Some "int"
+var addmul34 = (((1 * 2) + 3) + (... :: Some "int"
+(((1 * 2) + 3) + ((4 * 5) * 6)) :: Some "int"
+((1 * 2) + 3) :: Some "int"
+(1 * 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+((4 * 5) * 6) :: Some "int"
+(4 * 5) :: Some "int"
+4 :: Some "int"
+5 :: Some "int"
+6 :: Some "int"
+var ltaddmul = ((1 * 2) < (3 + (4... :: Some "int"
+((1 * 2) < (3 + (4 * 5))) :: Some "int"
+(1 * 2) :: Some "int"
+1 :: Some "int"
+2 :: Some "int"
+(3 + (4 * 5)) :: Some "int"
+3 :: Some "int"
+(4 * 5) :: Some "int"
+4 :: Some "int"
+5 :: Some "int"
+ltaddmul = addmul34 = ((addsub /=... :: Some "int"
+ltaddmul = addmul34 = ((addsub /=... :: Some "int"
+ltaddmul :: Some "int"
+addmul34 = ((addsub /= 1) | ((sub... :: Some "int"
+addmul34 :: Some "int"
+((addsub /= 1) | ((sub <= 12) & (... :: Some "int"
+(addsub /= 1) :: Some "int"
+addsub :: Some "int"
+addsub :: Some "int"
+1 :: Some "int"
+((sub <= 12) & (muldiv == muldiv2)) :: Some "int"
+(sub <= 12) :: Some "int"
+sub :: Some "int"
+sub :: Some "int"
+12 :: Some "int"
+(muldiv == muldiv2) :: Some "int"
+muldiv :: Some "int"
+muldiv :: Some "int"
+muldiv2 :: Some "int"
+muldiv2 :: Some "int"
+type Foo = {foo: string, bar: int} :: Some "{foo: string, bar: int}"
+{foo: string, bar: int} :: Some "{foo: string, bar: int}"
+string :: Some "string"
+int :: Some "int"
+var record = Foo {foo = "hi", bar... :: Some "error"
+Foo {foo = "hi", bar = 0} :: Some "error"
+"hi" :: None
+0 :: None
+var a = [1, 2, 3] :: Some "error"
+[1, 2, 3] :: Some "error"
+1 :: Some "int"
+2 :: Some "int"
+3 :: Some "int"
+var b = ["hi", Foo {foo = "hi", b... :: Some "error"
+["hi", Foo {foo = "hi", bar = 0}] :: Some "error"
+"hi" :: None
+Foo {foo = "hi", bar = 0} :: Some "error"
+"hi" :: None
+0 :: None
+var which = if (add < sub) then (... :: Some "error"
+if (add < sub) then (muladd + 1) ... :: Some "error"
+(add < sub) :: None
+add :: None
+add :: None
+sub :: Some "int"
+sub :: Some "int"
+(muladd + 1) :: None
+muladd :: None
+muladd :: None
+1 :: Some "int"
+addmul34 :: None
+addmul34 :: Some "int"
+while (addmul2 > 0) do (muladd + 1) :: Some "null"
+while (addmul2 > 0) do (muladd + 1) :: Some "null"
+(addmul2 > 0) :: None
+addmul2 :: None
+addmul2 :: None
+0 :: None
+(muladd + 1) :: None
+muladd :: None
+muladd :: None
+1 :: Some "int"
+for i = 0 to 12 do let var total ... :: Some "null"
+for i = 0 to 12 do let var total ... :: Some "null"
+0 :: None
+12 :: Some "int"
+let var total = (add * sub) var r... :: None
+var total = (add * sub) :: None
+(add * sub) :: None
+add :: None
+add :: None
+sub :: Some "int"
+sub :: Some "int"
+var result = ((0 < total) & (tota... :: None
+((0 < total) & (total < 100)) :: None
+(0 < total) :: None
+0 :: None
+total :: None
+total :: None
+(total < 100) :: None
+total :: None
+total :: None
+100 :: None
+((add * sub); if (i > 12) then br... :: None
+(add * sub) :: None
+add :: None
+add :: None
+sub :: Some "int"
+sub :: Some "int"
+if (i > 12) then break else () :: None
+(i > 12) :: None
+i :: None
+i :: None
+12 :: Some "int"
+break :: None
+() :: None"

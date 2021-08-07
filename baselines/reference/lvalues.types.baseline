@@ -1,27 +1,55 @@
-["x x.y x.y.z o o[x] o[x.y] o[x][y]... :: Some (Identifier "error")";
- "x :: Some (Identifier "error")"; "x :: Some (Identifier "error")";
- "x :: Some (Identifier "error")"; "x.y :: Some (Identifier "error")";
- "x.y :: Some (Identifier "error")"; "x.y :: Some (Identifier "error")";
- "x :: Some (Identifier "error")"; "x.y.z :: Some (Identifier "error")";
- "x.y.z :: Some (Identifier "error")"; "x.y.z :: Some (Identifier "error")";
- "x.y :: Some (Identifier "error")"; "x :: Some (Identifier "error")";
- "o :: Some (Identifier "error")"; "o :: Some (Identifier "error")";
- "o :: Some (Identifier "error")"; "o[x] :: Some (Identifier "error")";
- "o[x] :: Some (Identifier "error")"; "o[x] :: Some (Identifier "error")";
- "o :: Some (Identifier "error")"; "x :: Some (Identifier "error")";
- "x :: Some (Identifier "error")"; "o[x.y] :: Some (Identifier "error")";
- "o[x.y] :: Some (Identifier "error")"; "o[x.y] :: Some (Identifier "error")";
- "o :: Some (Identifier "error")"; "x.y :: Some (Identifier "error")";
- "x.y :: Some (Identifier "error")"; "x :: Some (Identifier "error")";
- "o[x][y] :: Some (Identifier "error")"; "o[x][y] :: Some (Identifier "error")";
- "o[x][y] :: Some (Identifier "error")"; "o[x] :: Some (Identifier "error")";
- "o :: Some (Identifier "error")"; "x :: Some (Identifier "error")";
- "x :: Some (Identifier "error")"; "y :: None"; "y :: None";
- "o.x[y][z] :: Some (Identifier "error")";
- "o.x[y][z] :: Some (Identifier "error")";
- "o.x[y][z] :: Some (Identifier "error")"; "o.x[y] :: None"; "o.x :: None";
- "o :: Some (Identifier "error")"; "y :: None"; "y :: None"; "z :: None";
- "z :: None"; "o[x].y :: Some (Identifier "error")";
- "o[x].y :: Some (Identifier "error")"; "o[x].y :: Some (Identifier "error")";
- "o[x] :: Some (Identifier "error")"; "o :: Some (Identifier "error")";
- "x :: Some (Identifier "error")"; "x :: Some (Identifier "error")"]
+"x x.y x.y.z o o[x] o[x.y] o[x][y]... :: Some "error"
+x :: Some "error"
+x :: Some "error"
+x :: Some "error"
+x.y :: Some "error"
+x.y :: Some "error"
+x.y :: Some "error"
+x :: Some "error"
+x.y.z :: Some "error"
+x.y.z :: Some "error"
+x.y.z :: Some "error"
+x.y :: Some "error"
+x :: Some "error"
+o :: Some "error"
+o :: Some "error"
+o :: Some "error"
+o[x] :: Some "error"
+o[x] :: Some "error"
+o[x] :: Some "error"
+o :: Some "error"
+x :: Some "error"
+x :: Some "error"
+o[x.y] :: Some "error"
+o[x.y] :: Some "error"
+o[x.y] :: Some "error"
+o :: Some "error"
+x.y :: Some "error"
+x.y :: Some "error"
+x :: Some "error"
+o[x][y] :: Some "error"
+o[x][y] :: Some "error"
+o[x][y] :: Some "error"
+o[x] :: Some "error"
+o :: Some "error"
+x :: Some "error"
+x :: Some "error"
+y :: None
+y :: None
+o.x[y][z] :: Some "error"
+o.x[y][z] :: Some "error"
+o.x[y][z] :: Some "error"
+o.x[y] :: None
+o.x :: None
+o :: Some "error"
+y :: None
+y :: None
+z :: None
+z :: None
+o[x].y :: Some "error"
+o[x].y :: Some "error"
+o[x].y :: Some "error"
+o[x] :: Some "error"
+o :: Some "error"
+x :: Some "error"
+x :: Some "error""

@@ -18,7 +18,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
   let parseExpected expected =
     if parseOptional expected 
     then ()
-    else errors.Add $"parseToken: Expected {expected} but got {lexer.token()}"
+    else errors.Add $"parseToken: Expected {expected} but got {lexer.token()} at {lexer.pos()}"
   let parseMany element =
     let rec loop acc =
       match element () with
@@ -38,7 +38,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
       "(missing)"
   let rec parseType () =
     (*
-      Some.default (parseOne [Identifier, LeftBrace] (function | Identifier -> ...)) (Type.Identifier "(missing)")
+      Option.default (parseOne [Identifier, LeftBrace] (function | Identifier -> ...)) (Type.Identifier "(missing)")
     *)
     match parseToken () with
     | Token.Identifier(text) when text = "Array" -> 

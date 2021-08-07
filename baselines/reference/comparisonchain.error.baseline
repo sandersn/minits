@@ -1,3 +1,2 @@
-["parseToken: Expected EOF but got LessThan";
- "Binary expressions don't check yet"; "Binary expressions don't check yet";
- "Binary expressions don't check yet"]
+["parseToken: Expected EOF but got LessThan at 95"; "Could not resolve x";
+ "Right side expected int but got error"; "Left side expected int but got error"]

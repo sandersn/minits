@@ -1,16 +1,38 @@
-["x var x = "hi" var y = 1 function... :: Some (Identifier "error")";
- "x :: Some (Identifier "string")"; "x :: Some (Identifier "string")";
- "x :: Some (Identifier "string")"; "var x = "hi" :: Some (Identifier "string")";
- ""hi" :: Some (Identifier "string")"; "var y = 1 :: Some (Identifier "int")";
- "1 :: Some (Identifier "int")";
- "function f(y: int, z: int) = (x; ... :: Some (Identifier "error")";
- "int :: None"; "int :: None"; "(x; y; alpha; let var x = 2 var a... :: None";
- "x :: Some (Identifier "string")"; "x :: Some (Identifier "string")";
- "y :: None"; "y :: None"; "alpha :: None"; "alpha :: None";
- "let var x = 2 var alpha = 1 in [x... :: None"; "var x = 2 :: None";
- "2 :: None"; "var alpha = 1 :: None"; "1 :: Some (Identifier "int")";
- "[x, y, z, alpha] :: None"; "x :: Some (Identifier "string")";
- "x :: Some (Identifier "string")"; "y :: None"; "y :: None"; "z :: None";
- "z :: None"; "alpha :: None"; "alpha :: None";
- "f(4, 5) :: Some (Identifier "error")"; "f(4, 5) :: Some (Identifier "error")";
- "f :: None"; "f :: None"; "4 :: None"; "5 :: None"]
+"x var x = "hi" var y = 1 function... :: Some "error"
+x :: Some "string"
+x :: Some "string"
+x :: Some "string"
+var x = "hi" :: Some "string"
+"hi" :: Some "string"
+var y = 1 :: Some "int"
+1 :: Some "int"
+function f(y: int, z: int) = (x; ... :: Some "error"
+int :: None
+int :: None
+(x; y; alpha; let var x = 2 var a... :: None
+x :: Some "string"
+x :: Some "string"
+y :: None
+y :: None
+alpha :: None
+alpha :: None
+let var x = 2 var alpha = 1 in [x... :: None
+var x = 2 :: None
+2 :: None
+var alpha = 1 :: None
+1 :: Some "int"
+[x, y, z, alpha] :: None
+x :: Some "string"
+x :: Some "string"
+y :: None
+y :: None
+z :: None
+z :: None
+alpha :: None
+alpha :: None
+f(4, 5) :: Some "error"
+f(4, 5) :: Some "error"
+f :: None
+f :: None
+4 :: None
+5 :: None"

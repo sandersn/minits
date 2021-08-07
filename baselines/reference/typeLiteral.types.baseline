@@ -1,4 +1,5 @@
-["type Position = {n: int, s: string} :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
- "type Position = {n: int, s: string} :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
- "{n: int, s: string} :: Some (Literal [("n", Identifier "int"); ("s", Identifier "string")])";
- "int :: Some (Identifier "int")"; "string :: Some (Identifier "string")"]
+"type Position = {n: int, s: string} :: Some "{n: int, s: string}"
+type Position = {n: int, s: string} :: Some "{n: int, s: string}"
+{n: int, s: string} :: Some "{n: int, s: string}"
+int :: Some "int"
+string :: Some "string""

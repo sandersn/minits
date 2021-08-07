@@ -1,5 +1,8 @@
-["var a = null (1; null; null) :: Some (Identifier "error")";
- "var a = null :: Some (Identifier "null")"; "null :: Some (Identifier "null")";
- "(1; null; null) :: Some (Identifier "error")";
- "(1; null; null) :: Some (Identifier "error")"; "1 :: None";
- "null :: Some (Identifier "null")"; "null :: Some (Identifier "null")"]
+"var a = null (1; null; null) :: Some "error"
+var a = null :: Some "null"
+null :: Some "null"
+(1; null; null) :: Some "error"
+(1; null; null) :: Some "error"
+1 :: None
+null :: Some "null"
+null :: Some "null""
