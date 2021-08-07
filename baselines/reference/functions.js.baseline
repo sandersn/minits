@@ -5,7 +5,7 @@ n
 function explicit(n: int): int =
 n
 function binary(n: int, m: int) =
-m
+(n + m)
 nullary()
 unary(1)
 explicit(2)

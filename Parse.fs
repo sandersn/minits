@@ -190,7 +190,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
      elif parseOptional Token.Function then
        let name = parseName ()
        parseExpected LeftParen
-       let parameters = parseMany parseProperty
+       let parameters = parseMany parseProperty |> List.map Param
        parseExpected RightParen
        let ret = if parseOptional Colon then Some <| parseType () else None
        parseExpected Equals

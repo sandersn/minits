@@ -83,7 +83,8 @@ and Declaration =
 | ExpressionStatement of Expression
 | Type of name: string * Type
 | Var of name: string * t: Option<Type> * init: Expression
-| Function of name: string * parameters: list<Property> * ret: Option<Type> * body: Expression
+| Param of name: string * t: Type
+| Function of name: string * parameters: list<Declaration> * ret: Option<Type> * body: Expression
 type Symbol = {
   var: option<Declaration>
   typ: option<Declaration>

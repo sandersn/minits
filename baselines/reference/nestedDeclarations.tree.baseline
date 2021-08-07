@@ -2,7 +2,7 @@
    [ExpressionStatement (LValue (Identifier "x"));
     Var ("x", None, StringLiteral "hi"); Var ("y", None, IntLiteral 1);
     Function
-      ("f", [("y", Identifier "int"); ("z", Identifier "int")], None,
+      ("f", [Param ("y", Identifier "int"); Param ("z", Identifier "int")], None,
        Sequence
          [LValue (Identifier "x"); LValue (Identifier "y");
           LValue (Identifier "alpha");
@@ -21,5 +21,5 @@
     [alpha, var alpha = 1]
     [x, var x = 2]";
   "function f(y: int, z: int) = (x; ...:
-    [y, var y: int = ()]
-    [z, var z: int = ()]"])
+    [y, y: int]
+    [z, z: int]"])

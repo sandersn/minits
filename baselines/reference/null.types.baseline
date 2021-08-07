@@ -1,8 +1,8 @@
-"var a = null (1; null; null) :: Some "error"
+"var a = null (1; null; null) :: Some "null"
 var a = null :: Some "null"
 null :: Some "null"
-(1; null; null) :: Some "error"
-(1; null; null) :: Some "error"
-1 :: None
+(1; null; null) :: Some "null"
+(1; null; null) :: Some "null"
+1 :: Some "int"
 null :: Some "null"
 null :: Some "null""

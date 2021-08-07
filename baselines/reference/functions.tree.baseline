@@ -1,28 +1,28 @@
 (File
    [Function ("nullary", [], None, IntLiteral 1);
-    Function ("unary", [("n", Identifier "int")], None, LValue (Identifier "n"));
     Function
-      ("explicit", [("n", Identifier "int")], Some (Identifier "int"),
+      ("unary", [Param ("n", Identifier "int")], None, LValue (Identifier "n"));
+    Function
+      ("explicit", [Param ("n", Identifier "int")], Some (Identifier "int"),
        LValue (Identifier "n"));
     Function
-      ("binary", [("n", Identifier "int"); ("m", Identifier "int")], None,
-       LValue (Identifier "m"));
+      ("binary", [Param ("n", Identifier "int"); Param ("m", Identifier "int")],
+       None, Binary (LValue (Identifier "n"), Plus, LValue (Identifier "m")));
     ExpressionStatement (Call (LValue (Identifier "nullary"), []));
     ExpressionStatement (Call (LValue (Identifier "unary"), [IntLiteral 1]));
     ExpressionStatement (Call (LValue (Identifier "explicit"), [IntLiteral 2]));
     ExpressionStatement
       (Call (LValue (Identifier "binary"), [IntLiteral 1; IntLiteral 2]))],
  ["function nullary() = 1 function u...:
-    [binary, function binary(n: int, m: int) = m]
+    [binary, function binary(n: int, m: int) =...]
     [explicit, function explicit(n: int): int = n]
     [nullary, function nullary() = 1]
     [unary, function unary(n: int) = n]";
-  "function binary(n: int, m: int) = m:
-    [m, var m: int = ()]
-    [n, var n: int = ()]";
+  "function binary(n: int, m: int) =...:
+    [m, m: int]
+    [n, n: int]";
   "function explicit(n: int): int = n:
-    [n, var n: int = ()]";
+    [n, n: int]";
   "function nullary() = 1:
-    ";
-  "function unary(n: int) = n:
-    [n, var n: int = ()]"])
+    "; "function unary(n: int) = n:
+    [n, n: int]"])

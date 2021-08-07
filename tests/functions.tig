@@ -1,7 +1,7 @@
 function nullary() = 1;
 function unary(n: int) = n;
 function explicit(n: int): int = n;
-function binary(n: int, m: int) = m;
+function binary(n: int, m: int) = n+m;
 nullary()
 unary(1)
 explicit(2)

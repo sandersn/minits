@@ -69,7 +69,10 @@ let check (env : Environment) (decl: Declaration) =
       if v <> n then errors.Add $"Cannot assign value of type '{typeToString v}' to variable of type '{typeToString n}'"
       n
     | Call(e, parameters) -> errors.Add "Cannot check calls yet"; errorType
-    | Sequence es -> errorType // List.map checkExpression es |> List.last
+    | Sequence es -> 
+      match es with 
+      | [] -> nullType
+      | es -> List.map (checkExpression scope) es |> List.last
     | RecordCons _ -> errors.Add "Records don't check yet"; errorType
     | ArrayCons _ -> errors.Add "Arrays don't check yet"; errorType
     | If _ -> errors.Add "If doesn't check yet"; errorType
@@ -103,8 +106,13 @@ let check (env : Environment) (decl: Declaration) =
           if t <> i then errors.Add $"Cannot assign initialiser of type '{typeToString i}' to variable with declared type '{typeToString t}'"
           t
       | None -> i
+    | Param(_, typename) -> resolveType scope typename
     | Declaration.Type(_, t) -> resolveType scope t
-    | Function _ -> errors.Add "Cannot check functions yet"; errorType
+    | Function (name,_,ret,body) as f ->
+      let bt = checkExpression (Map.find f env :: scope) body
+      match ret with
+      | Some t -> if t = bt then t else errors.Add $"Expected {name} to return {typeToString t} but got {typeToString bt}"; t
+      | None -> bt 
   and resolveType' scope typ = 
     match typ with
     | Type.Identifier name -> 

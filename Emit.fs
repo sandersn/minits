@@ -46,9 +46,10 @@ and emitDeclaration = function
 | ExpressionStatement e -> emitExpression e
 | Var(name, t, init) -> 
   $"var {name}{emitTypeAnnotation t} = {emitExpression init}"
+| Param(name, t) -> name + emitTypeAnnotation (Some t)
 | Declaration.Type (name,t) -> $"type {name} = {Check.typeToString t}"
 | Function (name, parameters, ret, body) ->
-  let sparams = parameters |> List.map emitProperty |> String.concat ", "
+  let sparams = parameters |> List.map emitDeclaration |> String.concat ", "
   let sbody = emitExpression body
   sprintf "function %s(%s)%s =\n%s" name sparams (emitTypeAnnotation ret) sbody
 // TODO: This emits Tiger instead of JS. I want to change this later.

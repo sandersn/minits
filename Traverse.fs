@@ -8,8 +8,9 @@ let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType =
   | ExpressionStatement e -> mapExprToList e
   | Declaration.Type(_, t) -> mapTypeToList t
   | Var(_, t, init) -> defaultOptionToList mapTypeToList t @ mapExprToList init
+  | Param(_, t) -> mapTypeToList t
   | Function(_, parameters, ret, body) -> 
-    List.collect (snd >> mapTypeToList) parameters 
+    List.collect mapDeclToList parameters 
     @ defaultOptionToList mapTypeToList ret 
     @ mapExprToList body
   and mapExprToList expr = mapExpr expr :: mapExprToList' expr

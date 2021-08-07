@@ -7,16 +7,18 @@ var x = "hi" :: Some "string"
 var y = 1 :: Some "int"
 1 :: Some "int"
 function f(y: int, z: int) = (x; ... :: Some "error"
-int :: None
-int :: None
-(x; y; alpha; let var x = 2 var a... :: None
+y: int :: Some "int"
+int :: Some "int"
+z: int :: None
+int :: Some "int"
+(x; y; alpha; let var x = 2 var a... :: Some "error"
 x :: Some "string"
 x :: Some "string"
-y :: None
-y :: None
-alpha :: None
-alpha :: None
-let var x = 2 var alpha = 1 in [x... :: None
+y :: Some "int"
+y :: Some "int"
+alpha :: Some "error"
+alpha :: Some "error"
+let var x = 2 var alpha = 1 in [x... :: Some "error"
 var x = 2 :: None
 2 :: None
 var alpha = 1 :: None
@@ -24,12 +26,12 @@ var alpha = 1 :: None
 [x, y, z, alpha] :: None
 x :: Some "string"
 x :: Some "string"
-y :: None
-y :: None
+y :: Some "int"
+y :: Some "int"
 z :: None
 z :: None
-alpha :: None
-alpha :: None
+alpha :: Some "error"
+alpha :: Some "error"
 f(4, 5) :: Some "error"
 f(4, 5) :: Some "error"
 f :: None

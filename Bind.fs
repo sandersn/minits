@@ -18,7 +18,11 @@ let bind (decl : Declaration) =
       match s' with
       | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
       | _ -> { s' with var = Some f }
-    | _ -> failwith $"Should only create symbols for Function, Var and Type, got {d}"
+    | Param (name,_) as p ->
+      match s' with
+      | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
+      | _ -> { s' with var = Some p }
+    | d -> failwith $"Should only create symbols for Function, Var and Type, got {d}"
   let createTable : list<string * Declaration> -> Table =
     List.fold 
       (fun locals (name,d) -> Map.add name (createSymbol d (Map.tryFind name locals)) locals)
@@ -27,11 +31,14 @@ let bind (decl : Declaration) =
   | Var(name,_,init) -> 
     bindExpression init
     Some name
+  | Param(name,_) -> Some name
   | Declaration.Type(name,_) -> Some name
   | Function (name,parameters,_,body) as f ->
     let params' : Table = 
       parameters 
-      |> List.map (fun (name, t) -> (name, Var (name, Some t, Sequence []))) 
+      |> List.map (function 
+        | Param (name, _) as parameter -> (name, parameter) 
+        | d -> failwith $"Should only create parameters with Param, got {d}")
       |> createTable
     bindExpression body
     env.Add(f, params')
