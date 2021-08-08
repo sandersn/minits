@@ -34,7 +34,7 @@ alpha :: Some "error"
 alpha :: Some "error"
 f(4, 5) :: Some "error"
 f(4, 5) :: Some "error"
-f :: None
-f :: None
-4 :: None
-5 :: None"
+f :: Some "(y: int, z: int) -> error"
+f :: Some "(y: int, z: int) -> error"
+4 :: Some "int"
+5 :: Some "int""

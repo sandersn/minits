@@ -1,4 +1,4 @@
-"function nullary() = 1 function u... :: Some "error"
+"function nullary() = 1 function u... :: Some "int"
 function nullary() = 1 :: Some "() -> int"
 1 :: Some "int"
 function unary(n: int) = n :: Some "(n: int) -> int"
@@ -22,23 +22,23 @@ n :: Some "int"
 n :: Some "int"
 m :: Some "int"
 m :: Some "int"
-nullary() :: Some "error"
-nullary() :: Some "error"
-nullary :: None
-nullary :: None
-unary(1) :: Some "error"
-unary(1) :: Some "error"
-unary :: None
-unary :: None
+nullary() :: Some "int"
+nullary() :: Some "int"
+nullary :: Some "() -> int"
+nullary :: Some "() -> int"
+unary(1) :: Some "int"
+unary(1) :: Some "int"
+unary :: Some "(n: int) -> int"
+unary :: Some "(n: int) -> int"
 1 :: Some "int"
-explicit(2) :: Some "error"
-explicit(2) :: Some "error"
-explicit :: None
-explicit :: None
-2 :: None
-binary(1, 2) :: Some "error"
-binary(1, 2) :: Some "error"
-binary :: None
-binary :: None
+explicit(2) :: Some "int"
+explicit(2) :: Some "int"
+explicit :: Some "(n: int) -> int"
+explicit :: Some "(n: int) -> int"
+2 :: Some "int"
+binary(1, 2) :: Some "int"
+binary(1, 2) :: Some "int"
+binary :: Some "(n: int, m: int) -> int"
+binary :: Some "(n: int, m: int) -> int"
 1 :: Some "int"
-2 :: None"
+2 :: Some "int""

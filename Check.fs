@@ -69,12 +69,37 @@ let check (env : Environment) (decl: Declaration) =
       let n = checkLValue scope lvalue
       if v <> n then errors.Add $"Cannot assign value of type '{typeToString v}' to variable of type '{typeToString n}'"
       n
-    | Call(e, args) -> errors.Add "Cannot check calls yet"; errorType
+    | Call(e, args) -> 
+      match checkExpression scope e with
+      | Type.Arrow(parameters, ret) ->
+        List.iter2 (fun (name,t) arg -> 
+            if t <> arg then errors.Add $"Parameter {name} expected type {typeToString t} but got {typeToString arg}." 
+            else ()) 
+          parameters 
+          (List.map (checkExpression scope) args)
+        ret
+      | t -> errors.Add $"{t} is not callable."; errorType
     | Sequence es -> 
       match es with 
       | [] -> nullType
       | es -> List.map (checkExpression scope) es |> List.last
-    | RecordCons _ -> errors.Add "Records don't check yet"; errorType
+    | RecordCons (name,inits) ->
+      match resolve name scope Type with
+      | Some (Declaration.Type _ as decl) -> 
+        match checkDeclaration scope decl with
+        | Type.Literal props -> 
+          let propTypes = Map.ofList props
+          inits |> List.iter (fun (name,i) -> 
+            let pt = Map.find name propTypes
+            let it = checkExpression scope i
+            if pt <> it then 
+              errors.Add $"{name} expected type {typeToString pt} but got {typeToString it}." 
+            else ())
+          ()
+        | t -> errors.Add $"Type {name} is not a record type."
+      | Some _ -> errors.Add $"{name} is not a type declaration."
+      | None -> errors.Add $"Could not resolve type {name}."
+      Type.Literal <| List.map (second (checkExpression scope)) inits
     | ArrayCons _ -> errors.Add "Arrays don't check yet"; errorType
     | If _ -> errors.Add "If doesn't check yet"; errorType
     | While _ -> errors.Add "While doesn't check yet"; nullType

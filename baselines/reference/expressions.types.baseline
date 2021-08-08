@@ -104,10 +104,10 @@ type Foo = {foo: string, bar: int} :: Some "{foo: string, bar: int}"
 {foo: string, bar: int} :: Some "{foo: string, bar: int}"
 string :: Some "string"
 int :: Some "int"
-var record = Foo {foo = "hi", bar... :: Some "error"
-Foo {foo = "hi", bar = 0} :: Some "error"
-"hi" :: None
-0 :: None
+var record = Foo {foo = "hi", bar... :: Some "{foo: string, bar: int}"
+Foo {foo = "hi", bar = 0} :: Some "{foo: string, bar: int}"
+"hi" :: Some "string"
+0 :: Some "int"
 var a = [1, 2, 3] :: Some "error"
 [1, 2, 3] :: Some "error"
 1 :: Some "int"
@@ -115,10 +115,10 @@ var a = [1, 2, 3] :: Some "error"
 3 :: Some "int"
 var b = ["hi", Foo {foo = "hi", b... :: Some "error"
 ["hi", Foo {foo = "hi", bar = 0}] :: Some "error"
-"hi" :: None
-Foo {foo = "hi", bar = 0} :: Some "error"
-"hi" :: None
-0 :: None
+"hi" :: Some "string"
+Foo {foo = "hi", bar = 0} :: Some "{foo: string, bar: int}"
+"hi" :: Some "string"
+0 :: Some "int"
 var which = if (add < sub) then (... :: Some "error"
 if (add < sub) then (muladd + 1) ... :: Some "error"
 (add < sub) :: None
@@ -137,14 +137,14 @@ while (addmul2 > 0) do (muladd + 1) :: Some "null"
 (addmul2 > 0) :: None
 addmul2 :: None
 addmul2 :: None
-0 :: None
+0 :: Some "int"
 (muladd + 1) :: None
 muladd :: None
 muladd :: None
 1 :: Some "int"
 for i = 0 to 12 do let var total ... :: Some "null"
 for i = 0 to 12 do let var total ... :: Some "null"
-0 :: None
+0 :: Some "int"
 12 :: Some "int"
 let var total = (add * sub) var r... :: None
 var total = (add * sub) :: None
@@ -156,7 +156,7 @@ sub :: Some "int"
 var result = ((0 < total) & (tota... :: None
 ((0 < total) & (total < 100)) :: None
 (0 < total) :: None
-0 :: None
+0 :: Some "int"
 total :: None
 total :: None
 (total < 100) :: None
