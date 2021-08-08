@@ -12,6 +12,7 @@ let rec typeToString = function
 | Type.Identifier name -> name
 | Literal ps -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
 | Type.Array t -> $"Array<{typeToString t}>"
+| Type.Arrow (ps, ret) -> sprintf "(%s) -> %s" (List.map propertyToString ps |> String.concat ", ") (typeToString ret)
 and propertyToString (name, t) = $"{name}: {typeToString t}"
 // TODO: also someday call the emitter to convert ASTs to strings
 let check (env : Environment) (decl: Declaration) =
@@ -68,7 +69,7 @@ let check (env : Environment) (decl: Declaration) =
       let n = checkLValue scope lvalue
       if v <> n then errors.Add $"Cannot assign value of type '{typeToString v}' to variable of type '{typeToString n}'"
       n
-    | Call(e, parameters) -> errors.Add "Cannot check calls yet"; errorType
+    | Call(e, args) -> errors.Add "Cannot check calls yet"; errorType
     | Sequence es -> 
       match es with 
       | [] -> nullType
@@ -108,11 +109,18 @@ let check (env : Environment) (decl: Declaration) =
       | None -> i
     | Param(_, typename) -> resolveType scope typename
     | Declaration.Type(_, t) -> resolveType scope t
-    | Function (name,_,ret,body) as f ->
+    | Function (name,parameters,ret,body) as f ->
       let bt = checkExpression (Map.find f env :: scope) body
-      match ret with
-      | Some t -> if t = bt then t else errors.Add $"Expected {name} to return {typeToString t} but got {typeToString bt}"; t
-      | None -> bt 
+      let ps' = 
+        parameters 
+        |> List.map (function
+          | Param (n,_) as p -> (n, checkDeclaration scope p)
+          | d  -> failwith "Only expected parameters in parameter list, got {d}")
+      let ret' = 
+        match ret with
+        | Some t -> if t = bt then t else errors.Add $"Expected {name} to return {typeToString t} but got {typeToString bt}"; t
+        | None -> bt 
+      Arrow (ps', ret')
   and resolveType' scope typ = 
     match typ with
     | Type.Identifier name -> 
@@ -123,6 +131,7 @@ let check (env : Environment) (decl: Declaration) =
       | name -> resolve name scope Type |> Option.map (checkDeclaration scope) |>defaultArg<| errorType
     | Type.Array elt -> Type.Array (resolveType scope elt)
     | Type.Literal properties -> Type.Literal (List.map (second (resolveType scope)) properties)
+    | Type.Arrow (parameters, ret) -> Type.Arrow (List.map (second (resolveType scope)) parameters, resolveType scope ret)
   decl |> checkDeclaration [globals] |> ignore
   (cache, errors :> seq<_> |> List.ofSeq)
 let getTypeOfDeclaration (cache: ResolvedTypes) (node: Declaration) =

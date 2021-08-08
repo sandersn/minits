@@ -55,6 +55,7 @@ type Lexer = {
 type Type =
 | Identifier of string
 | Literal of list<Property>
+| Arrow of parameters: list<Property> * ret: Type
 | Array of Type
 and Property = string * Type
 type LValue =

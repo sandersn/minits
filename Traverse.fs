@@ -38,4 +38,5 @@ let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType =
   | Type.Identifier _ -> []
   | Literal props -> List.collect (snd >> mapTypeToList) props
   | Array t -> mapTypeToList t
+  | Arrow (ps, ret) -> List.collect (snd >> mapTypeToList) ps @ mapTypeToList ret
   mapDeclToList tree
