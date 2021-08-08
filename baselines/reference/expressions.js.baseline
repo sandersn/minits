@@ -19,8 +19,11 @@ var b = ["hi", Foo {foo = "hi", bar = 0}]
 var which = if (add < sub) then (muladd + 1) else addmul34
 while (addmul2 > 0) do
 (muladd + 1)
+while (addmul2 > 0) do
+muladd = (muladd + 1)
 for i = 0 to 12 do
 let
-var total = (add * sub)
+var total = (add * sub) in
+let
 var result = ((0 < total) & (total < 100)) in
 ((add * sub); if (i > 12) then break else ())"

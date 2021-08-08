@@ -81,24 +81,19 @@ var ltaddmul = ((1 * 2) < (3 + (4... :: Some "int"
 4 :: Some "int"
 5 :: Some "int"
 ltaddmul = addmul34 = ((addsub /=... :: Some "int"
-ltaddmul = addmul34 = ((addsub /=... :: Some "int"
 ltaddmul :: Some "int"
 addmul34 = ((addsub /= 1) | ((sub... :: Some "int"
 addmul34 :: Some "int"
 ((addsub /= 1) | ((sub <= 12) & (... :: Some "int"
 (addsub /= 1) :: Some "int"
 addsub :: Some "int"
-addsub :: Some "int"
 1 :: Some "int"
 ((sub <= 12) & (muldiv == muldiv2)) :: Some "int"
 (sub <= 12) :: Some "int"
 sub :: Some "int"
-sub :: Some "int"
 12 :: Some "int"
 (muldiv == muldiv2) :: Some "int"
 muldiv :: Some "int"
-muldiv :: Some "int"
-muldiv2 :: Some "int"
 muldiv2 :: Some "int"
 type Foo = {foo: string, bar: int} :: Some "{foo: string, bar: int}"
 {foo: string, bar: int} :: Some "{foo: string, bar: int}"
@@ -108,71 +103,66 @@ var record = Foo {foo = "hi", bar... :: Some "{foo: string, bar: int}"
 Foo {foo = "hi", bar = 0} :: Some "{foo: string, bar: int}"
 "hi" :: Some "string"
 0 :: Some "int"
-var a = [1, 2, 3] :: Some "error"
-[1, 2, 3] :: Some "error"
+var a = [1, 2, 3] :: Some "Array<int>"
+[1, 2, 3] :: Some "Array<int>"
 1 :: Some "int"
 2 :: Some "int"
 3 :: Some "int"
-var b = ["hi", Foo {foo = "hi", b... :: Some "error"
-["hi", Foo {foo = "hi", bar = 0}] :: Some "error"
+var b = ["hi", Foo {foo = "hi", b... :: Some "Array<string>"
+["hi", Foo {foo = "hi", bar = 0}] :: Some "Array<string>"
 "hi" :: Some "string"
 Foo {foo = "hi", bar = 0} :: Some "{foo: string, bar: int}"
 "hi" :: Some "string"
 0 :: Some "int"
-var which = if (add < sub) then (... :: Some "error"
-if (add < sub) then (muladd + 1) ... :: Some "error"
-(add < sub) :: None
-add :: None
-add :: None
+var which = if (add < sub) then (... :: Some "int"
+if (add < sub) then (muladd + 1) ... :: Some "int"
+(add < sub) :: Some "int"
+add :: Some "int"
 sub :: Some "int"
-sub :: Some "int"
-(muladd + 1) :: None
-muladd :: None
-muladd :: None
+(muladd + 1) :: Some "int"
+muladd :: Some "int"
 1 :: Some "int"
-addmul34 :: None
 addmul34 :: Some "int"
-while (addmul2 > 0) do (muladd + 1) :: Some "null"
-while (addmul2 > 0) do (muladd + 1) :: Some "null"
-(addmul2 > 0) :: None
-addmul2 :: None
-addmul2 :: None
+while (addmul2 > 0) do (muladd + 1) :: Some "int"
+(addmul2 > 0) :: Some "int"
+addmul2 :: Some "int"
 0 :: Some "int"
-(muladd + 1) :: None
-muladd :: None
-muladd :: None
+(muladd + 1) :: Some "int"
+muladd :: Some "int"
+1 :: Some "int"
+while (addmul2 > 0) do muladd = (... :: Some "int"
+(addmul2 > 0) :: Some "int"
+addmul2 :: Some "int"
+0 :: Some "int"
+muladd = (muladd + 1) :: Some "int"
+muladd :: Some "int"
+(muladd + 1) :: Some "int"
+muladd :: Some "int"
 1 :: Some "int"
 for i = 0 to 12 do let var total ... :: Some "null"
-for i = 0 to 12 do let var total ... :: Some "null"
 0 :: Some "int"
 12 :: Some "int"
-let var total = (add * sub) var r... :: None
-var total = (add * sub) :: None
-(add * sub) :: None
-add :: None
-add :: None
+let var total = (add * sub) in le... :: Some "null"
+var total = (add * sub) :: Some "int"
+(add * sub) :: Some "int"
+add :: Some "int"
 sub :: Some "int"
-sub :: Some "int"
-var result = ((0 < total) & (tota... :: None
-((0 < total) & (total < 100)) :: None
-(0 < total) :: None
+let var result = ((0 < total) & (... :: Some "null"
+var result = ((0 < total) & (tota... :: Some "int"
+((0 < total) & (total < 100)) :: Some "int"
+(0 < total) :: Some "int"
 0 :: Some "int"
-total :: None
-total :: None
-(total < 100) :: None
-total :: None
-total :: None
-100 :: None
-((add * sub); if (i > 12) then br... :: None
-(add * sub) :: None
-add :: None
-add :: None
+total :: Some "int"
+(total < 100) :: Some "int"
+total :: Some "int"
+100 :: Some "int"
+((add * sub); if (i > 12) then br... :: Some "null"
+(add * sub) :: Some "int"
+add :: Some "int"
 sub :: Some "int"
-sub :: Some "int"
-if (i > 12) then break else () :: None
-(i > 12) :: None
-i :: None
-i :: None
+if (i > 12) then break else () :: Some "null"
+(i > 12) :: Some "int"
+i :: Some "int"
 12 :: Some "int"
-break :: None
-() :: None"
+break :: Some "null"
+() :: Some "null""

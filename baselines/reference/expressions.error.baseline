@@ -1,2 +1,1 @@
-["Arrays don't check yet"; "Arrays don't check yet"; "If doesn't check yet";
- "While doesn't check yet"; "For doesn't check yet"]
+["Expected array elements to have type string but got {foo: string, bar: int}."]

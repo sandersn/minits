@@ -2,7 +2,6 @@
 var a = null :: Some "null"
 null :: Some "null"
 (1; null; null) :: Some "null"
-(1; null; null) :: Some "null"
 1 :: Some "int"
 null :: Some "null"
 null :: Some "null""

@@ -89,6 +89,12 @@
          (Binary (LValue (Identifier "addmul2"), GreaterThan, IntLiteral 0),
           Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1)));
     ExpressionStatement
+      (While
+         (Binary (LValue (Identifier "addmul2"), GreaterThan, IntLiteral 0),
+          Assignment
+            (Identifier "muladd",
+             Binary (LValue (Identifier "muladd"), Plus, IntLiteral 1))));
+    ExpressionStatement
       (For
          ("i", IntLiteral 0, IntLiteral 12,
           Let
@@ -96,21 +102,24 @@
                 ("total", None,
                  Binary
                    (LValue (Identifier "add"), Asterisk,
-                    LValue (Identifier "sub")));
-              Var
-                ("result", None,
-                 Binary
-                   (Binary (IntLiteral 0, LessThan, LValue (Identifier "total")),
-                    Ampersand,
+                    LValue (Identifier "sub")))],
+             Let
+               ([Var
+                   ("result", None,
                     Binary
-                      (LValue (Identifier "total"), LessThan, IntLiteral 100)))],
-             Sequence
-               [Binary
-                  (LValue (Identifier "add"), Asterisk,
-                   LValue (Identifier "sub"));
-                If
-                  (Binary (LValue (Identifier "i"), GreaterThan, IntLiteral 12),
-                   Break, Sequence [])])))],
+                      (Binary
+                         (IntLiteral 0, LessThan, LValue (Identifier "total")),
+                       Ampersand,
+                       Binary
+                         (LValue (Identifier "total"), LessThan, IntLiteral 100)))],
+                Sequence
+                  [Binary
+                     (LValue (Identifier "add"), Asterisk,
+                      LValue (Identifier "sub"));
+                   If
+                     (Binary
+                        (LValue (Identifier "i"), GreaterThan, IntLiteral 12),
+                      Break, Sequence [])]))))],
  ["var negative = -1 var mult = (1 *...:
     [Foo, type Foo = {foo: string, bar: int}]
     [a, var a = [1, 2, 3]]
@@ -132,6 +141,7 @@
     [which, var which = if (add < sub) then (...]";
   "for i = 0 to 12 do let var total ...:
     [i, var i = 0]";
-  "let var total = (add * sub) var r...:
-    [result, var result = ((0 < total) & (tota...]
+  "let var result = ((0 < total) & (...:
+    [result, var result = ((0 < total) & (tota...]";
+  "let var total = (add * sub) in le...:
     [total, var total = (add * sub)]"])

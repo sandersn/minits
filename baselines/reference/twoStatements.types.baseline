@@ -2,6 +2,5 @@
 var arthurTwoShedsJackson = 1 :: Some "int"
 1 :: Some "int"
 arthurTwoShedsJackson = 2 :: Some "int"
-arthurTwoShedsJackson = 2 :: Some "int"
 arthurTwoShedsJackson :: Some "int"
 2 :: Some "int""

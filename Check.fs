@@ -60,7 +60,7 @@ let check (env : Environment) (decl: Declaration) =
         expectType intType lt rt
         intType
       | DoubleEquals | ForwardSlashEquals ->
-        if lt <> rt then errors.Add $"Expected both sides to have same type, but left={typeToString lt} and right={typeToString rt}" else ()
+        if lt <> rt then errors.Add $"Expected both sides to have same type, but left={typeToString lt} and right={typeToString rt}"
         intType
       | t -> failwith $"Unexpected binary operator token {t}"
       checkBinary op
@@ -73,8 +73,7 @@ let check (env : Environment) (decl: Declaration) =
       match checkExpression scope e with
       | Type.Arrow(parameters, ret) ->
         List.iter2 (fun (name,t) arg -> 
-            if t <> arg then errors.Add $"Parameter {name} expected type {typeToString t} but got {typeToString arg}." 
-            else ()) 
+            if t <> arg then errors.Add $"Parameter {name} expected type {typeToString t} but got {typeToString arg}.") 
           parameters 
           (List.map (checkExpression scope) args)
         ret
@@ -87,30 +86,50 @@ let check (env : Environment) (decl: Declaration) =
       match resolve name scope Type with
       | Some (Declaration.Type _ as decl) -> 
         match checkDeclaration scope decl with
-        | Type.Literal props -> 
+        | Literal props -> 
           let propTypes = Map.ofList props
           inits |> List.iter (fun (name,i) -> 
             let pt = Map.find name propTypes
             let it = checkExpression scope i
-            if pt <> it then 
-              errors.Add $"{name} expected type {typeToString pt} but got {typeToString it}." 
-            else ())
+            if pt <> it then errors.Add $"{name} expected type {typeToString pt} but got {typeToString it}.")
           ()
-        | t -> errors.Add $"Type {name} is not a record type."
+        | _ -> errors.Add $"Type {name} is not a record type."
       | Some _ -> errors.Add $"{name} is not a type declaration."
       | None -> errors.Add $"Could not resolve type {name}."
       Type.Literal <| List.map (second (checkExpression scope)) inits
-    | ArrayCons _ -> errors.Add "Arrays don't check yet"; errorType
-    | If _ -> errors.Add "If doesn't check yet"; errorType
-    | While _ -> errors.Add "While doesn't check yet"; nullType
-    | For _ -> errors.Add "For doesn't check yet"; nullType
-    | Let _ -> errors.Add "Let doesn't check yet"; errorType
-    | Break -> errors.Add "Break doesn't check yet"; nullType
+    | ArrayCons es ->
+      match List.map (checkExpression scope) es with
+      | (t :: ts) -> 
+        ts |> List.iter (fun t' -> if t <> t' then errors.Add $"Expected array elements to have type {typeToString t} but got {typeToString t'}.")
+        Array t
+      | [] -> Array nullType
+    | If (cond, cons, alt) ->
+      let condt = checkExpression scope cond 
+      if condt <> intType then errors.Add $"If condition must have type int, but got {typeToString condt}."
+      let ct = checkExpression scope cons
+      let at = checkExpression scope alt
+      if ct <> at then errors.Add $"Both branches of an if must have the same type. then-branch: {typeToString ct}; else-branch {typeToString at}."
+      ct
+    | While (cond, action) -> 
+      let condt = checkExpression scope cond 
+      if condt <> intType then errors.Add $"While condition must have type int, but got {typeToString condt}."
+      checkExpression scope action
+      // if at <> nullType then errors.Add $"While action must have type null, but got {typeToString at}."
+    | For (_, start, stop, action) as f -> 
+      let startt = checkExpression scope start 
+      if startt <> intType then errors.Add $"For start value must have type int, but got {typeToString startt}."
+      let stopt = checkExpression scope stop 
+      if stopt <> intType then errors.Add $"For stop value must have type int, but got {typeToString stopt}."
+      checkExpression (Map.find (ExpressionStatement f) env :: scope) action
+      // if at <> nullType then errors.Add $"For action must have type null, but got {typeToString at}."
+    | Let (decls, body) as l ->
+      decls |> List.iter (fun d -> checkDeclaration scope d |> ignore)
+      checkExpression (Map.find (ExpressionStatement l) env :: scope) body
+    | Break -> nullType // TODO: Error if not inside a for (not sure how to do this without parent pointers)
     | Null -> nullType
   and expectType expected lt rt = 
     if lt <> expected then errors.Add $"Left side expected {typeToString expected} but got {typeToString lt}" 
     elif rt <> expected then errors.Add $"Right side expected {typeToString expected} but got {typeToString rt}"
-    else ()
   and checkLValue' (scope : list<Table>) (lvalue : LValue) =
     match lvalue with
     | Identifier(name) -> 

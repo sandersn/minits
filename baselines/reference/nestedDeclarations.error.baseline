@@ -1,1 +1,4 @@
-["Could not resolve alpha"; "Let doesn't check yet"]
+["Could not resolve alpha";
+ "Expected array elements to have type string but got int.";
+ "Expected array elements to have type string but got int.";
+ "Expected array elements to have type string but got error."]
