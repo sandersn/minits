@@ -1,46 +1,46 @@
-"type Y = {z: int} type X = {y: Y}... :: Some "error"
-type Y = {z: int} :: Some "{z: int}"
-{z: int} :: Some "{z: int}"
-int :: Some "int"
-type X = {y: Y} :: Some "{y: {z: int}}"
-{y: Y} :: Some "{y: {z: int}}"
-Y :: Some "{z: int}"
-var x = X {y = Y {z = 12}} :: Some "{y: {z: int}}"
-X {y = Y {z = 12}} :: Some "{y: {z: int}}"
-Y {z = 12} :: Some "{z: int}"
-12 :: Some "int"
-var o = [1, 2, 3, 4] :: Some "Array<int>"
-[1, 2, 3, 4] :: Some "Array<int>"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-4 :: Some "int"
-x :: Some "{y: {z: int}}"
-x.y :: Some "{z: int}"
-x :: Some "{y: {z: int}}"
-x.y.z :: Some "int"
-x.y :: Some "{z: int}"
-x :: Some "{y: {z: int}}"
-o :: Some "Array<int>"
-o[x] :: Some "int"
-o :: Some "Array<int>"
-x :: Some "{y: {z: int}}"
-o[x.y] :: Some "int"
-o :: Some "Array<int>"
-x.y :: Some "{z: int}"
-x :: Some "{y: {z: int}}"
-o[x][y] :: Some "error"
-o[x] :: Some "int"
-o :: Some "Array<int>"
-x :: Some "{y: {z: int}}"
-y :: Some "error"
-o.x[y][z] :: Some "error"
-o.x[y] :: Some "error"
-o.x :: Some "error"
-o :: Some "Array<int>"
-y :: Some "error"
-z :: Some "error"
-o[x].y :: Some "error"
-o[x] :: Some "int"
-o :: Some "Array<int>"
-x :: Some "{y: {z: int}}""
+"type Y = {z: int} type X = {y: Y}... :: error
+type Y = {z: int} :: {z: int}
+{z: int} :: {z: int}
+int :: int
+type X = {y: Y} :: {y: {z: int}}
+{y: Y} :: {y: {z: int}}
+Y :: {z: int}
+var x = X {y = Y {z = 12}} :: {y: {z: int}}
+X {y = Y {z = 12}} :: {y: {z: int}}
+Y {z = 12} :: {z: int}
+12 :: int
+var o = [1, 2, 3, 4] :: Array<int>
+[1, 2, 3, 4] :: Array<int>
+1 :: int
+2 :: int
+3 :: int
+4 :: int
+x :: {y: {z: int}}
+x.y :: {z: int}
+x :: {y: {z: int}}
+x.y.z :: int
+x.y :: {z: int}
+x :: {y: {z: int}}
+o :: Array<int>
+o[x] :: int
+o :: Array<int>
+x :: {y: {z: int}}
+o[x.y] :: int
+o :: Array<int>
+x.y :: {z: int}
+x :: {y: {z: int}}
+o[x][y] :: error
+o[x] :: int
+o :: Array<int>
+x :: {y: {z: int}}
+y :: error
+o.x[y][z] :: error
+o.x[y] :: error
+o.x :: error
+o :: Array<int>
+y :: error
+z :: error
+o[x].y :: error
+o[x] :: int
+o :: Array<int>
+x :: {y: {z: int}}"

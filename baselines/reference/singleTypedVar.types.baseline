@@ -1,4 +1,4 @@
-"var s: string = 1 :: Some "string"
-var s: string = 1 :: Some "string"
-string :: Some "string"
-1 :: Some "int""
+"var s: string = 1 :: string
+var s: string = 1 :: string
+string :: string
+1 :: int"

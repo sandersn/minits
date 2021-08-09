@@ -1,32 +1,32 @@
-"function nullary() = 1 function u... :: Some "int"
-function nullary() = 1 :: Some "() -> int"
-1 :: Some "int"
-function unary(n: int) = n :: Some "(n: int) -> int"
-n: int :: Some "int"
-int :: Some "int"
-n :: Some "int"
-function explicit(n: int): int = n :: Some "(n: int) -> int"
-n: int :: Some "int"
-int :: Some "int"
-int :: Some "int"
-n :: Some "int"
-function binary(n: int, m: int) =... :: Some "(n: int, m: int) -> int"
-n: int :: Some "int"
-int :: Some "int"
-m: int :: Some "int"
-int :: Some "int"
-(n + m) :: Some "int"
-n :: Some "int"
-m :: Some "int"
-nullary() :: Some "int"
-nullary :: Some "() -> int"
-unary(1) :: Some "int"
-unary :: Some "(n: int) -> int"
-1 :: Some "int"
-explicit(2) :: Some "int"
-explicit :: Some "(n: int) -> int"
-2 :: Some "int"
-binary(1, 2) :: Some "int"
-binary :: Some "(n: int, m: int) -> int"
-1 :: Some "int"
-2 :: Some "int""
+"function nullary() = 1 function u... :: int
+function nullary() = 1 :: () -> int
+1 :: int
+function unary(n: int) = n :: (n: int) -> int
+n: int :: int
+int :: int
+n :: int
+function explicit(n: int): int = n :: (n: int) -> int
+n: int :: int
+int :: int
+int :: int
+n :: int
+function binary(n: int, m: int) =... :: (n: int, m: int) -> int
+n: int :: int
+int :: int
+m: int :: int
+int :: int
+(n + m) :: int
+n :: int
+m :: int
+nullary() :: int
+nullary :: () -> int
+unary(1) :: int
+unary :: (n: int) -> int
+1 :: int
+explicit(2) :: int
+explicit :: (n: int) -> int
+2 :: int
+binary(1, 2) :: int
+binary :: (n: int, m: int) -> int
+1 :: int
+2 :: int"

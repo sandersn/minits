@@ -1,7 +1,7 @@
-"var a = null (1; null; null) :: Some "null"
-var a = null :: Some "null"
-null :: Some "null"
-(1; null; null) :: Some "null"
-1 :: Some "int"
-null :: Some "null"
-null :: Some "null""
+"var a = null (1; null; null) :: null
+var a = null :: null
+null :: null
+(1; null; null) :: null
+1 :: int
+null :: null
+null :: null"

@@ -1,20 +1,20 @@
-"type Nat = int var Nat = "ok" var... :: Some "error"
-type Nat = int :: Some "int"
-int :: Some "int"
-var Nat = "ok" :: Some "string"
-"ok" :: Some "string"
-var Nat = "not ok" :: Some "string"
-"not ok" :: Some "string"
-var Nat = -1 :: Some "int"
--1 :: Some "int"
-1 :: Some "int"
-var Net: Nat = Nat :: Some "int"
-Nat :: Some "int"
-Nat :: Some "string"
-var Nit: Net = 13 :: Some "error"
-Net :: Some "error"
-13 :: Some "int"
-type Not = int :: Some "int"
-int :: Some "int"
-var Nut = Not :: Some "error"
-Not :: Some "error""
+"type Nat = int var Nat = "ok" var... :: error
+type Nat = int :: int
+int :: int
+var Nat = "ok" :: string
+"ok" :: string
+var Nat = "not ok" :: string
+"not ok" :: string
+var Nat = -1 :: int
+-1 :: int
+1 :: int
+var Net: Nat = Nat :: int
+Nat :: int
+Nat :: string
+var Nit: Net = 13 :: error
+Net :: error
+13 :: int
+type Not = int :: int
+int :: int
+var Nut = Not :: error
+Not :: error"

@@ -1,6 +1,6 @@
-"var arthurTwoShedsJackson = 1 art... :: Some "int"
-var arthurTwoShedsJackson = 1 :: Some "int"
-1 :: Some "int"
-arthurTwoShedsJackson = 2 :: Some "int"
-arthurTwoShedsJackson :: Some "int"
-2 :: Some "int""
+"var arthurTwoShedsJackson = 1 art... :: int
+var arthurTwoShedsJackson = 1 :: int
+1 :: int
+arthurTwoShedsJackson = 2 :: int
+arthurTwoShedsJackson :: int
+2 :: int"

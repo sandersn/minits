@@ -52,12 +52,12 @@ let formatEnvironment (env: Environment) =
 let getTypesOfNodes (decl: Declaration) (types: ResolvedTypes): string =
   let getTypesOfDeclaration = function
   | ExpressionStatement _ -> None
-  | decl -> Some $"{shorten <| emitDeclaration decl} :: %A{getTypeOfDeclaration types decl |> Option.map typeToString}"
+  | decl -> Some $"{shorten <| emitDeclaration decl} :: {getTypeOfDeclaration types decl |> Option.get |> typeToString}"
   let getTypesOfExpression = function
   | LValue _ -> None
-  | e -> Some $"{shorten <| emitExpression e} :: %A{getTypeOfExpression types e |> Option.map typeToString}"
-  let getTypesOfLValue l = Some $"{shorten <| emitLValue l} :: %A{getTypeOfLValue types l |> Option.map typeToString}"
-  let getTypesOfType t = Some $"{shorten <| typeToString t} :: %A{getTypeOfType types t |> Option.map typeToString}"
+  | e -> Some $"{shorten <| emitExpression e} :: {getTypeOfExpression types e |> Option.get |> typeToString}"
+  let getTypesOfLValue l = Some $"{shorten <| emitLValue l} :: {getTypeOfLValue types l |> Option.get |> typeToString}"
+  let getTypesOfType t = Some $"{shorten <| typeToString t} :: {getTypeOfType types t |> Option.get |> typeToString}"
   Traverse.toList decl getTypesOfDeclaration getTypesOfExpression getTypesOfLValue getTypesOfType |> List.filter Option.isSome |> List.map Option.get |> String.concat "\n"
 let run () =
     let lexResult = 

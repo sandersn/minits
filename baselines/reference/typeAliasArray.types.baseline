@@ -1,4 +1,4 @@
-"type Ints = Array<int> :: Some "Array<int>"
-type Ints = Array<int> :: Some "Array<int>"
-Array<int> :: Some "Array<int>"
-int :: Some "int""
+"type Ints = Array<int> :: Array<int>
+type Ints = Array<int> :: Array<int>
+Array<int> :: Array<int>
+int :: int"

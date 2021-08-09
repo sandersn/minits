@@ -1,11 +1,11 @@
-"var a = 1 () (a; a; a) (a; a) :: Some "int"
-var a = 1 :: Some "int"
-1 :: Some "int"
-() :: Some "null"
-(a; a; a) :: Some "int"
-a :: Some "int"
-a :: Some "int"
-a :: Some "int"
-(a; a) :: Some "int"
-a :: Some "int"
-a :: Some "int""
+"var a = 1 () (a; a; a) (a; a) :: int
+var a = 1 :: int
+1 :: int
+() :: null
+(a; a; a) :: int
+a :: int
+a :: int
+a :: int
+(a; a) :: int
+a :: int
+a :: int"

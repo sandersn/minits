@@ -1,168 +1,168 @@
-"var negative = -1 var mult = (1 *... :: Some "null"
-var negative = -1 :: Some "int"
--1 :: Some "int"
-1 :: Some "int"
-var mult = (1 * 2) :: Some "int"
-(1 * 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-var div = (1 / 2) :: Some "int"
-(1 / 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-var muldiv = ((1 * 2) / 3) :: Some "int"
-((1 * 2) / 3) :: Some "int"
-(1 * 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-var muldiv2 = ((1 / 2) * 3) :: Some "int"
-((1 / 2) * 3) :: Some "int"
-(1 / 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-var add = (1 + 2) :: Some "int"
-(1 + 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-var sub = (1 - 2) :: Some "int"
-(1 - 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-var addsub = ((1 + 2) - 3) :: Some "int"
-((1 + 2) - 3) :: Some "int"
-(1 + 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-var muladd = ((1 * 2) + 3) :: Some "int"
-((1 * 2) + 3) :: Some "int"
-(1 * 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-var muladd2 = (((1 * 2) * 3) + 4) :: Some "int"
-(((1 * 2) * 3) + 4) :: Some "int"
-((1 * 2) * 3) :: Some "int"
-(1 * 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-4 :: Some "int"
-var addmul2 = (1 + ((2 * 3) * 4)) :: Some "int"
-(1 + ((2 * 3) * 4)) :: Some "int"
-1 :: Some "int"
-((2 * 3) * 4) :: Some "int"
-(2 * 3) :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-4 :: Some "int"
-var addmul34 = (((1 * 2) + 3) + (... :: Some "int"
-(((1 * 2) + 3) + ((4 * 5) * 6)) :: Some "int"
-((1 * 2) + 3) :: Some "int"
-(1 * 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-((4 * 5) * 6) :: Some "int"
-(4 * 5) :: Some "int"
-4 :: Some "int"
-5 :: Some "int"
-6 :: Some "int"
-var ltaddmul = ((1 * 2) < (3 + (4... :: Some "int"
-((1 * 2) < (3 + (4 * 5))) :: Some "int"
-(1 * 2) :: Some "int"
-1 :: Some "int"
-2 :: Some "int"
-(3 + (4 * 5)) :: Some "int"
-3 :: Some "int"
-(4 * 5) :: Some "int"
-4 :: Some "int"
-5 :: Some "int"
-ltaddmul = addmul34 = ((addsub /=... :: Some "int"
-ltaddmul :: Some "int"
-addmul34 = ((addsub /= 1) | ((sub... :: Some "int"
-addmul34 :: Some "int"
-((addsub /= 1) | ((sub <= 12) & (... :: Some "int"
-(addsub /= 1) :: Some "int"
-addsub :: Some "int"
-1 :: Some "int"
-((sub <= 12) & (muldiv == muldiv2)) :: Some "int"
-(sub <= 12) :: Some "int"
-sub :: Some "int"
-12 :: Some "int"
-(muldiv == muldiv2) :: Some "int"
-muldiv :: Some "int"
-muldiv2 :: Some "int"
-type Foo = {foo: string, bar: int} :: Some "{foo: string, bar: int}"
-{foo: string, bar: int} :: Some "{foo: string, bar: int}"
-string :: Some "string"
-int :: Some "int"
-var record = Foo {foo = "hi", bar... :: Some "{foo: string, bar: int}"
-Foo {foo = "hi", bar = 0} :: Some "{foo: string, bar: int}"
-"hi" :: Some "string"
-0 :: Some "int"
-var a = [1, 2, 3] :: Some "Array<int>"
-[1, 2, 3] :: Some "Array<int>"
-1 :: Some "int"
-2 :: Some "int"
-3 :: Some "int"
-var b = ["hi", Foo {foo = "hi", b... :: Some "Array<string>"
-["hi", Foo {foo = "hi", bar = 0}] :: Some "Array<string>"
-"hi" :: Some "string"
-Foo {foo = "hi", bar = 0} :: Some "{foo: string, bar: int}"
-"hi" :: Some "string"
-0 :: Some "int"
-var which = if (add < sub) then (... :: Some "int"
-if (add < sub) then (muladd + 1) ... :: Some "int"
-(add < sub) :: Some "int"
-add :: Some "int"
-sub :: Some "int"
-(muladd + 1) :: Some "int"
-muladd :: Some "int"
-1 :: Some "int"
-addmul34 :: Some "int"
-while (addmul2 > 0) do (muladd + 1) :: Some "int"
-(addmul2 > 0) :: Some "int"
-addmul2 :: Some "int"
-0 :: Some "int"
-(muladd + 1) :: Some "int"
-muladd :: Some "int"
-1 :: Some "int"
-while (addmul2 > 0) do muladd = (... :: Some "int"
-(addmul2 > 0) :: Some "int"
-addmul2 :: Some "int"
-0 :: Some "int"
-muladd = (muladd + 1) :: Some "int"
-muladd :: Some "int"
-(muladd + 1) :: Some "int"
-muladd :: Some "int"
-1 :: Some "int"
-for i = 0 to 12 do let var total ... :: Some "null"
-0 :: Some "int"
-12 :: Some "int"
-let var total = (add * sub) in le... :: Some "null"
-var total = (add * sub) :: Some "int"
-(add * sub) :: Some "int"
-add :: Some "int"
-sub :: Some "int"
-let var result = ((0 < total) & (... :: Some "null"
-var result = ((0 < total) & (tota... :: Some "int"
-((0 < total) & (total < 100)) :: Some "int"
-(0 < total) :: Some "int"
-0 :: Some "int"
-total :: Some "int"
-(total < 100) :: Some "int"
-total :: Some "int"
-100 :: Some "int"
-((add * sub); if (i > 12) then br... :: Some "null"
-(add * sub) :: Some "int"
-add :: Some "int"
-sub :: Some "int"
-if (i > 12) then break else () :: Some "null"
-(i > 12) :: Some "int"
-i :: Some "int"
-12 :: Some "int"
-break :: Some "null"
-() :: Some "null""
+"var negative = -1 var mult = (1 *... :: null
+var negative = -1 :: int
+-1 :: int
+1 :: int
+var mult = (1 * 2) :: int
+(1 * 2) :: int
+1 :: int
+2 :: int
+var div = (1 / 2) :: int
+(1 / 2) :: int
+1 :: int
+2 :: int
+var muldiv = ((1 * 2) / 3) :: int
+((1 * 2) / 3) :: int
+(1 * 2) :: int
+1 :: int
+2 :: int
+3 :: int
+var muldiv2 = ((1 / 2) * 3) :: int
+((1 / 2) * 3) :: int
+(1 / 2) :: int
+1 :: int
+2 :: int
+3 :: int
+var add = (1 + 2) :: int
+(1 + 2) :: int
+1 :: int
+2 :: int
+var sub = (1 - 2) :: int
+(1 - 2) :: int
+1 :: int
+2 :: int
+var addsub = ((1 + 2) - 3) :: int
+((1 + 2) - 3) :: int
+(1 + 2) :: int
+1 :: int
+2 :: int
+3 :: int
+var muladd = ((1 * 2) + 3) :: int
+((1 * 2) + 3) :: int
+(1 * 2) :: int
+1 :: int
+2 :: int
+3 :: int
+var muladd2 = (((1 * 2) * 3) + 4) :: int
+(((1 * 2) * 3) + 4) :: int
+((1 * 2) * 3) :: int
+(1 * 2) :: int
+1 :: int
+2 :: int
+3 :: int
+4 :: int
+var addmul2 = (1 + ((2 * 3) * 4)) :: int
+(1 + ((2 * 3) * 4)) :: int
+1 :: int
+((2 * 3) * 4) :: int
+(2 * 3) :: int
+2 :: int
+3 :: int
+4 :: int
+var addmul34 = (((1 * 2) + 3) + (... :: int
+(((1 * 2) + 3) + ((4 * 5) * 6)) :: int
+((1 * 2) + 3) :: int
+(1 * 2) :: int
+1 :: int
+2 :: int
+3 :: int
+((4 * 5) * 6) :: int
+(4 * 5) :: int
+4 :: int
+5 :: int
+6 :: int
+var ltaddmul = ((1 * 2) < (3 + (4... :: int
+((1 * 2) < (3 + (4 * 5))) :: int
+(1 * 2) :: int
+1 :: int
+2 :: int
+(3 + (4 * 5)) :: int
+3 :: int
+(4 * 5) :: int
+4 :: int
+5 :: int
+ltaddmul = addmul34 = ((addsub /=... :: int
+ltaddmul :: int
+addmul34 = ((addsub /= 1) | ((sub... :: int
+addmul34 :: int
+((addsub /= 1) | ((sub <= 12) & (... :: int
+(addsub /= 1) :: int
+addsub :: int
+1 :: int
+((sub <= 12) & (muldiv == muldiv2)) :: int
+(sub <= 12) :: int
+sub :: int
+12 :: int
+(muldiv == muldiv2) :: int
+muldiv :: int
+muldiv2 :: int
+type Foo = {foo: string, bar: int} :: {foo: string, bar: int}
+{foo: string, bar: int} :: {foo: string, bar: int}
+string :: string
+int :: int
+var record = Foo {foo = "hi", bar... :: {foo: string, bar: int}
+Foo {foo = "hi", bar = 0} :: {foo: string, bar: int}
+"hi" :: string
+0 :: int
+var a = [1, 2, 3] :: Array<int>
+[1, 2, 3] :: Array<int>
+1 :: int
+2 :: int
+3 :: int
+var b = ["hi", Foo {foo = "hi", b... :: Array<string>
+["hi", Foo {foo = "hi", bar = 0}] :: Array<string>
+"hi" :: string
+Foo {foo = "hi", bar = 0} :: {foo: string, bar: int}
+"hi" :: string
+0 :: int
+var which = if (add < sub) then (... :: int
+if (add < sub) then (muladd + 1) ... :: int
+(add < sub) :: int
+add :: int
+sub :: int
+(muladd + 1) :: int
+muladd :: int
+1 :: int
+addmul34 :: int
+while (addmul2 > 0) do (muladd + 1) :: int
+(addmul2 > 0) :: int
+addmul2 :: int
+0 :: int
+(muladd + 1) :: int
+muladd :: int
+1 :: int
+while (addmul2 > 0) do muladd = (... :: int
+(addmul2 > 0) :: int
+addmul2 :: int
+0 :: int
+muladd = (muladd + 1) :: int
+muladd :: int
+(muladd + 1) :: int
+muladd :: int
+1 :: int
+for i = 0 to 12 do let var total ... :: null
+0 :: int
+12 :: int
+let var total = (add * sub) in le... :: null
+var total = (add * sub) :: int
+(add * sub) :: int
+add :: int
+sub :: int
+let var result = ((0 < total) & (... :: null
+var result = ((0 < total) & (tota... :: int
+((0 < total) & (total < 100)) :: int
+(0 < total) :: int
+0 :: int
+total :: int
+(total < 100) :: int
+total :: int
+100 :: int
+((add * sub); if (i > 12) then br... :: null
+(add * sub) :: int
+add :: int
+sub :: int
+if (i > 12) then break else () :: null
+(i > 12) :: int
+i :: int
+12 :: int
+break :: null
+() :: null"

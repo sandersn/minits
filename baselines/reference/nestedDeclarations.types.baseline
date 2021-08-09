@@ -1,29 +1,29 @@
-"x var x = "hi" var y = 1 function... :: Some "Array<string>"
-x :: Some "string"
-var x = "hi" :: Some "string"
-"hi" :: Some "string"
-var y = 1 :: Some "int"
-1 :: Some "int"
-function f(y: int, z: int) = (x; ... :: Some "(y: int, z: int) -> Array<string>"
-y: int :: Some "int"
-int :: Some "int"
-z: int :: Some "int"
-int :: Some "int"
-(x; y; alpha; let var x = 2 var a... :: Some "Array<string>"
-x :: Some "string"
-y :: Some "int"
-alpha :: Some "error"
-let var x = 2 var alpha = 1 in [x... :: Some "Array<string>"
-var x = 2 :: Some "int"
-2 :: Some "int"
-var alpha = 1 :: Some "int"
-1 :: Some "int"
-[x, y, z, alpha] :: Some "Array<string>"
-x :: Some "string"
-y :: Some "int"
-z :: Some "int"
-alpha :: Some "error"
-f(4, 5) :: Some "Array<string>"
-f :: Some "(y: int, z: int) -> Array<string>"
-4 :: Some "int"
-5 :: Some "int""
+"x var x = "hi" var y = 1 function... :: Array<string>
+x :: string
+var x = "hi" :: string
+"hi" :: string
+var y = 1 :: int
+1 :: int
+function f(y: int, z: int) = (x; ... :: (y: int, z: int) -> Array<string>
+y: int :: int
+int :: int
+z: int :: int
+int :: int
+(x; y; alpha; let var x = 2 var a... :: Array<string>
+x :: string
+y :: int
+alpha :: error
+let var x = 2 var alpha = 1 in [x... :: Array<string>
+var x = 2 :: int
+2 :: int
+var alpha = 1 :: int
+1 :: int
+[x, y, z, alpha] :: Array<string>
+x :: string
+y :: int
+z :: int
+alpha :: error
+f(4, 5) :: Array<string>
+f :: (y: int, z: int) -> Array<string>
+4 :: int
+5 :: int"

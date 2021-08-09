@@ -1,3 +1,3 @@
-"type Str = string :: Some "string"
-type Str = string :: Some "string"
-string :: Some "string""
+"type Str = string :: string
+type Str = string :: string
+string :: string"

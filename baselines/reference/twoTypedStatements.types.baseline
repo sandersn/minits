@@ -1,7 +1,7 @@
-"var s: string = 1 s = 2 :: Some "string"
-var s: string = 1 :: Some "string"
-string :: Some "string"
-1 :: Some "int"
-s = 2 :: Some "string"
-s :: Some "string"
-2 :: Some "int""
+"var s: string = 1 s = 2 :: string
+var s: string = 1 :: string
+string :: string
+1 :: int
+s = 2 :: string
+s :: string
+2 :: int"
