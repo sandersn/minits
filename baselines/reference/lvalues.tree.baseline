@@ -1,5 +1,13 @@
 (File
-   [ExpressionStatement (LValue (Identifier "x"));
+   [Type ("Y", Literal [("z", Identifier "int")]);
+    Type ("X", Literal [("y", Identifier "Y")]);
+    Var
+      ("x", None,
+       RecordCons ("X", [("y", RecordCons ("Y", [("z", IntLiteral 12)]))]));
+    Var
+      ("o", None,
+       ArrayCons [IntLiteral 1; IntLiteral 2; IntLiteral 3; IntLiteral 4]);
+    ExpressionStatement (LValue (Identifier "x"));
     ExpressionStatement (LValue (PropertyAccess (Identifier "x", "y")));
     ExpressionStatement
       (LValue (PropertyAccess (PropertyAccess (Identifier "x", "y"), "z")));
@@ -25,5 +33,8 @@
       (LValue
          (PropertyAccess
             (ArrayAccess (Identifier "o", LValue (Identifier "x")), "y")))],
- ["x x.y x.y.z o o[x] o[x.y] o[x][y]...:
-    "])
+ ["type Y = {z: int} type X = {y: Y}...:
+    [X, type X = {y: Y}]
+    [Y, type Y = {z: int}]
+    [o, var o = [1, 2, 3, 4]]
+    [x, var x = X {y = Y {z = 12}}]"])

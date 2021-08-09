@@ -1,1 +1,10 @@
-["Could not resolve x"; "Could not resolve o"]
+["Index of element access must be int, but got {y: {z: int}}.";
+ "Index of element access must be int, but got {z: int}."; "Could not resolve y";
+ "Index of element access must be int, but got error.";
+ "Element access is not allowed on int."; "Could not resolve z";
+ "Index of element access must be int, but got error.";
+ "Index of element access must be int, but got error.";
+ "Property access is not allowed on Array<int>.";
+ "Element access is not allowed on error.";
+ "Element access is not allowed on error.";
+ "Property access is not allowed on int."]

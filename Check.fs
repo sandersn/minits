@@ -136,8 +136,16 @@ let check (env : Environment) (decl: Declaration) =
       match resolve name scope Value with
       | Some(statement) -> checkDeclaration scope statement
       | _ -> errors.Add <| "Could not resolve " + name; errorType
-    | PropertyAccess _ -> errorType // TODO: REcursive resolve
-    | ArrayAccess _ -> errorType // TODO: Recursive resolve
+    | PropertyAccess (l,r) ->
+      match checkLValue scope l with
+      | Literal ps -> ps |> List.find (fst >> (=) r) |> snd
+      | t -> errors.Add $"Property access is not allowed on {typeToString t}."; errorType
+    | ArrayAccess (l,r) ->
+      let rt = checkExpression scope r
+      if rt <> intType then errors.Add $"Index of element access must be int, but got {typeToString rt}."
+      match checkLValue scope l with
+      | Array e -> e
+      | t -> errors.Add $"Element access is not allowed on {typeToString t}."; errorType
   and checkDeclaration' (scope : list<Table>) (decl : Declaration) = 
     match decl with
     | File decls as f -> 

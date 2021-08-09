@@ -1,4 +1,8 @@
-"x
+"type Y = {z: int}
+type X = {y: Y}
+var x = X {y = Y {z = 12}}
+var o = [1, 2, 3, 4]
+x
 x.y
 x.y.z
 o
