@@ -1,4 +1,5 @@
 module Minits.Test
+open System.Text.RegularExpressions
 open Types
 open Lex
 open Compile
@@ -59,12 +60,13 @@ let getTypesOfNodes (decl: Declaration) (types: ResolvedTypes): string =
   let getTypesOfLValue l = Some $"{shorten <| emitLValue l} :: {getTypeOfLValue types l |> Option.get |> typeToString}"
   let getTypesOfType t = Some $"{shorten <| typeToString t} :: {getTypeOfType types t |> Option.get |> typeToString}"
   Traverse.toList decl getTypesOfDeclaration getTypesOfExpression getTypesOfLValue getTypesOfType |> List.filter Option.isSome |> List.map Option.get |> String.concat "\n"
-let run () =
+let run (filter : Option<string>) =
     let lexResult = 
         lexTests 
         |> List.sumBy (fun (name,text) -> lexAll text |> test "lex" name) 
     let compileResult = 
         System.IO.Directory.GetFiles "tests"
+        |> Array.filter (fun file -> Option.isNone filter || Regex.IsMatch (file, Option.get filter))
         |> Array.sumBy (fun file -> 
           let (tree, environment, types, errors, emit) = file |> System.IO.File.ReadAllText |> compile
           let name = file.Substring ("tests/".Length, file.IndexOf ".tig" - "tests/".Length)

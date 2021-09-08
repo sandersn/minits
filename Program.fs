@@ -1,2 +1,2 @@
 [<EntryPoint>]
-let main _ = Minits.Test.run ()
+let main args = Minits.Test.run (Array.tryExactlyOne args)
