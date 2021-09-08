@@ -9,5 +9,5 @@ let
 function indent(s: string) =
 (for i = 1 to n do
 write(" "); output = concat(output, s); write("\n")) in
-if (t == nil) then indent(".") else (indent(t.key); show((n + 1), t.left); show((n + 1), t.right)) in
+if (t == null) then indent(".") else (indent(t.key); show((n + 1), t.left); show((n + 1), t.right)) in
 (show(0, tree); output)"

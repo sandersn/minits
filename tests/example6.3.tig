@@ -12,7 +12,7 @@ function prettyprint(tree: Tree): string =
             for i = 1 to n do write(" ")
             output = concat(output, s)
             write("\n")
-        ) in if t == nil then 
+        ) in if t == null then 
             indent(".") 
         else (
             indent(t.key)

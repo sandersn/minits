@@ -36,9 +36,7 @@
                                LValue (Identifier "s")]));
                         Call (LValue (Identifier "write"), [StringLiteral "\n"])])],
                  If
-                   (Binary
-                      (LValue (Identifier "t"), DoubleEquals,
-                       LValue (Identifier "nil")),
+                   (Binary (LValue (Identifier "t"), DoubleEquals, Null),
                     Call (LValue (Identifier "indent"), [StringLiteral "."]),
                     Sequence
                       [Call
