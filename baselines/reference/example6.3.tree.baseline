@@ -1,0 +1,79 @@
+(File
+   [Type
+      ("Tree",
+       Literal
+         [("key", Identifier "string"); ("left", Identifier "Tree");
+          ("right", Identifier "Tree")]);
+    Function
+      ("prettyprint", [Param ("tree", Identifier "Tree")],
+       Some (Identifier "string"),
+       Let
+         ([Var ("output", None, StringLiteral "");
+           Function
+             ("write", [Param ("s", Identifier "string")], None,
+              Assignment
+                (Identifier "output",
+                 Call
+                   (LValue (Identifier "concat"),
+                    [LValue (Identifier "output"); LValue (Identifier "s")])));
+           Function
+             ("show",
+              [Param ("n", Identifier "int"); Param ("t", Identifier "Tree")],
+              None,
+              Let
+                ([Function
+                    ("indent", [Param ("s", Identifier "string")], None,
+                     Sequence
+                       [For
+                          ("i", IntLiteral 1, LValue (Identifier "n"),
+                           Call
+                             (LValue (Identifier "write"), [StringLiteral " "]));
+                        Assignment
+                          (Identifier "output",
+                           Call
+                             (LValue (Identifier "concat"),
+                              [LValue (Identifier "output");
+                               LValue (Identifier "s")]));
+                        Call (LValue (Identifier "write"), [StringLiteral "\n"])])],
+                 If
+                   (Binary
+                      (LValue (Identifier "t"), DoubleEquals,
+                       LValue (Identifier "nil")),
+                    Call (LValue (Identifier "indent"), [StringLiteral "."]),
+                    Sequence
+                      [Call
+                         (LValue (Identifier "indent"),
+                          [LValue (PropertyAccess (Identifier "t", "key"))]);
+                       Call
+                         (LValue (Identifier "show"),
+                          [Binary (LValue (Identifier "n"), Plus, IntLiteral 1);
+                           LValue (PropertyAccess (Identifier "t", "left"))]);
+                       Call
+                         (LValue (Identifier "show"),
+                          [Binary (LValue (Identifier "n"), Plus, IntLiteral 1);
+                           LValue (PropertyAccess (Identifier "t", "right"))])])))],
+          Sequence
+            [Call
+               (LValue (Identifier "show"),
+                [IntLiteral 0; LValue (Identifier "tree")]);
+             LValue (Identifier "output")]))],
+ ["type Tree = {key: string, left: T...:
+    [Tree, type Tree = {key: string, left: T...]
+    [prettyprint, function prettyprint(tree: Tree):...]";
+  "for i = 1 to n do write(" "):
+    [i, var i = 1]";
+  "let var output = "" function writ...:
+    [output, var output = ""]
+    [show, function show(n: int, t: Tree) = ...]
+    [write, function write(s: string) = outpu...]";
+  "let function indent(s: string) = ...:
+    [indent, function indent(s: string) = (for...]";
+  "function indent(s: string) = (for...:
+    [s, s: string]";
+  "function prettyprint(tree: Tree):...:
+    [tree, tree: Tree]";
+  "function show(n: int, t: Tree) = ...:
+    [n, n: int]
+    [t, t: Tree]";
+  "function write(s: string) = outpu...:
+    [s, s: string]"])

@@ -1,11 +1,11 @@
 module Minits.Check
 open Types
 open Bind
+open System.Collections.Generic
 let stringType = Type.Identifier "string"
 let intType = Type.Identifier "int"
 let errorType = Type.Identifier "error"
 let nullType = Type.Identifier "null"
-let globals : Table = Map.empty
 let first f (a,b) = (f a, b)
 let second f (a,b) = (a, f b)
 let rec typeToString = function
@@ -15,32 +15,40 @@ let rec typeToString = function
 | Type.Arrow (ps, ret) -> sprintf "(%s) -> %s" (List.map propertyToString ps |> String.concat ", ") (typeToString ret)
 and propertyToString (name, t) = $"{name}: {typeToString t}"
 // TODO: also someday call the emitter to convert ASTs to strings
-let check (env : Environment) (decl: Declaration) =
-  let errors = System.Collections.Generic.List()
+let check (env : Environment) (globals: Table) (decl: Declaration) =
+  let errors = List()
   let cache: ResolvedTypes = {
-    declarations = System.Collections.Generic.Dictionary()
-    expressions = System.Collections.Generic.Dictionary()
-    types = System.Collections.Generic.Dictionary()
-    lvalues = System.Collections.Generic.Dictionary()
+    declarations = Dictionary()
+    expressions = Dictionary()
+    types = Dictionary()
+    lvalues = Dictionary()
   }
   let rec checkExpression scope expression = 
     if cache.expressions.ContainsKey expression then cache.expressions.[expression] else
+    cache.expressions.Add (expression,Type.Identifier "circular type resolution")
     let e = checkExpression' scope expression
+    cache.expressions.Remove expression |> ignore
     cache.expressions.Add (expression,e)
     e
   and checkLValue scope lvalue =
     if cache.lvalues.ContainsKey lvalue then cache.lvalues.[lvalue] else
+    cache.lvalues.Add (lvalue,Type.Identifier "circular type resolution")
     let l = checkLValue' scope lvalue
+    cache.lvalues.Remove lvalue |> ignore
     cache.lvalues.Add (lvalue,l)
     l
-  and checkDeclaration (scope : list<Table>) (decl : Declaration) = 
+  and checkDeclaration scope decl =
     if cache.declarations.ContainsKey decl then cache.declarations.[decl] else
+    cache.declarations.Add (decl,Type.Identifier "circular type resolution")
     let d = checkDeclaration' scope decl
+    cache.declarations.Remove decl |> ignore
     cache.declarations.Add (decl,d)
     d
   and resolveType scope typ = 
     if cache.types.ContainsKey typ then cache.types.[typ] else
+    cache.types.Add (typ,Type.Identifier "circular type resolution")
     let t = resolveType' scope typ
+    cache.types.Remove typ |> ignore
     cache.types.Add (typ,t)
     t
   and checkExpression' (scope : list<Table>) expression =
@@ -70,12 +78,13 @@ let check (env : Environment) (decl: Declaration) =
       if v <> n then errors.Add $"Cannot assign value of type '{typeToString v}' to variable of type '{typeToString n}'"
       n
     | Call(e, args) -> 
+      let args' = (List.map (checkExpression scope) args)
       match checkExpression scope e with
       | Type.Arrow(parameters, ret) ->
         List.iter2 (fun (name,t) arg -> 
             if t <> arg then errors.Add $"Parameter {name} expected type {typeToString t} but got {typeToString arg}.") 
           parameters 
-          (List.map (checkExpression scope) args)
+          args'
         ret
       | t -> errors.Add $"{t} is not callable."; errorType
     | Sequence es -> 

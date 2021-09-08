@@ -1,32 +1,33 @@
 module Minits.Bind
+open System.Collections.Generic
 open Types
+let createSymbol (d : Declaration) (s: option<Symbol>) (errors : List<string>): Symbol =
+  let s' = defaultArg s { var = None; typ = None }
+  match d with
+  | Declaration.Type (name,_) as t -> 
+    match s' with
+    | { typ = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
+    | _ -> { s' with typ = Some t }
+  | Var (name,_,_) as v -> 
+    match s' with
+    | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
+    | _ -> { s' with var = Some v }
+  | Function (name,_,_,_) as f ->
+    match s' with
+    | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
+    | _ -> { s' with var = Some f }
+  | Param (name,_) as p ->
+    match s' with
+    | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
+    | _ -> { s' with var = Some p }
+  | d -> failwith $"Should only create symbols for Function, Var and Type, got {d}"
+let createTable errors =
+  List.fold 
+    (fun locals (name,d) -> locals |> Map.add name (createSymbol d (Map.tryFind name locals) errors))
+    Map.empty
 let bind (decl : Declaration) = 
-  let env = System.Collections.Generic.Dictionary()
-  let errors = System.Collections.Generic.List()
-  let createSymbol (d : Declaration) (s: option<Symbol>): Symbol =
-    let s' = defaultArg s { var = None; typ = None }
-    match d with
-    | Declaration.Type (name,_) as t -> 
-      match s' with
-      | { typ = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
-      | _ -> { s' with typ = Some t }
-    | Var (name,_,_) as v -> 
-      match s' with
-      | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
-      | _ -> { s' with var = Some v }
-    | Function (name,_,_,_) as f ->
-      match s' with
-      | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
-      | _ -> { s' with var = Some f }
-    | Param (name,_) as p ->
-      match s' with
-      | { var = Some _ } -> errors.Add $"Duplicate declaration of {name}"; s'
-      | _ -> { s' with var = Some p }
-    | d -> failwith $"Should only create symbols for Function, Var and Type, got {d}"
-  let createTable : list<string * Declaration> -> Table =
-    List.fold 
-      (fun locals (name,d) -> Map.add name (createSymbol d (Map.tryFind name locals)) locals)
-      Map.empty
+  let env = Dictionary()
+  let errors = List()
   let rec bindDeclaration = function
   | Var(name,_,init) -> 
     bindExpression init
@@ -39,7 +40,7 @@ let bind (decl : Declaration) =
       |> List.map (function 
         | Param (name, _) as parameter -> (name, parameter) 
         | d -> failwith $"Should only create parameters with Param, got {d}")
-      |> createTable
+      |> createTable errors
     bindExpression body
     env.Add(f, params')
     Some name
@@ -50,7 +51,7 @@ let bind (decl : Declaration) =
   and bindDeclarations declarations = 
     declarations
     |> List.choose (fun d -> Option.map (fun name -> (name, d)) (bindDeclaration d))
-    |> createTable
+    |> createTable errors
   and walkExpression (f : Expression -> list<Expression> -> 'a) (expression : Expression) =
     let kids = 
       match expression with
@@ -72,7 +73,7 @@ let bind (decl : Declaration) =
     walkExpression (fun e kids ->
       match e with
       | For (name, start, _, _) as f ->
-        env.Add(ExpressionStatement f, createTable [name, (Var (name,None,start))])
+        env.Add(ExpressionStatement f, createTable errors [name, (Var (name,None,start))])
       | Let (decls, e) as l -> 
         env.Add(ExpressionStatement l, bindDeclarations decls)
       | _ -> ()
