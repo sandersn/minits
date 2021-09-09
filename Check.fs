@@ -1,18 +1,29 @@
 module Minits.Check
 open Types
 open Bind
+open Traverse
 open System.Collections.Generic
 let stringType = Type.Identifier "string"
 let intType = Type.Identifier "int"
 let errorType = Type.Identifier "error"
 let nullType = Type.Identifier "null"
+let circularType = Type.Identifier "circular"
 let first f (a,b) = (f a, b)
 let second f (a,b) = (a, f b)
+// TODO: can't refer to other entries in a let (and I thought you could) <-- fixed?
+// TODO: can't refer to containing function (and binder should make sure this happens <--) <-- fixed?
+// TODO: need to dereference types on usage OR SOMETHING <-- also now arrows
+// (anything that checkDeclaration handles circularity for)
 let rec typeToString = function
 | Type.Identifier name -> name
 | Literal ps -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
-| Type.Array t -> $"Array<{typeToString t}>"
-| Type.Arrow (ps, ret) -> sprintf "(%s) -> %s" (List.map propertyToString ps |> String.concat ", ") (typeToString ret)
+| Array t -> $"Array<{typeToString t}>"
+| Arrow (ps, ret) -> sprintf "(%s) -> %s" (List.map propertyToString ps |> String.concat ", ") (typeToString ret)
+| Reference r ->
+  match r.contents with
+  | Type.Literal ps -> "{...}" 
+  | Type.Arrow _ -> "(...) -> ()"
+  | _ -> failwith $"Should not have reference to non-recursive type {r.contents}"
 and propertyToString (name, t) = $"{name}: {typeToString t}"
 // TODO: also someday call the emitter to convert ASTs to strings
 let check (env : Environment) (globals: Table) (decl: Declaration) =
@@ -25,32 +36,43 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
   }
   let rec checkExpression scope expression = 
     if cache.expressions.ContainsKey expression then cache.expressions.[expression] else
-    cache.expressions.Add (expression,Type.Identifier "circular type resolution")
     let e = checkExpression' scope expression
-    cache.expressions.Remove expression |> ignore
     cache.expressions.Add (expression,e)
     e
   and checkLValue scope lvalue =
     if cache.lvalues.ContainsKey lvalue then cache.lvalues.[lvalue] else
-    cache.lvalues.Add (lvalue,Type.Identifier "circular type resolution")
     let l = checkLValue' scope lvalue
-    cache.lvalues.Remove lvalue |> ignore
     cache.lvalues.Add (lvalue,l)
     l
   and checkDeclaration scope decl =
     if cache.declarations.ContainsKey decl then cache.declarations.[decl] else
-    cache.declarations.Add (decl,Type.Identifier "circular type resolution")
-    let d = checkDeclaration' scope decl
-    cache.declarations.Remove decl |> ignore
-    cache.declarations.Add (decl,d)
-    d
+    let mutateCircularity circular =
+      let circularRef = (ref circular)
+      cache.declarations.Add (decl,Reference circularRef)
+      circularRef.contents <- checkDeclaration' scope decl
+      cache.declarations.Remove decl |> ignore
+      cache.declarations.Add (decl,circularRef.contents)
+      circularRef.contents
+    match decl with
+    | Declaration.Type (_,Literal _)
+    | Declaration.Type (_,Arrow _) -> mutateCircularity circularType
+    | Function (_, ps, ret, _) ->
+      let circular = match ret with 
+                        | Some(t) -> Arrow (ps |> List.map (paramOnly (fun _ (n,t) -> (n,t))), t)
+                        | _ -> circularType
+      mutateCircularity circular
+    | _ -> 
+      let t = checkDeclaration' scope decl
+      cache.declarations.Add (decl,t)
+      t
   and resolveType scope typ = 
     if cache.types.ContainsKey typ then cache.types.[typ] else
-    cache.types.Add (typ,Type.Identifier "circular type resolution")
     let t = resolveType' scope typ
-    cache.types.Remove typ |> ignore
     cache.types.Add (typ,t)
     t
+  and checkRelatedTo source target message = 
+    let related = source = nullType || target = nullType || source = target
+    if not related then errors.Add (message + $" expected type {typeToString target} but got {typeToString source}.") else ()
   and checkExpression' (scope : list<Table>) expression =
     match expression with
     | LValue lvalue -> checkLValue scope lvalue
@@ -58,31 +80,30 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
     | StringLiteral _ -> stringType
     | Negative e -> 
       let t = checkExpression scope e
-      if t <> intType then errors.Add $"Negative: expected int but got {typeToString t}"
+      checkRelatedTo t intType "Negative: "
       intType
     | Binary(l,op,r) -> 
       let lt = checkExpression scope l
       let rt = checkExpression scope r
       let checkBinary = function
       | Plus | Minus | Asterisk | ForwardSlash | Pipe | Ampersand | LessThan | GreaterThan | LessThanEquals | GreaterThanEquals -> 
-        expectType intType lt rt
+        checkExpectedType intType lt rt
         intType
       | DoubleEquals | ForwardSlashEquals ->
-        if lt <> rt then errors.Add $"Expected both sides to have same type, but left={typeToString lt} and right={typeToString rt}"
+        checkRelatedTo lt rt "Both sides should have the same type;"
         intType
       | t -> failwith $"Unexpected binary operator token {t}"
       checkBinary op
     | Assignment(lvalue, value) -> 
       let v = checkExpression scope value
       let n = checkLValue scope lvalue
-      if v <> n then errors.Add $"Cannot assign value of type '{typeToString v}' to variable of type '{typeToString n}'"
+      checkRelatedTo v n "Cannot assign value of"
       n
     | Call(e, args) -> 
       let args' = (List.map (checkExpression scope) args)
       match checkExpression scope e with
       | Type.Arrow(parameters, ret) ->
-        List.iter2 (fun (name,t) arg -> 
-            if t <> arg then errors.Add $"Parameter {name} expected type {typeToString t} but got {typeToString arg}.") 
+        List.iter2 (fun (name,t) arg -> checkRelatedTo arg t $"Parameter {name}") 
           parameters 
           args'
         ret
@@ -98,10 +119,7 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
         | Literal props -> 
           let propTypes = Map.ofList props
           inits |> List.iter (fun (name,i) -> 
-            let pt = Map.find name propTypes
-            let it = checkExpression scope i
-            if pt <> it then errors.Add $"{name} expected type {typeToString pt} but got {typeToString it}.")
-          ()
+            checkRelatedTo (checkExpression scope i) (Map.find name propTypes) name)
         | _ -> errors.Add $"Type {name} is not a record type."
       | Some _ -> errors.Add $"{name} is not a type declaration."
       | None -> errors.Add $"Could not resolve type {name}."
@@ -109,34 +127,31 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
     | ArrayCons es ->
       match List.map (checkExpression scope) es with
       | (t :: ts) -> 
-        ts |> List.iter (fun t' -> if t <> t' then errors.Add $"Expected array elements to have type {typeToString t} but got {typeToString t'}.")
+        ts |> List.iter (fun t' -> checkRelatedTo t t' "Array elements:")
         Array t
       | [] -> Array nullType
     | If (cond, cons, alt) ->
-      let condt = checkExpression scope cond 
-      if condt <> intType then errors.Add $"If condition must have type int, but got {typeToString condt}."
+      checkRelatedTo (checkExpression scope cond) intType "If condition:"
       let ct = checkExpression scope cons
       let at = checkExpression scope alt
-      if ct <> at then errors.Add $"Both branches of an if must have the same type. then-branch: {typeToString ct}; else-branch {typeToString at}."
+      checkRelatedTo ct at "Both branches of an if must have the same type."
       ct
     | While (cond, action) -> 
-      let condt = checkExpression scope cond 
-      if condt <> intType then errors.Add $"While condition must have type int, but got {typeToString condt}."
+      checkRelatedTo (checkExpression scope cond) intType "While condition:"
       checkExpression scope action
       // if at <> nullType then errors.Add $"While action must have type null, but got {typeToString at}."
     | For (_, start, stop, action) as f -> 
-      let startt = checkExpression scope start 
-      if startt <> intType then errors.Add $"For start value must have type int, but got {typeToString startt}."
-      let stopt = checkExpression scope stop 
-      if stopt <> intType then errors.Add $"For stop value must have type int, but got {typeToString stopt}."
+      checkRelatedTo (checkExpression scope start) intType "For start value:"
+      checkRelatedTo (checkExpression scope stop) intType "For stop value:"
       checkExpression (Map.find (ExpressionStatement f) env :: scope) action
       // if at <> nullType then errors.Add $"For action must have type null, but got {typeToString at}."
     | Let (decls, body) as l ->
-      decls |> List.iter (fun d -> checkDeclaration scope d |> ignore)
-      checkExpression (Map.find (ExpressionStatement l) env :: scope) body
+      let scope' = Map.find (ExpressionStatement l) env :: scope
+      decls |> List.iter (fun d -> checkDeclaration scope' d |> ignore)
+      checkExpression scope' body
     | Break -> nullType // TODO: Error if not inside a for (not sure how to do this without parent pointers)
     | Null -> nullType
-  and expectType expected lt rt = 
+  and checkExpectedType expected lt rt = 
     if lt <> expected then errors.Add $"Left side expected {typeToString expected} but got {typeToString lt}" 
     elif rt <> expected then errors.Add $"Right side expected {typeToString expected} but got {typeToString rt}"
   and checkLValue' (scope : list<Table>) (lvalue : LValue) =
@@ -150,8 +165,7 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
       | Literal ps -> ps |> List.find (fst >> (=) r) |> snd
       | t -> errors.Add $"Property access is not allowed on {typeToString t}."; errorType
     | ArrayAccess (l,r) ->
-      let rt = checkExpression scope r
-      if rt <> intType then errors.Add $"Index of element access must be int, but got {typeToString rt}."
+      checkRelatedTo (checkExpression scope r) intType "Index of element access:"
       match checkLValue scope l with
       | Array e -> e
       | t -> errors.Add $"Element access is not allowed on {typeToString t}."; errorType
@@ -172,11 +186,10 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
     | Declaration.Type(_, t) -> resolveType scope t
     | Function (name,parameters,ret,body) as f ->
       let bt = checkExpression (Map.find f env :: scope) body
+      
       let ps' = 
         parameters 
-        |> List.map (function
-          | Param (n,_) as p -> (n, checkDeclaration scope p)
-          | d  -> failwith "Only expected parameters in parameter list, got {d}")
+        |> List.map (paramOnly (fun p (n,t) -> (n, checkDeclaration scope p)))
       let ret' = 
         match ret with
         | Some t -> if t = bt then t else errors.Add $"Expected {name} to return {typeToString t} but got {typeToString bt}"; t
@@ -190,9 +203,10 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
       | "int" -> intType
       | "null" -> nullType
       | name -> resolve name scope Type |> Option.map (checkDeclaration scope) |>defaultArg<| errorType
-    | Type.Array elt -> Type.Array (resolveType scope elt)
-    | Type.Literal properties -> Type.Literal (List.map (second (resolveType scope)) properties)
-    | Type.Arrow (parameters, ret) -> Type.Arrow (List.map (second (resolveType scope)) parameters, resolveType scope ret)
+    | Array elt -> Array (resolveType scope elt)
+    | Literal properties -> Literal (List.map (second (resolveType scope)) properties)
+    | Arrow (parameters, ret) -> Arrow (List.map (second (resolveType scope)) parameters, resolveType scope ret)
+    | Reference r -> failwith $"Do not resolveType on reference types: {r}"
   decl |> checkDeclaration [globals] |> ignore
   (cache, errors :> seq<_> |> List.ofSeq)
 let getTypeOfDeclaration (cache: ResolvedTypes) (node: Declaration) =

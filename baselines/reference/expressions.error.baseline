@@ -1,1 +1,1 @@
-["Expected array elements to have type string but got {foo: string, bar: int}."]
+["Array elements: expected type {foo: string, bar: int} but got string."]

@@ -57,6 +57,7 @@ type Type =
 | Literal of list<Property>
 | Arrow of parameters: list<Property> * ret: Type
 | Array of Type
+| Reference of Ref<Type>
 and Property = string * Type
 type LValue =
 | Identifier of string
@@ -84,7 +85,7 @@ and Declaration =
 | ExpressionStatement of Expression
 | Type of name: string * Type
 | Var of name: string * t: Option<Type> * init: Expression
-| Param of name: string * t: Type
+| Param of Property
 | Function of name: string * parameters: list<Declaration> * ret: Option<Type> * body: Expression
 type Symbol = {
   var: option<Declaration>

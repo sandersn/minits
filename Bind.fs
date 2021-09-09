@@ -1,6 +1,7 @@
 module Minits.Bind
 open System.Collections.Generic
 open Types
+open Traverse
 let createSymbol (d : Declaration) (s: option<Symbol>) (errors : List<string>): Symbol =
   let s' = defaultArg s { var = None; typ = None }
   match d with
@@ -35,14 +36,8 @@ let bind (decl : Declaration) =
   | Param(name,_) -> Some name
   | Declaration.Type(name,_) -> Some name
   | Function (name,parameters,_,body) as f ->
-    let params' : Table = 
-      parameters 
-      |> List.map (function 
-        | Param (name, _) as parameter -> (name, parameter) 
-        | d -> failwith $"Should only create parameters with Param, got {d}")
-      |> createTable errors
     bindExpression body
-    env.Add(f, params')
+    env.Add(f, createTable errors (parameters |> List.map (paramOnly (fun p (n,_) -> (n,p)))))
     Some name
   | ExpressionStatement e -> 
     bindExpression e

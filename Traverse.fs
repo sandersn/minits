@@ -1,5 +1,8 @@
 module Minits.Traverse
 open Types
+let paramOnly f = function
+| Param (n,t) as p -> f p (n,t)
+| d -> failwith $"Only expected parameters in parameter list, got {d}"
 let defaultOptionToList f x = defaultArg (Option.map f x) []
 let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType = 
   let rec mapDeclToList decl = mapDecl decl :: mapDeclToList' decl
@@ -39,4 +42,5 @@ let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType =
   | Literal props -> List.collect (snd >> mapTypeToList) props
   | Array t -> mapTypeToList t
   | Arrow (ps, ret) -> List.collect (snd >> mapTypeToList) ps @ mapTypeToList ret
+  | Reference r -> mapTypeToList r.contents
   mapDeclToList tree

@@ -1,4 +1,3 @@
-["Could not resolve alpha";
- "Expected array elements to have type string but got int.";
- "Expected array elements to have type string but got int.";
- "Expected array elements to have type string but got error."]
+["Could not resolve alpha"; "Array elements: expected type int but got string.";
+ "Array elements: expected type int but got string.";
+ "Array elements: expected type error but got string."]
