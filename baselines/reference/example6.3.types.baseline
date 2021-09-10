@@ -1,0 +1,80 @@
+"type Tree = {key: string, left: T... :: (tree: {...}) -> string
+type Tree = {key: string, left: T... :: {key: string, left: {...}, right: {...}}
+{key: string, left: Tree, right: ... :: {key: string, left: {...}, right: {...}}
+string :: string
+Tree :: {...}
+Tree :: {...}
+function prettyprint(tree: Tree):... :: (tree: {...}) -> string
+tree: Tree :: {...}
+Tree :: {...}
+string :: string
+let var output = "" function writ... :: string
+var output = "" :: string
+"" :: string
+function write(s: string) = outpu... :: (s: string) -> string
+s: string :: string
+string :: string
+output = concat(output, s) :: string
+output :: string
+concat(output, s) :: string
+concat :: (left: string, right: string) -> string
+output :: string
+s :: string
+function show(n: int, t: Tree): s... :: (n: int, t: {...}) -> string
+n: int :: int
+int :: int
+t: Tree :: {...}
+Tree :: {...}
+string :: string
+let function indent(s: string) = ... :: string
+function indent(s: string) = (for... :: (s: string) -> string
+s: string :: string
+string :: string
+(for i = 1 to n do write(" "); ou... :: string
+for i = 1 to n do write(" ") :: string
+1 :: int
+n :: int
+write(" ") :: string
+write :: (s: string) -> string
+" " :: string
+output = concat(output, s) :: string
+output :: string
+concat(output, s) :: string
+concat :: (left: string, right: string) -> string
+output :: string
+s :: string
+write("\n") :: string
+write :: (s: string) -> string
+"\n" :: string
+if (t == null) then indent(".") e... :: string
+(t == null) :: int
+t :: {...}
+null :: null
+indent(".") :: string
+indent :: (s: string) -> string
+"." :: string
+(indent(t.key); show((n + 1), t.l... :: string
+indent(t.key) :: string
+indent :: (s: string) -> string
+t.key :: string
+t :: {...}
+show((n + 1), t.left) :: string
+show :: (...) -> ()
+(n + 1) :: int
+n :: int
+1 :: int
+t.left :: {...}
+t :: {...}
+show((n + 1), t.right) :: string
+show :: (...) -> ()
+(n + 1) :: int
+n :: int
+1 :: int
+t.right :: {...}
+t :: {...}
+(show(0, tree); output) :: string
+show(0, tree) :: string
+show :: (...) -> ()
+0 :: int
+tree :: {...}
+output :: string"

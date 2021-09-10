@@ -10,10 +10,6 @@ let nullType = Type.Identifier "null"
 let circularType = Type.Identifier "circular"
 let first f (a,b) = (f a, b)
 let second f (a,b) = (a, f b)
-// TODO: can't refer to other entries in a let (and I thought you could) <-- fixed?
-// TODO: can't refer to containing function (and binder should make sure this happens <--) <-- fixed?
-// TODO: need to dereference types on usage OR SOMETHING <-- also now arrows
-// (anything that checkDeclaration handles circularity for)
 let deref = function
 | Reference t -> t.contents
 | t -> t
@@ -86,7 +82,7 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
     List.zip (List.map snd ps1) (List.map snd ps2) |> List.forall isRelatedTo && isRelatedTo (r1,r2)
   | (Array t1, Array t2) -> isRelatedTo (t1,t2)
   | (Reference r1, Reference r2) -> LanguagePrimitives.PhysicalEquality r1.contents r2.contents
-  | (Reference r, t) -> isRelatedTo (r.contents, t) // TODO: This means deref probably isn't needed
+  | (Reference r, t) -> isRelatedTo (r.contents, t)
   | (s, Reference r) -> isRelatedTo (s, r.contents)
   | (s,t) -> s = nullType || t = nullType
   and checkExpression' (scope : list<Table>) expression =

@@ -19,7 +19,7 @@
            Function
              ("show",
               [Param ("n", Identifier "int"); Param ("t", Identifier "Tree")],
-              None,
+              Some (Identifier "string"),
               Let
                 ([Function
                     ("indent", [Param ("s", Identifier "string")], None,
@@ -62,7 +62,7 @@
     [i, var i = 1]";
   "let var output = "" function writ...:
     [output, var output = ""]
-    [show, function show(n: int, t: Tree) = ...]
+    [show, function show(n: int, t: Tree): s...]
     [write, function write(s: string) = outpu...]";
   "let function indent(s: string) = ...:
     [indent, function indent(s: string) = (for...]";
@@ -70,7 +70,7 @@
     [s, s: string]";
   "function prettyprint(tree: Tree):...:
     [tree, tree: Tree]";
-  "function show(n: int, t: Tree) = ...:
+  "function show(n: int, t: Tree): s...:
     [n, n: int]
     [t, t: Tree]";
   "function write(s: string) = outpu...:
