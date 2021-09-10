@@ -14,6 +14,9 @@ let second f (a,b) = (a, f b)
 // TODO: can't refer to containing function (and binder should make sure this happens <--) <-- fixed?
 // TODO: need to dereference types on usage OR SOMETHING <-- also now arrows
 // (anything that checkDeclaration handles circularity for)
+let deref = function
+| Reference t -> t.contents
+| t -> t
 let rec typeToString = function
 | Type.Identifier name -> name
 | Literal ps -> ps |> List.map propertyToString |> String.concat ", " |> sprintf "{%s}"
@@ -58,8 +61,8 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
     | Declaration.Type (_,Arrow _) -> mutateCircularity circularType
     | Function (_, ps, ret, _) ->
       let circular = match ret with 
-                        | Some(t) -> Arrow (ps |> List.map (paramOnly (fun _ (n,t) -> (n,t))), t)
-                        | _ -> circularType
+                     | Some(t) -> Arrow (ps |> List.map (paramOnly (fun _ (n,t) -> (n, resolveType scope t))), resolveType scope t)
+                     | _ -> circularType
       mutateCircularity circular
     | _ -> 
       let t = checkDeclaration' scope decl
@@ -71,8 +74,21 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
     cache.types.Add (typ,t)
     t
   and checkRelatedTo source target message = 
-    let related = source = nullType || target = nullType || source = target
-    if not related then errors.Add (message + $" expected type {typeToString target} but got {typeToString source}.") else ()
+    // TODO: isRelatedTo should probably be cached
+    if isRelatedTo (source,target)
+    then ()
+    else errors.Add (message + $" expected type {typeToString target} but got {typeToString source}.") 
+  and isRelatedTo = function
+  | (Type.Identifier i1, Type.Identifier i2) -> i1 = i2
+  | (Literal ps1, Literal ps2) -> 
+    List.zip (List.map snd ps1) (List.map snd ps2) |> List.forall isRelatedTo 
+  | (Arrow (ps1,r1), Arrow (ps2,r2)) ->
+    List.zip (List.map snd ps1) (List.map snd ps2) |> List.forall isRelatedTo && isRelatedTo (r1,r2)
+  | (Array t1, Array t2) -> isRelatedTo (t1,t2)
+  | (Reference r1, Reference r2) -> LanguagePrimitives.PhysicalEquality r1.contents r2.contents
+  | (Reference r, t) -> isRelatedTo (r.contents, t) // TODO: This means deref probably isn't needed
+  | (s, Reference r) -> isRelatedTo (s, r.contents)
+  | (s,t) -> s = nullType || t = nullType
   and checkExpression' (scope : list<Table>) expression =
     match expression with
     | LValue lvalue -> checkLValue scope lvalue
@@ -101,7 +117,7 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
       n
     | Call(e, args) -> 
       let args' = (List.map (checkExpression scope) args)
-      match checkExpression scope e with
+      match checkExpression scope e |> deref with
       | Type.Arrow(parameters, ret) ->
         List.iter2 (fun (name,t) arg -> checkRelatedTo arg t $"Parameter {name}") 
           parameters 
@@ -161,7 +177,7 @@ let check (env : Environment) (globals: Table) (decl: Declaration) =
       | Some(statement) -> checkDeclaration scope statement
       | _ -> errors.Add <| "Could not resolve " + name; errorType
     | PropertyAccess (l,r) ->
-      match checkLValue scope l with
+      match checkLValue scope l |> deref with
       | Literal ps -> ps |> List.find (fst >> (=) r) |> snd
       | t -> errors.Add $"Property access is not allowed on {typeToString t}."; errorType
     | ArrayAccess (l,r) ->
