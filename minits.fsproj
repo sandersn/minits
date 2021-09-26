@@ -7,12 +7,14 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Traverse.fs" />
+    <Compile Include="Temp.fs" />
     <Compile Include="Lex.fs" />
     <Compile Include="Parse.fs" />
     <Compile Include="Bind.fs" />
     <Compile Include="Check.fs" />
     <Compile Include="Transform.fs" />
     <Compile Include="Emit.fs" />
+    <Compile Include="Frame.fs" />
     <Compile Include="Compile.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Program.fs" />
