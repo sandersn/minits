@@ -101,3 +101,24 @@ type ResolvedTypes = {
   types: Dictionary<Type, Type>
   lvalues: Dictionary<LValue, Type>
 }
+type Label = string
+type Temp = string * int
+type IExpression = 
+| Const of int
+| Name of Label
+| Temp of Temp
+| Binop of l: IExpression * IBinop * r: IExpression
+| Mem of IExpression
+| Call of IExpression * list<IExpression>
+| Eseq of IStatement * IExpression
+and IStatement =
+| Move of IExpression * IExpression
+| Exp of IExpression
+| Jump of IExpression * list<Label>
+| CJump of l: IExpression * op: IRelop * r: IExpression * t: Label * f: Label
+| Seq of list<IStatement>
+| Label of Label
+and IBinop =
+| Plus | Minus | Mul | Div | And | Or | LShift | RShift | ARShift | Xor
+and IRelop =
+| Eq | Ne | Lt | Gt | Le | Ge | Ult | Ule | Ugt | Uge

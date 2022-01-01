@@ -8,8 +8,8 @@ let emitProperty (name, t) = $"{name}: {Check.typeToString t}"
 let emitToken = function
 | Pipe -> "|"
 | Ampersand -> "&"
-| Plus -> "+"
-| Minus -> "-"
+| Token.Plus -> "+"
+| Token.Minus -> "-"
 | Asterisk -> "*"
 | ForwardSlash -> "/"
 | LessThan -> "<"
@@ -30,7 +30,7 @@ and emitExpression = function
 | Negative(e) -> "-" + emitExpression e
 | Binary (l,op,r) -> sprintf "(%s %s %s)" (emitExpression l) (emitToken op) (emitExpression r)
 | Assignment(name, value) -> $"{emitLValue name} = {emitExpression value}"
-| Call(name, parameters) -> 
+| Expression.Call(name, parameters) -> 
   sprintf "%s(%s)" (emitExpression name) (parameters |> List.map emitExpression |> String.concat ", ")
 | Sequence es -> sprintf "(%s)" (es |> List.map emitExpression |> String.concat "; ")
 | RecordCons (name,inits) -> sprintf "%s {%s}" name (inits |> List.map (fun (n,e) -> $"{n} = {emitExpression e}") |> String.concat ", ")

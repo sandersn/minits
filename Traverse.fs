@@ -4,7 +4,7 @@ let paramOnly f = function
 | Param (n,t) as p -> f p (n,t)
 | d -> failwith $"Only expected parameters in parameter list, got {d}"
 let defaultOptionToList f x = defaultArg (Option.map f x) []
-let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType = 
+let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType : list<'a> = 
   let rec mapDeclToList decl = mapDecl decl :: mapDeclToList' decl
   and mapDeclToList' = function
   | File decls -> List.collect mapDeclToList decls
@@ -17,13 +17,13 @@ let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType =
     @ defaultOptionToList mapTypeToList ret 
     @ mapExprToList body
   and mapExprToList expr = mapExpr expr :: mapExprToList' expr
-  and mapExprToList' = function
+  and mapExprToList'  = function
   | LValue l -> mapLValToList l
   | Negative e -> mapExprToList e
   | Binary(l, op, r) -> mapExprToList l @ mapExprToList r
   | Assignment(lval, init) -> mapLValToList lval @ mapExprToList init
   | Sequence es -> List.collect mapExprToList es
-  | Call(e, args) -> mapExprToList e @ List.collect mapExprToList args
+  | Expression.Call(e, args) -> mapExprToList e @ List.collect mapExprToList args
   | RecordCons(_, inits) -> List.collect (snd >> mapExprToList) inits
   | ArrayCons inits -> List.collect mapExprToList inits
   | If(cond, cons, alt) -> mapExprToList cond @ mapExprToList cons @ mapExprToList alt

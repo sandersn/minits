@@ -89,10 +89,10 @@ let parse (lexer: Lexer) : Declaration * list<string> =
     match parseSome [LessThan; GreaterThan; LessThanEquals; GreaterThanEquals; DoubleEquals; ForwardSlashEquals] with
     | Some t -> Binary (acc, t, parsePlusMinus ())
     | None -> acc
-  and parsePlusMinus () = parseBinary [Plus; Minus] parseTimesDivide
+  and parsePlusMinus () = parseBinary [Token.Plus; Token.Minus] parseTimesDivide
   and parseTimesDivide () = parseBinary  [Asterisk; ForwardSlash] parseNegative
   and parseNegative () =
-    if parseOptional Minus then Negative (parseConstructor ()) else parseConstructor ()
+    if parseOptional Token.Minus then Negative (parseConstructor ()) else parseConstructor ()
   and parseBinary ops seed = parseBinary' ops seed (seed ())
   and parseBinary' ops seed acc =
     match parseSome ops with
@@ -119,7 +119,7 @@ let parse (lexer: Lexer) : Declaration * list<string> =
   and parseCall () =
     let e = parseSingleExpression ()
     if parseOptional LeftParen then
-      let call = Call (e, parseTerminated parseExpression isStartOfExpression Comma)
+      let call = Expression.Call (e, parseTerminated parseExpression isStartOfExpression Comma)
       parseExpected RightParen |> ignore
       call
     else e

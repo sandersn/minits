@@ -28,8 +28,8 @@ let punctuation = Map.ofList [
   '<', LessThan
   '>', GreaterThan
   '=', Equals
-  '+', Plus
-  '-', Minus
+  '+', Token.Plus
+  '-', Token.Minus
   '*', Asterisk
   '&', Ampersand
   '|', Pipe

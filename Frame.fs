@@ -1,8 +1,22 @@
 module Minits.Frame
 open Types
-type Frame = unit
-type Access = unit
-let newFrame = ()
+type Frame = {
+    name: Label
+    formals: list<bool>
+}
+type Access = 
+  | InFrame of int 
+  | InReg of Temp
+let newFrame (name: Label) (formals: list<bool>): Frame = {
+    name = name
+    formals = formals
+}
+let formals (frame: Frame): list<Access> = 
+  frame.formals 
+  |> List.mapi (fun i escapes -> if escapes then InFrame i else InReg (Temp.newtemp()))
+let allocLocal (frame: Frame) (escapes: bool): Access = 
+  // TODO: Also side-effect frame?!
+  if escapes then InFrame (List.length frame.formals) else InReg (Temp.newtemp())
 type Escape = Map<string, int * bool>
 let escape (decl : Declaration) =
   let mapM f table es = List.fold f table es
@@ -21,7 +35,7 @@ let escape (decl : Declaration) =
   | Binary (l,_,r) -> List.fold (fun t e -> escapeExp t depth e) table [l; r]
   | Assignment (lval, init) -> escapeExp (escapeLVal table depth lval) depth init
   | Sequence es -> List.fold (fun t e -> escapeExp t depth e) table es
-  | Call (e, args) -> List.fold (fun t e -> escapeExp t depth e) table (e :: args)
+  | Expression.Call (e, args) -> List.fold (fun t e -> escapeExp t depth e) table (e :: args)
   | RecordCons (name, inits) ->  List.fold (fun t e -> escapeExp t depth e) table (List.map snd inits)
   | ArrayCons inits -> List.fold (fun t e -> escapeExp t depth e) table inits
   | If (cond,cons,alt) -> List.fold (fun t e -> escapeExp t depth e) table [cond;cons;alt]

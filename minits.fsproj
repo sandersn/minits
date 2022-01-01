@@ -11,10 +11,12 @@
     <Compile Include="Lex.fs" />
     <Compile Include="Parse.fs" />
     <Compile Include="Bind.fs" />
+    <Compile Include="Frame.fs" />
+    <Compile Include="Translate.fs" />
     <Compile Include="Check.fs" />
     <Compile Include="Transform.fs" />
     <Compile Include="Emit.fs" />
-    <Compile Include="Frame.fs" />
+    <Compile Include="Semantic.fs" />
     <Compile Include="Compile.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Program.fs" />

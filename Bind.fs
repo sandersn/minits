@@ -54,7 +54,7 @@ let bind (decl : Declaration) =
       | Binary(l,_,r) -> [l; r]
       | Assignment (_,e) -> [e]
       | Sequence es -> es
-      | Call (e, args) -> (e :: args)
+      | Expression.Call (e, args) -> (e :: args)
       | RecordCons (_, inits) -> List.map snd inits
       | ArrayCons inits -> inits
       | If (cond,cons,alt) -> [cond; cons; alt]
