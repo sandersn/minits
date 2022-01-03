@@ -44,3 +44,12 @@ let toList (tree: Declaration) mapDecl mapExpr mapLVal mapType : list<'a> =
   | Arrow (ps, ret) -> List.collect (snd >> mapTypeToList) ps @ mapTypeToList ret
   | Reference r -> mapTypeToList r.contents
   mapDeclToList tree
+// TODO: Need to have a bound-tree traverser with a traversal function set
+// (Declaration -> list<Table> -> 'state -> 'output)
+// check has 'state=(), 'output=()
+//  -- check is also caching like crazy, which might make it hard
+// escape has 'state=int, 'output=Map<Declaration, int*string>
+// translate has 'state=Level, 'output=Exp
+// (and for Expression and LValue)
+let addToScope (env : Environment) (decl : Declaration) (scope : list<Table>) =
+  Map.find decl env :: scope

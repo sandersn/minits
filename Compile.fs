@@ -17,7 +17,9 @@ let compile (s: string) =
     // for debugging purposes, retaining global errors is a good idea
     let (globalFile, _) = lex globalS |> parse
     let (globalEnvironment, _) = bind globalFile
-    let (types, checkErrors) = check (globalEnvironment |>mapMerge<| environment) (Map.find globalFile globalEnvironment) file
+    let env = globalEnvironment |>mapMerge<| environment
+    let (types, checkErrors) = check env (Map.find globalFile globalEnvironment) file
+    let ir = Translate.translate env file
     (file, 
      environment, 
      types, 

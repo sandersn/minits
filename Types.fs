@@ -1,5 +1,6 @@
 module Minits.Types
 open System.Collections.Generic
+(* Lexer *)
 // TODO: Change token nam/intes to be less convenient to avoid clash with others
 type Token =
  | Type
@@ -52,6 +53,7 @@ type Lexer = {
     token: unit -> Token
     pos: unit -> int
 }
+(* Parser *)
 type Type =
 | Identifier of string
 | Literal of list<Property>
@@ -87,6 +89,7 @@ and Declaration =
 | Var of name: string * t: Option<Type> * init: Expression
 | Param of Property
 | Function of name: string * parameters: list<Declaration> * ret: Option<Type> * body: Expression
+(* Binder *)
 type Symbol = {
   var: option<Declaration>
   typ: option<Declaration>
@@ -95,14 +98,31 @@ type Table = Map<string, Symbol>
 type Environment = Map<Declaration, Table>
 type Meaning = Type | Value
 type Module = Table * list<Declaration>
+(* Checker *)
 type ResolvedTypes = {
   declarations: Dictionary<Declaration, Type>
   expressions: Dictionary<Expression, Type>
   types: Dictionary<Type, Type>
   lvalues: Dictionary<LValue, Type>
 }
+(* * IR emit * *)
+(* Frames *)
 type Label = string
 type Temp = string * int
+type Frame = {
+    name: Label
+    formals: list<bool>
+}
+type Access = 
+  | InFrame of int 
+  | InReg of Temp
+(* Translater *)
+type Level = {
+    parent: Level
+    name: Label
+    formals: list<bool>
+}
+type TrAccess = Level * Access
 type IExpression = 
 | Const of int
 | Name of Label

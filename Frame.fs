@@ -1,12 +1,6 @@
 module Minits.Frame
+open Traverse
 open Types
-type Frame = {
-    name: Label
-    formals: list<bool>
-}
-type Access = 
-  | InFrame of int 
-  | InReg of Temp
 let newFrame (name: Label) (formals: list<bool>): Frame = {
     name = name
     formals = formals
@@ -15,44 +9,55 @@ let formals (frame: Frame): list<Access> =
   frame.formals 
   |> List.mapi (fun i escapes -> if escapes then InFrame i else InReg (Temp.newtemp()))
 let allocLocal (frame: Frame) (escapes: bool): Access = 
-  // TODO: Also side-effect frame?!
+  // TODO: Also side-effect frame?! (because otherwise the InFrame index is wrong)
   if escapes then InFrame (List.length frame.formals) else InReg (Temp.newtemp())
-type Escape = Map<string, int * bool>
-let escape (decl : Declaration) =
+type Escape = Map<Declaration, int * bool>
+let wordSize = 1
+let FP: Temp = ("frame-pointer", 0)
+(*
+function f(x) =
+  x
+  function g(x) =
+     x // no escape
+  function h(y) =
+     x // yes escape
+     function i(x) =
+       x // no escape
+*)
+let escape (env : Environment) (decl : Declaration) (globals : Table) =
   let mapM f table es = List.fold f table es
-  let rec escapeDecl (table : Escape) depth = function
-  | File decls -> List.fold (fun t d -> escapeDecl t depth d) table decls
-  | ExpressionStatement e -> escapeExp table depth e
-  | Var (name,_,_) as v -> Map.add name (depth, false) table
-  | Param (name,_) as p -> Map.add name (depth, false) table
-  | Function (_, parameters, _, body) -> 
-    let table' = (List.fold (fun t d -> escapeDecl t (depth + 1) d) table parameters)
-    escapeExp table' (depth + 1) body
+  let rec escapeDecl (scope : list<Table>) (table : Escape) depth = function
+  | File decls as f -> List.fold (fun t d -> escapeDecl (addToScope env f scope) t depth d) table decls
+  | ExpressionStatement e -> escapeExp scope table depth e
+  | Var _ as v -> Map.add v (depth, false) table
+  | Param _ as p -> Map.add p (depth, false) table
+  | Function (_, parameters, _, body) as f -> 
+    let table' = (List.fold (fun t d -> escapeDecl (addToScope env f scope) t (depth + 1) d) table parameters)
+    escapeExp scope table' (depth + 1) body
   | _ -> table
-  and escapeExp table depth = function
-  | LValue lval -> escapeLVal table depth lval
-  | Negative e -> escapeExp table depth e
-  | Binary (l,_,r) -> List.fold (fun t e -> escapeExp t depth e) table [l; r]
-  | Assignment (lval, init) -> escapeExp (escapeLVal table depth lval) depth init
-  | Sequence es -> List.fold (fun t e -> escapeExp t depth e) table es
-  | Expression.Call (e, args) -> List.fold (fun t e -> escapeExp t depth e) table (e :: args)
-  | RecordCons (name, inits) ->  List.fold (fun t e -> escapeExp t depth e) table (List.map snd inits)
-  | ArrayCons inits -> List.fold (fun t e -> escapeExp t depth e) table inits
-  | If (cond,cons,alt) -> List.fold (fun t e -> escapeExp t depth e) table [cond;cons;alt]
-  | While (cond,action) -> List.fold (fun t e -> escapeExp t depth e) table [cond;action]
-  | For (_,start,stop,action) -> List.fold (fun t e -> escapeExp t depth e) table [start;stop;action]
-  | Let (decls,body) -> escapeExp (List.fold (fun t d -> escapeDecl t depth d) table decls) depth body
+  and escapeExp (scope : list<Table>) table depth = function
+  | LValue lval -> escapeLVal scope table depth lval
+  | Negative e -> escapeExp scope table depth e
+  | Binary (l,_,r) -> List.fold (fun t e -> escapeExp scope t depth e) table [l; r]
+  | Assignment (lval, init) -> escapeExp scope (escapeLVal scope table depth lval) depth init
+  | Sequence es -> List.fold (fun t e -> escapeExp scope t depth e) table es
+  | Expression.Call (e, args) -> List.fold (fun t e -> escapeExp scope t depth e) table (e :: args)
+  | RecordCons (name, inits) ->  List.fold (fun t e -> escapeExp scope t depth e) table (List.map snd inits)
+  | ArrayCons inits -> List.fold (fun t e -> escapeExp scope t depth e) table inits
+  | If (cond,cons,alt) -> List.fold (fun t e -> escapeExp scope t depth e) table [cond;cons;alt]
+  | While (cond,action) -> List.fold (fun t e -> escapeExp scope t depth e) table [cond;action]
+  | For (_,start,stop,action) as f -> 
+    List.fold (fun t e -> escapeExp (addToScope env (ExpressionStatement f) scope) t depth e) table [start;stop;action]
+  | Let (decls,body) as l -> 
+    escapeExp scope (List.fold (fun t d -> escapeDecl (addToScope env (ExpressionStatement l) scope) t depth d) table decls) depth body
   | _ -> table
-  and escapeLVal table depth = function
-  // This is correct, but the answers aren't correctly stored -- nested names will disappear
-  // at least if there are shadowing names -- you really do have to store the decl and resolve by name
-  // on the other hand, making this work correctly means integrating with symbol binding,
-  // which is a giant pain.
+  and escapeLVal scope table depth = function
   // also there is a LOT of boilerplate for something which only really matters for
   // Var, Param, Function, Identifier
   | Identifier id -> 
-    let (d,_) = Map.find id table
-    if depth > d then Map.add id (d, true) table else table
-  | PropertyAccess (l,r) -> escapeLVal table depth l
-  | ArrayAccess (l,r) -> escapeExp (escapeLVal table depth l) depth r
-  escapeDecl Map.empty 0 decl
+    let decl = Bind.resolve id scope Value |> Option.get
+    let (depth',_) = Map.find decl table
+    if depth > depth' then Map.add decl (depth', true) table else table
+  | PropertyAccess (l,r) -> escapeLVal scope table depth l
+  | ArrayAccess (l,r) -> escapeExp scope (escapeLVal scope table depth l) depth r
+  escapeDecl [globals] Map.empty 0 decl
