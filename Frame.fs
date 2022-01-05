@@ -1,17 +1,21 @@
 module Minits.Frame
 open Traverse
 open Types
-let newFrame (name: Label) (formals: list<bool>): Frame = {
+let newFrame decl name formals = {
+    decl = decl
     name = name
     formals = formals
 }
 let formals (frame: Frame): list<Access> = 
   frame.formals 
   |> List.mapi (fun i escapes -> if escapes then InFrame i else InReg (Temp.newtemp()))
-let allocLocal (frame: Frame) (escapes: bool): Access = 
-  // TODO: Also side-effect frame?! (because otherwise the InFrame index is wrong)
-  if escapes then InFrame (List.length frame.formals) else InReg (Temp.newtemp())
-type Escape = Map<Declaration, int * bool>
+let allocLocal (decl : Declaration) (frame: Frame) (escapes: bool): Access = 
+  match escapes, frame.decl with
+  | false, Function _ -> InReg (Temp.newtemp())
+  // the (1+) in 1 + index-of-param skips over the frame pointer added at index 0
+  | true, Function (_, parameters, _, _) -> InFrame <| 1 + List.findIndex ((=)decl) parameters
+  | _ -> failwith "Should only get functions in allocLocal"
+  
 let wordSize = 1
 let FP: Temp = ("frame-pointer", 0)
 (*

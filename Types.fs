@@ -107,9 +107,12 @@ type ResolvedTypes = {
 }
 (* * IR emit * *)
 (* Frames *)
+// TODO: depth: int doesn't seem to be used later, only escape: bool
+type Escape = Map<Declaration, int * bool>
 type Label = string
 type Temp = string * int
 type Frame = {
+    decl: Declaration
     name: Label
     formals: list<bool>
 }
@@ -118,9 +121,8 @@ type Access =
   | InReg of Temp
 (* Translater *)
 type Level = {
-    parent: Level
-    name: Label
-    formals: list<bool>
+    parent: Option<Level>
+    frame: Frame
 }
 type TrAccess = Level * Access
 type IExpression = 

@@ -1,4 +1,5 @@
 module Minits.Translate
+open System.Collections.Generic
 open Types
 (*
 Temp?
@@ -10,19 +11,22 @@ Check : Node * Env -> Map Node Type
 Check ->
 *)
 let rec outermost: Level = {
-    parent = outermost // lol @ letrec
-    name = Temp.newlabel ()
-    formals = []
+    parent = None
+    frame = {
+        decl = File []
+        name = Temp.newlabel ()
+        formals = []
+    }
 }
-let newLevel (parent: Level) (name: Label) (formals: list<bool>) = {
-    parent = parent
-    name = name
-    formals = formals
+let newLevel (decl : Declaration) (parent: Level) (label: Label) (formals: list<bool>) = {
+    parent = Some parent
+    frame = Frame.newFrame decl label (true :: formals)
 }
-// let formals (l: Level): list<TrAccess> = l.formals |> List.map (fun f -> (l, ()))
-let allocLocal (l: Level) (escapes: bool): Access = 
-  // TODO: Returning level as the first part of the tuple is redundant and probably wrong
-  Frame.allocLocal (Frame.newFrame l.name l.formals) escapes
+let formals (l: Level): list<TrAccess> = 
+  Frame.formals l.frame
+  |> List.map (fun access -> (l, access))
+let allocLocal (decl : Declaration) (level: Level) (frame : Frame) (escapes: bool): TrAccess = 
+  (level, Frame.allocLocal decl frame escapes)
 type Exp =
   | Cx of (Label * Label -> IStatement)
   | Ex of IExpression
@@ -50,11 +54,10 @@ let toCx = function
 | Nx s -> fun (t,f) -> Label f // TODO
 let todoE = Ex (Const 0)
 let todoD = Nx <| Exp (Const 0)
-// TODO: It would be really nice to have a generic bound-tree Traverse function
-// that maintains scope properly and lets you maintain a state variable
-// guess I need to read Scrap Your Boilerplate or maybe its descendants
+type TrLevel = Fun of Level | TrVar of TrAccess
 let translate (env: Environment) (decl: Declaration) (globals : Table) =
   let escapes = Frame.escape env decl globals
+  let levels = new Dictionary<Declaration, TrLevel>()
   let rec translateExpression scope exp level =
     match exp with
     | LValue lvalue -> translateLValue scope lvalue level
@@ -122,20 +125,28 @@ let translate (env: Environment) (decl: Declaration) (globals : Table) =
       simpleVar (Bind.resolve name scope Value |> Option.get) level
     | PropertyAccess (l,r) -> todoE
     | ArrayAccess (l,r) -> todoE
-  and simpleVar (statement : Declaration) (level : Level) = 
-    match allocLocal level (snd escapes.[statement]) with
-    | InReg x -> Ex <| Mem (Temp x)
-    | InFrame k -> Ex <| Mem (Binop (Temp Frame.FP, Plus, Const k))
-    
+  and simpleVar (declaration : Declaration) (level : Level) = 
+    match levels.[declaration] with
+    | Fun _ -> failwith "shouldn't get this"
+    | TrVar (_, InReg x) -> Ex <| Mem (Temp x)
+    | TrVar (declLevel, InFrame k) -> Ex <| wrap level declLevel (Mem (Binop (Const k, Plus, Temp Frame.FP)))
+  and wrap current level access = 
+    match current.parent, formals current with
+    | Some(parent),((_,InFrame i) :: _) when current <> level -> 
+      Binop (Const i, Plus, wrap parent level access)
+    | _ -> access // I GUESS
   and translateDeclaration scope decl level =
     match decl with
     | File decls -> todoD
     | ExpressionStatement e -> Nx <| Exp (toEx <| translateExpression scope e level)
-    | Var(_, typename, init) -> todoD
+    | Var(_, typename, init) -> 
+      levels.Add (decl, TrVar <| allocLocal decl level level.frame (snd escapes.[decl]))
+      todoD
     | Param(_, typename) -> todoD
     | Declaration.Type(_, t) -> todoD
     | Function (name, parameters, ret, body) -> 
-        let level' = newLevel level (Temp.newlabel ()) (parameters |> List.map (fun _ -> false))
+        let level' = newLevel decl level (Temp.newlabel ()) (parameters |> List.map (fun p -> snd escapes.[p]))
+        levels.Add (decl,Fun level')
         // TODO:use level' when translating body
         todoD
   translateDeclaration [globals] decl outermost
