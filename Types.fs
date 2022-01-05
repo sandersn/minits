@@ -124,6 +124,7 @@ type Level = {
     parent: Option<Level>
     frame: Frame
 }
+type Fragment = String of Label * string
 type TrAccess = Level * Access
 type IExpression = 
 | Const of int

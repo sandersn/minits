@@ -58,14 +58,16 @@ type TrLevel = Fun of Level | TrVar of TrAccess
 let translate (env: Environment) (decl: Declaration) (globals : Table) (types : ResolvedTypes)=
   let escapes = Frame.escape env decl globals
   let levels = new Dictionary<Declaration, TrLevel>()
+  let fragments = new List<Fragment>()
   let rec translateExpression scope exp level =
     match exp with
     | LValue lvalue -> translateLValue scope lvalue level
     | IntLiteral i -> Const i |> Ex
     | StringLiteral s ->
-      let saddress = 000 // TODO
-      Ex <| Mem (Const saddress)
-    | Negative e -> todoE
+      let label = Temp.newlabel ()
+      fragments.Add (String (label,s))
+      Ex <| Name label
+    | Negative e -> translateExpression scope (Binary (IntLiteral 0, Token.Minus, e)) level
     | Binary(l,op,r) -> 
         let lt = translateExpression scope l level |> toEx
         let rt = translateExpression scope r level |> toEx
