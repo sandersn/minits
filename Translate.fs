@@ -55,7 +55,7 @@ let toCx = function
 let todoE = Ex (Const 0)
 let todoD = Nx <| Exp (Const 0)
 type TrLevel = Fun of Level | TrVar of TrAccess
-let translate (env: Environment) (decl: Declaration) (globals : Table) =
+let translate (env: Environment) (decl: Declaration) (globals : Table) (types : ResolvedTypes)=
   let escapes = Frame.escape env decl globals
   let levels = new Dictionary<Declaration, TrLevel>()
   let rec translateExpression scope exp level =
@@ -81,7 +81,6 @@ let translate (env: Environment) (decl: Declaration) (globals : Table) =
         | DoubleEquals -> Cx (fun (t,f) -> CJump(lt, Eq, rt, t, f))
         | ForwardSlashEquals -> Cx (fun (t,f) -> CJump(lt, Ne, rt, t, f))
         | t -> failwith $"Unexpected binary operator token {t}"
-        //checkBinary op
     | Assignment(lvalue, value) -> todoE
     | Expression.Call(e, args) -> todoE
     | Sequence es -> todoE
@@ -123,8 +122,19 @@ let translate (env: Environment) (decl: Declaration) (globals : Table) =
     match lvalue with
     | Identifier name ->
       simpleVar (Bind.resolve name scope Value |> Option.get) level
-    | PropertyAccess (l,r) -> todoE
-    | ArrayAccess (l,r) -> todoE
+    | PropertyAccess (o,name) ->
+      let o' = toEx <| translateLValue scope o level
+      let i = match Check.getTypeOfLValue types o with
+              | Some (Literal ps) -> ps |> List.findIndex (fst >> (=) name) |> Const
+              | _ -> failwith "Couldn't find type of expression or it was not a type literal"
+      // TODO: Also emit null check (if the checker hasn't excluded it)
+      Ex <| Binop (o', Plus, i)
+    | ArrayAccess (a,i) ->
+      let a' = toEx <| translateLValue scope a level
+      let i' = toEx <| translateExpression scope i level
+      // full equation is not a+i, but a+((i-start)*size); however, start=0 and size=1 in tiger
+      // TODO: Also emit bounds check
+      Ex <| Binop (a', Plus, i')
   and simpleVar (declaration : Declaration) (level : Level) = 
     match levels.[declaration] with
     | Fun _ -> failwith "shouldn't get this"
@@ -134,7 +144,7 @@ let translate (env: Environment) (decl: Declaration) (globals : Table) =
     match current.parent, formals current with
     | Some(parent),((_,InFrame i) :: _) when current <> level -> 
       Binop (Const i, Plus, wrap parent level access)
-    | _ -> access // I GUESS
+    | _ -> access // I GUESS, some of these failure cases should probably assert
   and translateDeclaration scope decl level =
     match decl with
     | File decls -> todoD
