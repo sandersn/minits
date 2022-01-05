@@ -62,7 +62,9 @@ let translate (env: Environment) (decl: Declaration) (globals : Table) (types : 
     match exp with
     | LValue lvalue -> translateLValue scope lvalue level
     | IntLiteral i -> Const i |> Ex
-    | StringLiteral s -> todoE
+    | StringLiteral s ->
+      let saddress = 000 // TODO
+      Ex <| Mem (Const saddress)
     | Negative e -> todoE
     | Binary(l,op,r) -> 
         let lt = translateExpression scope l level |> toEx
@@ -72,14 +74,26 @@ let translate (env: Environment) (decl: Declaration) (globals : Table) (types : 
         | Token.Minus -> Binop (lt, Minus, rt) |> Ex
         | Asterisk -> Binop (lt, Mul, rt) |> Ex
         | ForwardSlash -> Binop (lt, Div, rt) |> Ex
-        | Pipe -> Binop (lt, Or, rt) |> Ex // TODO: if l then 1 else r
-        | Ampersand -> Binop (lt, And, rt) |> Ex // TODO: if l then r else 0
+        | Pipe -> translateExpression scope (If (l, IntLiteral 1, r)) level
+        | Ampersand -> translateExpression scope (If (l, r, IntLiteral 0)) level
         | LessThan -> Cx (fun (t,f) -> CJump(lt, Lt, rt, t, f))
         | GreaterThan -> Cx (fun (t,f) -> CJump(lt, Gt, rt, t, f))
         | LessThanEquals -> Cx (fun (t,f) -> CJump(lt, Le, rt, t, f))
         | GreaterThanEquals -> Cx (fun (t,f) -> CJump(lt, Ge, rt, t, f))
-        | DoubleEquals -> Cx (fun (t,f) -> CJump(lt, Eq, rt, t, f))
-        | ForwardSlashEquals -> Cx (fun (t,f) -> CJump(lt, Ne, rt, t, f))
+        | DoubleEquals ->
+          // don't bother checking that `r: string` since the program would fail to check
+          match Check.getTypeOfExpression types l with 
+          | Some t  when t = Check.stringType -> Ex <| Call (Name "stringEqual", [lt; rt])
+          | Some _ -> Cx (fun (t,f) -> CJump(lt, Eq, rt, t, f))
+          | _ -> failwith "Could not find type for left equality operand"
+        | ForwardSlashEquals ->
+          // don't bother checking that `r: string` since the program would fail to check
+          match Check.getTypeOfExpression types l with 
+          | Some t  when t = Check.stringType -> 
+            let stringEqual = Call (Name "stringEqual", [lt; rt])
+            Cx (fun (t,f) -> CJump (stringEqual, Eq, Const 0, t, f))
+          | Some _ -> Cx (fun (t,f) -> CJump(lt, Ne, rt, t, f))
+          | _ -> failwith "Could not find type for left equality operand"
         | t -> failwith $"Unexpected binary operator token {t}"
     | Assignment(lvalue, value) -> todoE
     | Expression.Call(e, args) -> todoE
